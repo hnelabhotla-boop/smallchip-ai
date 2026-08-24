@@ -190,6 +190,19 @@
                     </label>
                 </div>
                 <canvas id="placementCanvas" width="800" height="600"></canvas>
+
+    <div id="fullVizSection" class="hidden" style="margin-top: 20px;">
+        <h3>📐 Legal Placement Visualization (colored by congestion)</h3>
+        <div class="viz-controls">
+            <label>Color by:
+                <select id="fullVizColor">
+                    <option value="congestion">Congestion (nets/region)</option>
+                    <option value="thermal">Thermal (power density)</option>
+                </select>
+            </label>
+        </div>
+        <canvas id="fullVizCanvas" width="800" height="600" style="border: 1px solid #cbd5e0; border-radius: 6px;"></canvas>
+    </div>
             </div>
         </section>
 
@@ -296,6 +309,7 @@
   }
 
   function renderFullAnalysis(d) {
+    if (typeof _lastFullResult !== 'undefined') _lastFullResult = d;
     document.getElementById('fullChipInfo').textContent = `${d.n_cells.toLocaleString()} cells, ${d.n_nets.toLocaleString()} nets`;
     document.getElementById('fullAlgo').textContent = d.algorithm;
     document.getElementById('fullRawHpwl').textContent = Math.round(d.raw_hpwl).toLocaleString();
@@ -342,6 +356,87 @@
     document.getElementById('thermalMax').textContent = Math.round(thermMax);
     document.getElementById('thermalAvg').textContent = d.thermal.avg_power.toFixed(1);
     document.getElementById('thermalRatio').textContent = d.thermal.max_avg_ratio.toFixed(2) + 'x';
+
+    // Show + draw the legal placement visualization
+    const fullVizSection = document.getElementById('fullVizSection');
+    if (fullVizSection) fullVizSection.classList.remove('hidden');
+    drawFullViz(d);
+  }
+
+  function drawFullViz(d) {
+    const canvas = document.getElementById('fullVizCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const colorBy = document.getElementById('fullVizColor').value;
+    const gridKey = colorBy === 'congestion' ? 'congestion' : 'thermal';
+    const grid = d[gridKey].grid;
+    const maxVal = d[gridKey].max_congestion || d[gridKey].max_power || 1;
+
+    // Compute die bounds from scaled components (they're in 0..die_size units)
+    const comps = d.components || {};
+    const xs = Object.values(comps).map(p => p.x || 0);
+    const ys = Object.values(comps).map(p => p.y || 0);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const dieW = Math.max(maxX - minX, 1);
+    const dieH = Math.max(maxY - minY, 1);
+
+    const w = canvas.width, h = canvas.height, pad = 20;
+    const scale = Math.min((w - 2 * pad) / dieW, (h - 2 * pad) / dieH);
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#fafafa';
+    ctx.fillRect(0, 0, w, h);
+
+    // Draw die outline
+    ctx.strokeStyle = '#2d3748';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(pad, pad, dieW * scale, dieH * scale);
+
+    // Draw cells as small rectangles, colored by their grid cell's congestion/thermal
+    const gW = grid.length, gH = grid[0].length;
+    const cellW = dieW / gW, cellH = dieH / gH;
+    const cellSize = Math.max(2, Math.min(5, scale * 0.5));
+
+    ctx.globalAlpha = 0.7;
+    Object.values(comps).forEach(p => {
+      const gx = Math.min(gW - 1, Math.floor((p.x - minX) / cellW));
+      const gy = Math.min(gH - 1, Math.floor((p.y - minY) / cellH));
+      const v = grid[gy][gx] || 0;
+      const intensity = maxVal > 0 ? v / maxVal : 0;
+      // Color: blue (low) → yellow (mid) → red (high)
+      let r, g, b;
+      if (intensity < 0.5) {
+        // blue to yellow
+        r = Math.round(255 * intensity * 2);
+        g = Math.round(200 * intensity * 2);
+        b = Math.round(255 * (1 - intensity * 2));
+      } else {
+        // yellow to red
+        r = 255;
+        g = Math.round(200 * (1 - (intensity - 0.5) * 2));
+        b = 0;
+      }
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      const cx = pad + (p.x - minX) * scale;
+      const cy = pad + (p.y - minY) * scale;
+      ctx.fillRect(cx - cellSize / 2, cy - cellSize / 2, cellSize, cellSize);
+    });
+    ctx.globalAlpha = 1.0;
+
+    // Legend
+    ctx.fillStyle = '#2d3748';
+    ctx.font = '11px sans-serif';
+    ctx.fillText(`Colored by ${colorBy} (max: ${Math.round(maxVal)})`, pad, h - 8);
+  }
+
+  // Color-mode switcher for the full viz
+  let _lastFullResult = null;
+  const fullVizColor = document.getElementById('fullVizColor');
+  if (fullVizColor) {
+    fullVizColor.addEventListener('change', () => {
+      if (_lastFullResult) drawFullViz(_lastFullResult);
+    });
   }
 
   if ('serviceWorker' in navigator) {
