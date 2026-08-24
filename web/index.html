@@ -114,6 +114,7 @@
 
         <section class="run-section">
             <button id="runBtn" class="btn btn-run" disabled>3. Run placement comparison (5 quality metrics)</button>
+            <button id="runFullBtn" class="btn btn-run-full" disabled style="margin-left: 12px;">4. Run full analysis (legal HPWL + congestion + thermal)</button>
             <div id="loading" class="loading hidden">
                 <div class="spinner"></div>
                 <p id="loadingText">Running...</p>
@@ -219,6 +220,33 @@
                 "make it use less power", and get a redesigned chip in 20 seconds.
             </p>
         </section>
+
+        <section id="fullAnalysisSection" class="results-section hidden">
+            <h2>🔬 Full Analysis (Legal HPWL + Quality Maps)</h2>
+            <div class="results-summary">
+                <p>Chip: <strong id="fullChipInfo"></strong> — <span id="fullAlgo"></span></p>
+            </div>
+
+            <div class="metric-row" style="font-size: 16px; margin: 16px 0;">
+                <strong>Raw HPWL (V3, pre-legalization):</strong>
+                <span id="fullRawHpwl">—</span>
+            </div>
+            <div class="metric-row" style="font-size: 16px; margin: 16px 0;">
+                <strong>Legal HPWL (post-legalization):</strong>
+                <span id="fullLegalHpwl">—</span>
+                <span id="fullDelta" style="margin-left: 12px; font-size: 13px;"></span>
+            </div>
+
+            <h3 style="margin-top: 20px;">🌡️ Congestion Map (10×10 grid)</h3>
+            <p style="font-size: 13px; color: #718096;">Nets passing through each region. Hot spots = harder to route.</p>
+            <div id="congestionGrid" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; max-width: 400px; margin: 10px 0;"></div>
+            <div class="metric-row"><strong>Max congestion:</strong> <span id="congestionMax">—</span> &nbsp; <strong>Avg:</strong> <span id="congestionAvg">—</span> &nbsp; <strong>Hot spots:</strong> <span id="congestionHot">—</span></div>
+
+            <h3 style="margin-top: 20px;">🔥 Thermal Map (10×10 grid)</h3>
+            <p style="font-size: 13px; color: #718096;">Power density per region. High = potential hot spot.</p>
+            <div id="thermalGrid" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; max-width: 400px; margin: 10px 0;"></div>
+            <div class="metric-row"><strong>Max power:</strong> <span id="thermalMax">—</span> &nbsp; <strong>Avg:</strong> <span id="thermalAvg">—</span> &nbsp; <strong>Max/avg ratio:</strong> <span id="thermalRatio">—</span></div>
+        </section>
     </main>
 
     <footer>
@@ -230,6 +258,92 @@
 </html>
 
 <script>
+  // Full Analysis button — calls /api/place_full and renders results
+  const runFullBtn = document.getElementById('runFullBtn');
+  const fullAnalysisSection = document.getElementById('fullAnalysisSection');
+  if (runFullBtn) {
+    runFullBtn.disabled = false;
+    runFullBtn.addEventListener('click', async () => {
+      if (!currentFile) return;
+      runFullBtn.disabled = true;
+      runFullBtn.innerHTML = '<span class="spinner"></span> Running full analysis...';
+      fullAnalysisSection.classList.add('hidden');
+      const loading = document.getElementById('loading');
+      const loadingText = document.getElementById('loadingText');
+      loading.classList.remove('hidden');
+      loadingText.textContent = 'Running V3 + legalization + quality analysis...';
+      try {
+        const fd = new FormData();
+        fd.append('file', currentFile);
+        fd.append('algorithm', 'gat');
+        const r = await fetch('/api/place_full', { method: 'POST', body: fd });
+        if (!r.ok) {
+          const e = await r.json().catch(() => ({detail: 'Server error'}));
+          throw new Error(e.detail);
+        }
+        const d = await r.json();
+        renderFullAnalysis(d);
+        fullAnalysisSection.classList.remove('hidden');
+        fullAnalysisSection.scrollIntoView({ behavior: 'smooth' });
+      } catch (err) {
+        alert('Error: ' + err.message);
+      } finally {
+        runFullBtn.disabled = false;
+        runFullBtn.innerHTML = '4. Run full analysis (legal HPWL + congestion + thermal)';
+        loading.classList.add('hidden');
+      }
+    });
+  }
+
+  function renderFullAnalysis(d) {
+    document.getElementById('fullChipInfo').textContent = `${d.n_cells.toLocaleString()} cells, ${d.n_nets.toLocaleString()} nets`;
+    document.getElementById('fullAlgo').textContent = d.algorithm;
+    document.getElementById('fullRawHpwl').textContent = Math.round(d.raw_hpwl).toLocaleString();
+    document.getElementById('fullLegalHpwl').textContent = Math.round(d.legal_hpwl).toLocaleString();
+    const deltaEl = document.getElementById('fullDelta');
+    const d_pct = d.delta_pct;
+    deltaEl.textContent = `(${d_pct >= 0 ? '+' : ''}${d_pct.toFixed(1)}% vs raw)`;
+    deltaEl.style.color = d_pct < 0 ? '#22543d' : '#c53030';
+
+    // Render congestion heatmap
+    const congGrid = document.getElementById('congestionGrid');
+    congGrid.innerHTML = '';
+    const congMax = d.congestion.max_congestion || 1;
+    d.congestion.grid.flat().forEach(v => {
+      const cell = document.createElement('div');
+      const intensity = Math.min(v / congMax, 1);
+      const r = Math.round(255 * intensity);
+      const g = Math.round(200 * (1 - intensity));
+      const b = Math.round(200 * (1 - intensity));
+      cell.style.cssText = `background: rgb(${r},${g},${b}); aspect-ratio: 1; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: ${intensity > 0.5 ? 'white' : '#333'};`;
+      cell.textContent = v > 0 ? v : '';
+      cell.title = `Congestion: ${v}`;
+      congGrid.appendChild(cell);
+    });
+    document.getElementById('congestionMax').textContent = congMax.toLocaleString();
+    document.getElementById('congestionAvg').textContent = Math.round(d.congestion.avg_congestion).toLocaleString();
+    document.getElementById('congestionHot').textContent = d.congestion.hot_spots;
+
+    // Render thermal heatmap
+    const thermGrid = document.getElementById('thermalGrid');
+    thermGrid.innerHTML = '';
+    const thermMax = d.thermal.max_power || 1;
+    d.thermal.grid.flat().forEach(v => {
+      const cell = document.createElement('div');
+      const intensity = Math.min(v / thermMax, 1);
+      const r = Math.round(255 * intensity);
+      const g = Math.round(100 * (1 - intensity * 0.5));
+      const b = Math.round(100 * (1 - intensity));
+      cell.style.cssText = `background: rgb(${r},${g},${b}); aspect-ratio: 1; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: ${intensity > 0.5 ? 'white' : '#333'};`;
+      cell.textContent = v > 0 ? Math.round(v) : '';
+      cell.title = `Power density: ${v.toFixed(0)}`;
+      thermGrid.appendChild(cell);
+    });
+    document.getElementById('thermalMax').textContent = Math.round(thermMax);
+    document.getElementById('thermalAvg').textContent = d.thermal.avg_power.toFixed(1);
+    document.getElementById('thermalRatio').textContent = d.thermal.max_avg_ratio.toFixed(2) + 'x';
+  }
+
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   }
