@@ -1,0 +1,5762 @@
+[
+  {
+    "name": "adaptec1_s0_n472",
+    "features": {
+      "n_cells": 472,
+      "n_nets": 457,
+      "avg_net_size": 3.350109409190372,
+      "max_net_size": 47,
+      "avg_cell_degree": 3.2436440677966103,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 472,
+      "timing_ps": 23.6,
+      "power_mw": 0.00047200000000000003,
+      "max_congestion": 457,
+      "mean_congestion": 0.1828,
+      "median_congestion": 0.0,
+      "std_congestion": 9.138171817163432
+    }
+  },
+  {
+    "name": "adaptec1_s1_n207",
+    "features": {
+      "n_cells": 207,
+      "n_nets": 178,
+      "avg_net_size": 5.606741573033708,
+      "max_net_size": 48,
+      "avg_cell_degree": 4.821256038647343,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 207,
+      "timing_ps": 10.350000000000001,
+      "power_mw": 0.00020700000000000002,
+      "max_congestion": 178,
+      "mean_congestion": 0.0712,
+      "median_congestion": 0.0,
+      "std_congestion": 3.559287928785757
+    }
+  },
+  {
+    "name": "adaptec1_s2_n296",
+    "features": {
+      "n_cells": 296,
+      "n_nets": 246,
+      "avg_net_size": 4.780487804878049,
+      "max_net_size": 17,
+      "avg_cell_degree": 3.972972972972973,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 296,
+      "timing_ps": 14.8,
+      "power_mw": 0.000296,
+      "max_congestion": 246,
+      "mean_congestion": 0.0984,
+      "median_congestion": 0.0,
+      "std_congestion": 4.919015901580314
+    }
+  },
+  {
+    "name": "adaptec1_s3_n416",
+    "features": {
+      "n_cells": 416,
+      "n_nets": 741,
+      "avg_net_size": 3.425101214574899,
+      "max_net_size": 406,
+      "avg_cell_degree": 6.100961538461538,
+      "max_cell_degree": 298,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 1560956.0
+    },
+    "metrics": {
+      "hpwl": 1560956,
+      "area": 416,
+      "timing_ps": 801.278,
+      "power_mw": 1.5613720000000002,
+      "max_congestion": 492,
+      "mean_congestion": 1.8036,
+      "median_congestion": 0.0,
+      "std_congestion": 19.653951944583568
+    }
+  },
+  {
+    "name": "adaptec1_s4_n363",
+    "features": {
+      "n_cells": 363,
+      "n_nets": 394,
+      "avg_net_size": 4.888324873096447,
+      "max_net_size": 49,
+      "avg_cell_degree": 5.305785123966942,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 363,
+      "timing_ps": 18.150000000000002,
+      "power_mw": 0.000363,
+      "max_congestion": 394,
+      "mean_congestion": 0.1576,
+      "median_congestion": 0.0,
+      "std_congestion": 7.87842384236847
+    }
+  },
+  {
+    "name": "adaptec1_s5_n354",
+    "features": {
+      "n_cells": 354,
+      "n_nets": 288,
+      "avg_net_size": 4.149305555555555,
+      "max_net_size": 36,
+      "avg_cell_degree": 3.3757062146892656,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 354,
+      "timing_ps": 17.7,
+      "power_mw": 0.00035400000000000004,
+      "max_congestion": 288,
+      "mean_congestion": 0.1152,
+      "median_congestion": 0.0,
+      "std_congestion": 5.758847884776956
+    }
+  },
+  {
+    "name": "adaptec1_s6_n182",
+    "features": {
+      "n_cells": 182,
+      "n_nets": 233,
+      "avg_net_size": 5.437768240343348,
+      "max_net_size": 21,
+      "avg_cell_degree": 6.961538461538462,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 182,
+      "timing_ps": 9.1,
+      "power_mw": 0.000182,
+      "max_congestion": 233,
+      "mean_congestion": 0.0932,
+      "median_congestion": 0.0,
+      "std_congestion": 4.659067906781355
+    }
+  },
+  {
+    "name": "adaptec1_s7_n311",
+    "features": {
+      "n_cells": 311,
+      "n_nets": 262,
+      "avg_net_size": 4.312977099236641,
+      "max_net_size": 40,
+      "avg_cell_degree": 3.6334405144694535,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 311,
+      "timing_ps": 15.55,
+      "power_mw": 0.000311,
+      "max_congestion": 262,
+      "mean_congestion": 0.1048,
+      "median_congestion": 0.0,
+      "std_congestion": 5.238951895179036
+    }
+  },
+  {
+    "name": "adaptec1_s8_n326",
+    "features": {
+      "n_cells": 326,
+      "n_nets": 313,
+      "avg_net_size": 5.1629392971246,
+      "max_net_size": 50,
+      "avg_cell_degree": 4.957055214723926,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 326,
+      "timing_ps": 16.3,
+      "power_mw": 0.000326,
+      "max_congestion": 313,
+      "mean_congestion": 0.1252,
+      "median_congestion": 0.0,
+      "std_congestion": 6.258747874774954
+    }
+  },
+  {
+    "name": "adaptec1_s9_n588",
+    "features": {
+      "n_cells": 588,
+      "n_nets": 426,
+      "avg_net_size": 6.539906103286385,
+      "max_net_size": 509,
+      "avg_cell_degree": 4.738095238095238,
+      "max_cell_degree": 7,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 588,
+      "timing_ps": 29.400000000000002,
+      "power_mw": 0.000588,
+      "max_congestion": 426,
+      "mean_congestion": 0.1704,
+      "median_congestion": 0.0,
+      "std_congestion": 8.518295829565913
+    }
+  },
+  {
+    "name": "adaptec1_s10_n579",
+    "features": {
+      "n_cells": 579,
+      "n_nets": 813,
+      "avg_net_size": 4.464944649446495,
+      "max_net_size": 747,
+      "avg_cell_degree": 6.269430051813472,
+      "max_cell_degree": 271,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 854270.0
+    },
+    "metrics": {
+      "hpwl": 854270,
+      "area": 579,
+      "timing_ps": 456.085,
+      "power_mw": 0.854849,
+      "max_congestion": 478,
+      "mean_congestion": 1.1508,
+      "median_congestion": 0.0,
+      "std_congestion": 15.133038669084277
+    }
+  },
+  {
+    "name": "adaptec1_s11_n177",
+    "features": {
+      "n_cells": 177,
+      "n_nets": 220,
+      "avg_net_size": 4.490909090909091,
+      "max_net_size": 48,
+      "avg_cell_degree": 5.581920903954802,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 177,
+      "timing_ps": 8.85,
+      "power_mw": 0.00017700000000000002,
+      "max_congestion": 220,
+      "mean_congestion": 0.088,
+      "median_congestion": 0.0,
+      "std_congestion": 4.399119911982396
+    }
+  },
+  {
+    "name": "adaptec1_s12_n586",
+    "features": {
+      "n_cells": 586,
+      "n_nets": 522,
+      "avg_net_size": 5.304597701149425,
+      "max_net_size": 342,
+      "avg_cell_degree": 4.725255972696246,
+      "max_cell_degree": 123,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 744442.0
+    },
+    "metrics": {
+      "hpwl": 744442,
+      "area": 586,
+      "timing_ps": 401.521,
+      "power_mw": 0.7450280000000001,
+      "max_congestion": 493,
+      "mean_congestion": 1.2624,
+      "median_congestion": 0.0,
+      "std_congestion": 12.741269412425122
+    }
+  },
+  {
+    "name": "adaptec1_s13_n374",
+    "features": {
+      "n_cells": 374,
+      "n_nets": 345,
+      "avg_net_size": 4.556521739130435,
+      "max_net_size": 47,
+      "avg_cell_degree": 4.2032085561497325,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 374,
+      "timing_ps": 18.7,
+      "power_mw": 0.00037400000000000004,
+      "max_congestion": 345,
+      "mean_congestion": 0.138,
+      "median_congestion": 0.0,
+      "std_congestion": 6.898619861972394
+    }
+  },
+  {
+    "name": "adaptec1_s14_n250",
+    "features": {
+      "n_cells": 250,
+      "n_nets": 311,
+      "avg_net_size": 4.861736334405145,
+      "max_net_size": 55,
+      "avg_cell_degree": 6.048,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 250,
+      "timing_ps": 12.5,
+      "power_mw": 0.00025000000000000006,
+      "max_congestion": 311,
+      "mean_congestion": 0.1244,
+      "median_congestion": 0.0,
+      "std_congestion": 6.218755875575116
+    }
+  },
+  {
+    "name": "adaptec1_s15_n155",
+    "features": {
+      "n_cells": 155,
+      "n_nets": 141,
+      "avg_net_size": 3.602836879432624,
+      "max_net_size": 13,
+      "avg_cell_degree": 3.2774193548387096,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 155,
+      "timing_ps": 7.75,
+      "power_mw": 0.000155,
+      "max_congestion": 141,
+      "mean_congestion": 0.0564,
+      "median_congestion": 0.0,
+      "std_congestion": 2.8194359435887173
+    }
+  },
+  {
+    "name": "adaptec1_s16_n338",
+    "features": {
+      "n_cells": 338,
+      "n_nets": 354,
+      "avg_net_size": 5.240112994350283,
+      "max_net_size": 47,
+      "avg_cell_degree": 5.488165680473373,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 338,
+      "timing_ps": 16.900000000000002,
+      "power_mw": 0.00033800000000000003,
+      "max_congestion": 354,
+      "mean_congestion": 0.1416,
+      "median_congestion": 0.0,
+      "std_congestion": 7.078583858371672
+    }
+  },
+  {
+    "name": "adaptec1_s17_n250",
+    "features": {
+      "n_cells": 250,
+      "n_nets": 227,
+      "avg_net_size": 4.651982378854625,
+      "max_net_size": 41,
+      "avg_cell_degree": 4.224,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 250,
+      "timing_ps": 12.5,
+      "power_mw": 0.00025000000000000006,
+      "max_congestion": 227,
+      "mean_congestion": 0.0908,
+      "median_congestion": 0.0,
+      "std_congestion": 4.539091909181835
+    }
+  },
+  {
+    "name": "adaptec1_s18_n193",
+    "features": {
+      "n_cells": 193,
+      "n_nets": 186,
+      "avg_net_size": 5.032258064516129,
+      "max_net_size": 121,
+      "avg_cell_degree": 4.849740932642487,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 193,
+      "timing_ps": 9.65,
+      "power_mw": 0.00019300000000000003,
+      "max_congestion": 186,
+      "mean_congestion": 0.0744,
+      "median_congestion": 0.0,
+      "std_congestion": 3.7192559255851148
+    }
+  },
+  {
+    "name": "adaptec1_s19_n295",
+    "features": {
+      "n_cells": 295,
+      "n_nets": 231,
+      "avg_net_size": 4.909090909090909,
+      "max_net_size": 48,
+      "avg_cell_degree": 3.8440677966101693,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 295,
+      "timing_ps": 14.75,
+      "power_mw": 0.000295,
+      "max_congestion": 231,
+      "mean_congestion": 0.0924,
+      "median_congestion": 0.0,
+      "std_congestion": 4.619075907581514
+    }
+  },
+  {
+    "name": "adaptec1_s20_n243",
+    "features": {
+      "n_cells": 243,
+      "n_nets": 221,
+      "avg_net_size": 4.624434389140271,
+      "max_net_size": 82,
+      "avg_cell_degree": 4.205761316872428,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 243,
+      "timing_ps": 12.15,
+      "power_mw": 0.000243,
+      "max_congestion": 221,
+      "mean_congestion": 0.0884,
+      "median_congestion": 0.0,
+      "std_congestion": 4.419115911582315
+    }
+  },
+  {
+    "name": "adaptec1_s21_n238",
+    "features": {
+      "n_cells": 238,
+      "n_nets": 231,
+      "avg_net_size": 3.515151515151515,
+      "max_net_size": 19,
+      "avg_cell_degree": 3.411764705882353,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 238,
+      "timing_ps": 11.9,
+      "power_mw": 0.000238,
+      "max_congestion": 231,
+      "mean_congestion": 0.0924,
+      "median_congestion": 0.0,
+      "std_congestion": 4.619075907581514
+    }
+  },
+  {
+    "name": "adaptec1_s22_n377",
+    "features": {
+      "n_cells": 377,
+      "n_nets": 377,
+      "avg_net_size": 6.384615384615385,
+      "max_net_size": 25,
+      "avg_cell_degree": 6.384615384615385,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 377,
+      "timing_ps": 18.85,
+      "power_mw": 0.000377,
+      "max_congestion": 377,
+      "mean_congestion": 0.1508,
+      "median_congestion": 0.0,
+      "std_congestion": 7.538491849169834
+    }
+  },
+  {
+    "name": "adaptec1_s23_n213",
+    "features": {
+      "n_cells": 213,
+      "n_nets": 203,
+      "avg_net_size": 5.019704433497537,
+      "max_net_size": 119,
+      "avg_cell_degree": 4.784037558685446,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 213,
+      "timing_ps": 10.65,
+      "power_mw": 0.00021300000000000003,
+      "max_congestion": 203,
+      "mean_congestion": 0.0812,
+      "median_congestion": 0.0,
+      "std_congestion": 4.059187918783755
+    }
+  },
+  {
+    "name": "adaptec1_s24_n297",
+    "features": {
+      "n_cells": 297,
+      "n_nets": 560,
+      "avg_net_size": 2.9375,
+      "max_net_size": 36,
+      "avg_cell_degree": 5.538720538720539,
+      "max_cell_degree": 357,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 1409766.0
+    },
+    "metrics": {
+      "hpwl": 1409766,
+      "area": 297,
+      "timing_ps": 719.7330000000001,
+      "power_mw": 1.4100630000000003,
+      "max_congestion": 421,
+      "mean_congestion": 2.434,
+      "median_congestion": 0.0,
+      "std_congestion": 22.365688990057965
+    }
+  },
+  {
+    "name": "adaptec1_s25_n309",
+    "features": {
+      "n_cells": 309,
+      "n_nets": 326,
+      "avg_net_size": 4.730061349693251,
+      "max_net_size": 49,
+      "avg_cell_degree": 4.990291262135922,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 309,
+      "timing_ps": 15.450000000000001,
+      "power_mw": 0.00030900000000000003,
+      "max_congestion": 326,
+      "mean_congestion": 0.1304,
+      "median_congestion": 0.0,
+      "std_congestion": 6.518695869573915
+    }
+  },
+  {
+    "name": "adaptec1_s26_n209",
+    "features": {
+      "n_cells": 209,
+      "n_nets": 163,
+      "avg_net_size": 4.595092024539877,
+      "max_net_size": 47,
+      "avg_cell_degree": 3.583732057416268,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 209,
+      "timing_ps": 10.450000000000001,
+      "power_mw": 0.000209,
+      "max_congestion": 163,
+      "mean_congestion": 0.0652,
+      "median_congestion": 0.0,
+      "std_congestion": 3.2593479347869576
+    }
+  },
+  {
+    "name": "adaptec1_s27_n388",
+    "features": {
+      "n_cells": 388,
+      "n_nets": 323,
+      "avg_net_size": 3.984520123839009,
+      "max_net_size": 48,
+      "avg_cell_degree": 3.3170103092783507,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 388,
+      "timing_ps": 19.400000000000002,
+      "power_mw": 0.00038800000000000005,
+      "max_congestion": 323,
+      "mean_congestion": 0.1292,
+      "median_congestion": 0.0,
+      "std_congestion": 6.458707870774152
+    }
+  },
+  {
+    "name": "adaptec1_s28_n169",
+    "features": {
+      "n_cells": 169,
+      "n_nets": 148,
+      "avg_net_size": 4.506756756756757,
+      "max_net_size": 101,
+      "avg_cell_degree": 3.9467455621301775,
+      "max_cell_degree": 13,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 20090.0
+    },
+    "metrics": {
+      "hpwl": 20090,
+      "area": 169,
+      "timing_ps": 18.495,
+      "power_mw": 0.020259,
+      "max_congestion": 148,
+      "mean_congestion": 0.0592,
+      "median_congestion": 0.0,
+      "std_congestion": 2.9594079407881573
+    }
+  },
+  {
+    "name": "adaptec1_s29_n300",
+    "features": {
+      "n_cells": 300,
+      "n_nets": 207,
+      "avg_net_size": 4.473429951690822,
+      "max_net_size": 21,
+      "avg_cell_degree": 3.0866666666666664,
+      "max_cell_degree": 7,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 300,
+      "timing_ps": 15.0,
+      "power_mw": 0.00030000000000000003,
+      "max_congestion": 207,
+      "mean_congestion": 0.0828,
+      "median_congestion": 0.0,
+      "std_congestion": 4.139171917183437
+    }
+  },
+  {
+    "name": "adaptec2_s0_n410",
+    "features": {
+      "n_cells": 410,
+      "n_nets": 270,
+      "avg_net_size": 6.355555555555555,
+      "max_net_size": 294,
+      "avg_cell_degree": 4.185365853658537,
+      "max_cell_degree": 20,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 60998.0
+    },
+    "metrics": {
+      "hpwl": 60998,
+      "area": 410,
+      "timing_ps": 50.999,
+      "power_mw": 0.061408000000000004,
+      "max_congestion": 266,
+      "mean_congestion": 0.154,
+      "median_congestion": 0.0,
+      "std_congestion": 5.33163051983162
+    }
+  },
+  {
+    "name": "adaptec2_s1_n477",
+    "features": {
+      "n_cells": 477,
+      "n_nets": 274,
+      "avg_net_size": 7.883211678832117,
+      "max_net_size": 402,
+      "avg_cell_degree": 4.528301886792453,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 477,
+      "timing_ps": 23.85,
+      "power_mw": 0.00047700000000000005,
+      "max_congestion": 274,
+      "mean_congestion": 0.1096,
+      "median_congestion": 0.0,
+      "std_congestion": 5.478903890378076
+    }
+  },
+  {
+    "name": "adaptec2_s2_n315",
+    "features": {
+      "n_cells": 315,
+      "n_nets": 208,
+      "avg_net_size": 4.115384615384615,
+      "max_net_size": 43,
+      "avg_cell_degree": 2.7174603174603176,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 25610.0
+    },
+    "metrics": {
+      "hpwl": 25610,
+      "area": 315,
+      "timing_ps": 28.555,
+      "power_mw": 0.025925000000000004,
+      "max_congestion": 208,
+      "mean_congestion": 0.0832,
+      "median_congestion": 0.0,
+      "std_congestion": 4.159167916783355
+    }
+  },
+  {
+    "name": "adaptec2_s3_n327",
+    "features": {
+      "n_cells": 327,
+      "n_nets": 190,
+      "avg_net_size": 6.28421052631579,
+      "max_net_size": 56,
+      "avg_cell_degree": 3.6513761467889907,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 327,
+      "timing_ps": 16.35,
+      "power_mw": 0.000327,
+      "max_congestion": 190,
+      "mean_congestion": 0.076,
+      "median_congestion": 0.0,
+      "std_congestion": 3.7992399239847954
+    }
+  },
+  {
+    "name": "adaptec2_s4_n461",
+    "features": {
+      "n_cells": 461,
+      "n_nets": 355,
+      "avg_net_size": 6.042253521126761,
+      "max_net_size": 279,
+      "avg_cell_degree": 4.6529284164859,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 461,
+      "timing_ps": 23.05,
+      "power_mw": 0.00046100000000000004,
+      "max_congestion": 355,
+      "mean_congestion": 0.142,
+      "median_congestion": 0.0,
+      "std_congestion": 7.098579857971593
+    }
+  },
+  {
+    "name": "adaptec2_s5_n389",
+    "features": {
+      "n_cells": 389,
+      "n_nets": 229,
+      "avg_net_size": 5.449781659388647,
+      "max_net_size": 51,
+      "avg_cell_degree": 3.2082262210796917,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 389,
+      "timing_ps": 19.450000000000003,
+      "power_mw": 0.000389,
+      "max_congestion": 229,
+      "mean_congestion": 0.0916,
+      "median_congestion": 0.0,
+      "std_congestion": 4.579083908381675
+    }
+  },
+  {
+    "name": "adaptec2_s6_n377",
+    "features": {
+      "n_cells": 377,
+      "n_nets": 399,
+      "avg_net_size": 3.7042606516290726,
+      "max_net_size": 69,
+      "avg_cell_degree": 3.920424403183024,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 377,
+      "timing_ps": 18.85,
+      "power_mw": 0.000377,
+      "max_congestion": 399,
+      "mean_congestion": 0.1596,
+      "median_congestion": 0.0,
+      "std_congestion": 7.97840384036807
+    }
+  },
+  {
+    "name": "adaptec2_s7_n157",
+    "features": {
+      "n_cells": 157,
+      "n_nets": 67,
+      "avg_net_size": 5.850746268656716,
+      "max_net_size": 48,
+      "avg_cell_degree": 2.4968152866242037,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 157,
+      "timing_ps": 7.8500000000000005,
+      "power_mw": 0.00015700000000000002,
+      "max_congestion": 67,
+      "mean_congestion": 0.0268,
+      "median_congestion": 0.0,
+      "std_congestion": 1.3397319731946393
+    }
+  },
+  {
+    "name": "adaptec2_s8_n379",
+    "features": {
+      "n_cells": 379,
+      "n_nets": 268,
+      "avg_net_size": 6.5559701492537314,
+      "max_net_size": 291,
+      "avg_cell_degree": 4.635883905013193,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 379,
+      "timing_ps": 18.95,
+      "power_mw": 0.00037900000000000005,
+      "max_congestion": 268,
+      "mean_congestion": 0.1072,
+      "median_congestion": 0.0,
+      "std_congestion": 5.358927892778557
+    }
+  },
+  {
+    "name": "adaptec2_s9_n310",
+    "features": {
+      "n_cells": 310,
+      "n_nets": 247,
+      "avg_net_size": 4.809716599190283,
+      "max_net_size": 59,
+      "avg_cell_degree": 3.832258064516129,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 310,
+      "timing_ps": 15.5,
+      "power_mw": 0.00031,
+      "max_congestion": 247,
+      "mean_congestion": 0.0988,
+      "median_congestion": 0.0,
+      "std_congestion": 4.939011901180235
+    }
+  },
+  {
+    "name": "adaptec2_s10_n494",
+    "features": {
+      "n_cells": 494,
+      "n_nets": 443,
+      "avg_net_size": 5.383747178329571,
+      "max_net_size": 72,
+      "avg_cell_degree": 4.827935222672065,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 494,
+      "timing_ps": 24.700000000000003,
+      "power_mw": 0.0004940000000000001,
+      "max_congestion": 443,
+      "mean_congestion": 0.1772,
+      "median_congestion": 0.0,
+      "std_congestion": 8.85822782276455
+    }
+  },
+  {
+    "name": "adaptec2_s11_n246",
+    "features": {
+      "n_cells": 246,
+      "n_nets": 171,
+      "avg_net_size": 6.713450292397661,
+      "max_net_size": 73,
+      "avg_cell_degree": 4.666666666666667,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 246,
+      "timing_ps": 12.3,
+      "power_mw": 0.000246,
+      "max_congestion": 171,
+      "mean_congestion": 0.0684,
+      "median_congestion": 0.0,
+      "std_congestion": 3.419315931586316
+    }
+  },
+  {
+    "name": "adaptec2_s12_n509",
+    "features": {
+      "n_cells": 509,
+      "n_nets": 408,
+      "avg_net_size": 6.102941176470588,
+      "max_net_size": 73,
+      "avg_cell_degree": 4.8919449901768175,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 509,
+      "timing_ps": 25.450000000000003,
+      "power_mw": 0.000509,
+      "max_congestion": 408,
+      "mean_congestion": 0.1632,
+      "median_congestion": 0.0,
+      "std_congestion": 8.15836783676735
+    }
+  },
+  {
+    "name": "adaptec2_s13_n209",
+    "features": {
+      "n_cells": 209,
+      "n_nets": 143,
+      "avg_net_size": 5.146853146853147,
+      "max_net_size": 47,
+      "avg_cell_degree": 3.521531100478469,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 209,
+      "timing_ps": 10.450000000000001,
+      "power_mw": 0.000209,
+      "max_congestion": 143,
+      "mean_congestion": 0.0572,
+      "median_congestion": 0.0,
+      "std_congestion": 2.859427942788557
+    }
+  },
+  {
+    "name": "adaptec2_s14_n598",
+    "features": {
+      "n_cells": 598,
+      "n_nets": 402,
+      "avg_net_size": 5.174129353233831,
+      "max_net_size": 51,
+      "avg_cell_degree": 3.4782608695652173,
+      "max_cell_degree": 17,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 85977.0
+    },
+    "metrics": {
+      "hpwl": 85977,
+      "area": 598,
+      "timing_ps": 72.88850000000001,
+      "power_mw": 0.086575,
+      "max_congestion": 401,
+      "mean_congestion": 0.2436,
+      "median_congestion": 0.0,
+      "std_congestion": 8.063117203662612
+    }
+  },
+  {
+    "name": "adaptec2_s15_n167",
+    "features": {
+      "n_cells": 167,
+      "n_nets": 77,
+      "avg_net_size": 5.961038961038961,
+      "max_net_size": 41,
+      "avg_cell_degree": 2.748502994011976,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 167,
+      "timing_ps": 8.35,
+      "power_mw": 0.000167,
+      "max_congestion": 77,
+      "mean_congestion": 0.0308,
+      "median_congestion": 0.0,
+      "std_congestion": 1.539691969193839
+    }
+  },
+  {
+    "name": "adaptec2_s16_n474",
+    "features": {
+      "n_cells": 474,
+      "n_nets": 465,
+      "avg_net_size": 4.640860215053763,
+      "max_net_size": 46,
+      "avg_cell_degree": 4.552742616033755,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 474,
+      "timing_ps": 23.700000000000003,
+      "power_mw": 0.00047400000000000003,
+      "max_congestion": 465,
+      "mean_congestion": 0.186,
+      "median_congestion": 0.0,
+      "std_congestion": 9.298139813962793
+    }
+  },
+  {
+    "name": "adaptec2_s17_n300",
+    "features": {
+      "n_cells": 300,
+      "n_nets": 212,
+      "avg_net_size": 5.39622641509434,
+      "max_net_size": 62,
+      "avg_cell_degree": 3.8133333333333335,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 300,
+      "timing_ps": 15.0,
+      "power_mw": 0.00030000000000000003,
+      "max_congestion": 212,
+      "mean_congestion": 0.0848,
+      "median_congestion": 0.0,
+      "std_congestion": 4.239151915183036
+    }
+  },
+  {
+    "name": "adaptec2_s18_n342",
+    "features": {
+      "n_cells": 342,
+      "n_nets": 253,
+      "avg_net_size": 5.379446640316205,
+      "max_net_size": 47,
+      "avg_cell_degree": 3.97953216374269,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 342,
+      "timing_ps": 17.1,
+      "power_mw": 0.000342,
+      "max_congestion": 253,
+      "mean_congestion": 0.1012,
+      "median_congestion": 0.0,
+      "std_congestion": 5.058987898779756
+    }
+  },
+  {
+    "name": "adaptec2_s19_n151",
+    "features": {
+      "n_cells": 151,
+      "n_nets": 109,
+      "avg_net_size": 3.963302752293578,
+      "max_net_size": 39,
+      "avg_cell_degree": 2.8609271523178808,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 151,
+      "timing_ps": 7.550000000000001,
+      "power_mw": 0.000151,
+      "max_congestion": 109,
+      "mean_congestion": 0.0436,
+      "median_congestion": 0.0,
+      "std_congestion": 2.179563956391278
+    }
+  },
+  {
+    "name": "adaptec2_s20_n579",
+    "features": {
+      "n_cells": 579,
+      "n_nets": 493,
+      "avg_net_size": 4.174442190669371,
+      "max_net_size": 45,
+      "avg_cell_degree": 3.5544041450777204,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 579,
+      "timing_ps": 28.950000000000003,
+      "power_mw": 0.000579,
+      "max_congestion": 493,
+      "mean_congestion": 0.1972,
+      "median_congestion": 0.0,
+      "std_congestion": 9.85802780276055
+    }
+  },
+  {
+    "name": "adaptec2_s21_n273",
+    "features": {
+      "n_cells": 273,
+      "n_nets": 227,
+      "avg_net_size": 4.317180616740088,
+      "max_net_size": 68,
+      "avg_cell_degree": 3.58974358974359,
+      "max_cell_degree": 8,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 273,
+      "timing_ps": 13.65,
+      "power_mw": 0.000273,
+      "max_congestion": 227,
+      "mean_congestion": 0.0908,
+      "median_congestion": 0.0,
+      "std_congestion": 4.539091909181835
+    }
+  },
+  {
+    "name": "adaptec2_s22_n590",
+    "features": {
+      "n_cells": 590,
+      "n_nets": 385,
+      "avg_net_size": 6.51948051948052,
+      "max_net_size": 69,
+      "avg_cell_degree": 4.254237288135593,
+      "max_cell_degree": 8,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 590,
+      "timing_ps": 29.5,
+      "power_mw": 0.00059,
+      "max_congestion": 385,
+      "mean_congestion": 0.154,
+      "median_congestion": 0.0,
+      "std_congestion": 7.698459845969192
+    }
+  },
+  {
+    "name": "adaptec2_s23_n546",
+    "features": {
+      "n_cells": 546,
+      "n_nets": 511,
+      "avg_net_size": 4.6438356164383565,
+      "max_net_size": 77,
+      "avg_cell_degree": 4.346153846153846,
+      "max_cell_degree": 20,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 60998.0
+    },
+    "metrics": {
+      "hpwl": 60998,
+      "area": 546,
+      "timing_ps": 57.79900000000001,
+      "power_mw": 0.06154400000000001,
+      "max_congestion": 507,
+      "mean_congestion": 0.2504,
+      "median_congestion": 0.0,
+      "std_congestion": 10.144185518808298
+    }
+  },
+  {
+    "name": "adaptec2_s24_n461",
+    "features": {
+      "n_cells": 461,
+      "n_nets": 220,
+      "avg_net_size": 7.540909090909091,
+      "max_net_size": 57,
+      "avg_cell_degree": 3.598698481561822,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 461,
+      "timing_ps": 23.05,
+      "power_mw": 0.00046100000000000004,
+      "max_congestion": 220,
+      "mean_congestion": 0.088,
+      "median_congestion": 0.0,
+      "std_congestion": 4.399119911982396
+    }
+  },
+  {
+    "name": "adaptec2_s25_n329",
+    "features": {
+      "n_cells": 329,
+      "n_nets": 197,
+      "avg_net_size": 4.096446700507614,
+      "max_net_size": 42,
+      "avg_cell_degree": 2.452887537993921,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 329,
+      "timing_ps": 16.45,
+      "power_mw": 0.000329,
+      "max_congestion": 197,
+      "mean_congestion": 0.0788,
+      "median_congestion": 0.0,
+      "std_congestion": 3.939211921184235
+    }
+  },
+  {
+    "name": "adaptec2_s26_n489",
+    "features": {
+      "n_cells": 489,
+      "n_nets": 309,
+      "avg_net_size": 4.527508090614886,
+      "max_net_size": 61,
+      "avg_cell_degree": 2.8609406952965237,
+      "max_cell_degree": 7,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 42520.0
+    },
+    "metrics": {
+      "hpwl": 42520,
+      "area": 489,
+      "timing_ps": 45.71000000000001,
+      "power_mw": 0.043009000000000006,
+      "max_congestion": 309,
+      "mean_congestion": 0.1772,
+      "median_congestion": 0.0,
+      "std_congestion": 6.186905539928663
+    }
+  },
+  {
+    "name": "adaptec2_s27_n171",
+    "features": {
+      "n_cells": 171,
+      "n_nets": 406,
+      "avg_net_size": 4.482758620689655,
+      "max_net_size": 145,
+      "avg_cell_degree": 10.64327485380117,
+      "max_cell_degree": 179,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 3894486.0
+    },
+    "metrics": {
+      "hpwl": 3894486,
+      "area": 171,
+      "timing_ps": 1955.793,
+      "power_mw": 3.8946570000000005,
+      "max_congestion": 369,
+      "mean_congestion": 2.196,
+      "median_congestion": 0.0,
+      "std_congestion": 19.71178287218079
+    }
+  },
+  {
+    "name": "adaptec2_s28_n269",
+    "features": {
+      "n_cells": 269,
+      "n_nets": 218,
+      "avg_net_size": 6.192660550458716,
+      "max_net_size": 236,
+      "avg_cell_degree": 5.018587360594796,
+      "max_cell_degree": 263,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 93049.0
+    },
+    "metrics": {
+      "hpwl": 93049,
+      "area": 269,
+      "timing_ps": 59.974500000000006,
+      "power_mw": 0.09331799999999998,
+      "max_congestion": 215,
+      "mean_congestion": 0.1312,
+      "median_congestion": 0.0,
+      "std_congestion": 4.357382994413045
+    }
+  },
+  {
+    "name": "adaptec2_s29_n572",
+    "features": {
+      "n_cells": 572,
+      "n_nets": 383,
+      "avg_net_size": 4.947780678851175,
+      "max_net_size": 45,
+      "avg_cell_degree": 3.312937062937063,
+      "max_cell_degree": 9,
+      "die_area": 140400000.0,
+      "die_aspect": 0.7122507122507122,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 572,
+      "timing_ps": 28.6,
+      "power_mw": 0.000572,
+      "max_congestion": 383,
+      "mean_congestion": 0.1532,
+      "median_congestion": 0.0,
+      "std_congestion": 7.658467846769353
+    }
+  },
+  {
+    "name": "adaptec3_s0_n458",
+    "features": {
+      "n_cells": 458,
+      "n_nets": 348,
+      "avg_net_size": 4.896551724137931,
+      "max_net_size": 49,
+      "avg_cell_degree": 3.7205240174672487,
+      "max_cell_degree": 20,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 38619.0
+    },
+    "metrics": {
+      "hpwl": 38619,
+      "area": 458,
+      "timing_ps": 42.209500000000006,
+      "power_mw": 0.03907700000000001,
+      "max_congestion": 348,
+      "mean_congestion": 0.144,
+      "median_congestion": 0.0,
+      "std_congestion": 6.959544812701475
+    }
+  },
+  {
+    "name": "adaptec3_s1_n499",
+    "features": {
+      "n_cells": 499,
+      "n_nets": 396,
+      "avg_net_size": 4.7146464646464645,
+      "max_net_size": 67,
+      "avg_cell_degree": 3.741482965931864,
+      "max_cell_degree": 19,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 25746.0
+    },
+    "metrics": {
+      "hpwl": 25746,
+      "area": 499,
+      "timing_ps": 37.82300000000001,
+      "power_mw": 0.026245,
+      "max_congestion": 396,
+      "mean_congestion": 0.1616,
+      "median_congestion": 0.0,
+      "std_congestion": 7.918755296130825
+    }
+  },
+  {
+    "name": "adaptec3_s2_n235",
+    "features": {
+      "n_cells": 235,
+      "n_nets": 121,
+      "avg_net_size": 6.471074380165289,
+      "max_net_size": 33,
+      "avg_cell_degree": 3.331914893617021,
+      "max_cell_degree": 5,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 235,
+      "timing_ps": 11.75,
+      "power_mw": 0.00023500000000000002,
+      "max_congestion": 121,
+      "mean_congestion": 0.0484,
+      "median_congestion": 0.0,
+      "std_congestion": 2.4195159515903173
+    }
+  },
+  {
+    "name": "adaptec3_s3_n208",
+    "features": {
+      "n_cells": 208,
+      "n_nets": 147,
+      "avg_net_size": 5.095238095238095,
+      "max_net_size": 45,
+      "avg_cell_degree": 3.6009615384615383,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 208,
+      "timing_ps": 10.4,
+      "power_mw": 0.00020800000000000001,
+      "max_congestion": 147,
+      "mean_congestion": 0.0588,
+      "median_congestion": 0.0,
+      "std_congestion": 2.9394119411882382
+    }
+  },
+  {
+    "name": "adaptec3_s4_n235",
+    "features": {
+      "n_cells": 235,
+      "n_nets": 374,
+      "avg_net_size": 3.3262032085561497,
+      "max_net_size": 45,
+      "avg_cell_degree": 5.293617021276596,
+      "max_cell_degree": 196,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 4780385.0
+    },
+    "metrics": {
+      "hpwl": 4780385,
+      "area": 235,
+      "timing_ps": 2401.9425,
+      "power_mw": 4.780620000000001,
+      "max_congestion": 344,
+      "mean_congestion": 13.3936,
+      "median_congestion": 0.0,
+      "std_congestion": 47.266363082428924
+    }
+  },
+  {
+    "name": "adaptec3_s5_n516",
+    "features": {
+      "n_cells": 516,
+      "n_nets": 456,
+      "avg_net_size": 4.5964912280701755,
+      "max_net_size": 59,
+      "avg_cell_degree": 4.062015503875969,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 516,
+      "timing_ps": 25.8,
+      "power_mw": 0.000516,
+      "max_congestion": 456,
+      "mean_congestion": 0.1824,
+      "median_congestion": 0.0,
+      "std_congestion": 9.118175817563511
+    }
+  },
+  {
+    "name": "adaptec3_s6_n463",
+    "features": {
+      "n_cells": 463,
+      "n_nets": 597,
+      "avg_net_size": 3.562814070351759,
+      "max_net_size": 169,
+      "avg_cell_degree": 4.593952483801296,
+      "max_cell_degree": 278,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 1179712.0
+    },
+    "metrics": {
+      "hpwl": 1179712,
+      "area": 463,
+      "timing_ps": 613.006,
+      "power_mw": 1.1801750000000002,
+      "max_congestion": 523,
+      "mean_congestion": 0.4436,
+      "median_congestion": 0.0,
+      "std_congestion": 11.327012803029758
+    }
+  },
+  {
+    "name": "adaptec3_s7_n533",
+    "features": {
+      "n_cells": 533,
+      "n_nets": 364,
+      "avg_net_size": 4.975274725274725,
+      "max_net_size": 60,
+      "avg_cell_degree": 3.397748592870544,
+      "max_cell_degree": 30,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 5156.0
+    },
+    "metrics": {
+      "hpwl": 5156,
+      "area": 533,
+      "timing_ps": 29.228,
+      "power_mw": 0.0056890000000000005,
+      "max_congestion": 364,
+      "mean_congestion": 0.1456,
+      "median_congestion": 0.0,
+      "std_congestion": 7.278543854370872
+    }
+  },
+  {
+    "name": "adaptec3_s8_n400",
+    "features": {
+      "n_cells": 400,
+      "n_nets": 605,
+      "avg_net_size": 3.7917355371900827,
+      "max_net_size": 61,
+      "avg_cell_degree": 5.735,
+      "max_cell_degree": 199,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 6890996.0
+    },
+    "metrics": {
+      "hpwl": 6890996,
+      "area": 400,
+      "timing_ps": 3465.498,
+      "power_mw": 6.891396,
+      "max_congestion": 435,
+      "mean_congestion": 23.1016,
+      "median_congestion": 0.0,
+      "std_congestion": 60.43704888096374
+    }
+  },
+  {
+    "name": "adaptec3_s9_n201",
+    "features": {
+      "n_cells": 201,
+      "n_nets": 92,
+      "avg_net_size": 9.152173913043478,
+      "max_net_size": 44,
+      "avg_cell_degree": 4.189054726368159,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 201,
+      "timing_ps": 10.05,
+      "power_mw": 0.000201,
+      "max_congestion": 92,
+      "mean_congestion": 0.0368,
+      "median_congestion": 0.0,
+      "std_congestion": 1.8396319631926374
+    }
+  },
+  {
+    "name": "adaptec3_s10_n242",
+    "features": {
+      "n_cells": 242,
+      "n_nets": 150,
+      "avg_net_size": 6.366666666666666,
+      "max_net_size": 39,
+      "avg_cell_degree": 3.946280991735537,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 242,
+      "timing_ps": 12.100000000000001,
+      "power_mw": 0.00024200000000000003,
+      "max_congestion": 150,
+      "mean_congestion": 0.06,
+      "median_congestion": 0.0,
+      "std_congestion": 2.999399939987997
+    }
+  },
+  {
+    "name": "adaptec3_s11_n367",
+    "features": {
+      "n_cells": 367,
+      "n_nets": 297,
+      "avg_net_size": 4.555555555555555,
+      "max_net_size": 56,
+      "avg_cell_degree": 3.6866485013623977,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 367,
+      "timing_ps": 18.35,
+      "power_mw": 0.00036700000000000003,
+      "max_congestion": 297,
+      "mean_congestion": 0.1188,
+      "median_congestion": 0.0,
+      "std_congestion": 5.9388118811762345
+    }
+  },
+  {
+    "name": "adaptec3_s12_n422",
+    "features": {
+      "n_cells": 422,
+      "n_nets": 316,
+      "avg_net_size": 4.762658227848101,
+      "max_net_size": 47,
+      "avg_cell_degree": 3.566350710900474,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 422,
+      "timing_ps": 21.1,
+      "power_mw": 0.00042200000000000007,
+      "max_congestion": 316,
+      "mean_congestion": 0.1264,
+      "median_congestion": 0.0,
+      "std_congestion": 6.318735873574714
+    }
+  },
+  {
+    "name": "adaptec3_s13_n464",
+    "features": {
+      "n_cells": 464,
+      "n_nets": 685,
+      "avg_net_size": 4.525547445255475,
+      "max_net_size": 643,
+      "avg_cell_degree": 6.681034482758621,
+      "max_cell_degree": 38,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 1841923.0
+    },
+    "metrics": {
+      "hpwl": 1841923,
+      "area": 464,
+      "timing_ps": 944.1615,
+      "power_mw": 1.842387,
+      "max_congestion": 166,
+      "mean_congestion": 1.5396,
+      "median_congestion": 0.0,
+      "std_congestion": 9.331175265742253
+    }
+  },
+  {
+    "name": "adaptec3_s14_n570",
+    "features": {
+      "n_cells": 570,
+      "n_nets": 492,
+      "avg_net_size": 5.134146341463414,
+      "max_net_size": 573,
+      "avg_cell_degree": 4.431578947368421,
+      "max_cell_degree": 5,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 570,
+      "timing_ps": 28.5,
+      "power_mw": 0.0005700000000000001,
+      "max_congestion": 492,
+      "mean_congestion": 0.1968,
+      "median_congestion": 0.0,
+      "std_congestion": 9.838031803160629
+    }
+  },
+  {
+    "name": "adaptec3_s15_n424",
+    "features": {
+      "n_cells": 424,
+      "n_nets": 319,
+      "avg_net_size": 4.363636363636363,
+      "max_net_size": 56,
+      "avg_cell_degree": 3.2830188679245285,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 424,
+      "timing_ps": 21.200000000000003,
+      "power_mw": 0.00042400000000000006,
+      "max_congestion": 319,
+      "mean_congestion": 0.1276,
+      "median_congestion": 0.0,
+      "std_congestion": 6.378723872374477
+    }
+  },
+  {
+    "name": "adaptec3_s16_n193",
+    "features": {
+      "n_cells": 193,
+      "n_nets": 143,
+      "avg_net_size": 5.4125874125874125,
+      "max_net_size": 33,
+      "avg_cell_degree": 4.010362694300518,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 193,
+      "timing_ps": 9.65,
+      "power_mw": 0.00019300000000000003,
+      "max_congestion": 143,
+      "mean_congestion": 0.0572,
+      "median_congestion": 0.0,
+      "std_congestion": 2.859427942788557
+    }
+  },
+  {
+    "name": "adaptec3_s17_n319",
+    "features": {
+      "n_cells": 319,
+      "n_nets": 290,
+      "avg_net_size": 6.010344827586207,
+      "max_net_size": 65,
+      "avg_cell_degree": 5.463949843260188,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 319,
+      "timing_ps": 15.950000000000001,
+      "power_mw": 0.00031900000000000006,
+      "max_congestion": 290,
+      "mean_congestion": 0.116,
+      "median_congestion": 0.0,
+      "std_congestion": 5.798839883976794
+    }
+  },
+  {
+    "name": "adaptec3_s18_n573",
+    "features": {
+      "n_cells": 573,
+      "n_nets": 512,
+      "avg_net_size": 4.279296875,
+      "max_net_size": 54,
+      "avg_cell_degree": 3.823734729493892,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 573,
+      "timing_ps": 28.650000000000002,
+      "power_mw": 0.000573,
+      "max_congestion": 512,
+      "mean_congestion": 0.2048,
+      "median_congestion": 0.0,
+      "std_congestion": 10.237951795159033
+    }
+  },
+  {
+    "name": "adaptec3_s19_n403",
+    "features": {
+      "n_cells": 403,
+      "n_nets": 249,
+      "avg_net_size": 5.156626506024097,
+      "max_net_size": 53,
+      "avg_cell_degree": 3.1861042183622827,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 403,
+      "timing_ps": 20.150000000000002,
+      "power_mw": 0.00040300000000000004,
+      "max_congestion": 249,
+      "mean_congestion": 0.0996,
+      "median_congestion": 0.0,
+      "std_congestion": 4.979003900380076
+    }
+  },
+  {
+    "name": "adaptec3_s20_n290",
+    "features": {
+      "n_cells": 290,
+      "n_nets": 193,
+      "avg_net_size": 4.569948186528498,
+      "max_net_size": 59,
+      "avg_cell_degree": 3.0413793103448277,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 290,
+      "timing_ps": 14.5,
+      "power_mw": 0.00029000000000000006,
+      "max_congestion": 193,
+      "mean_congestion": 0.0772,
+      "median_congestion": 0.0,
+      "std_congestion": 3.8592279227845547
+    }
+  },
+  {
+    "name": "adaptec3_s21_n516",
+    "features": {
+      "n_cells": 516,
+      "n_nets": 385,
+      "avg_net_size": 6.025974025974026,
+      "max_net_size": 41,
+      "avg_cell_degree": 4.496124031007752,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 516,
+      "timing_ps": 25.8,
+      "power_mw": 0.000516,
+      "max_congestion": 385,
+      "mean_congestion": 0.154,
+      "median_congestion": 0.0,
+      "std_congestion": 7.698459845969192
+    }
+  },
+  {
+    "name": "adaptec3_s22_n280",
+    "features": {
+      "n_cells": 280,
+      "n_nets": 96,
+      "avg_net_size": 8.791666666666666,
+      "max_net_size": 48,
+      "avg_cell_degree": 3.0142857142857142,
+      "max_cell_degree": 5,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 280,
+      "timing_ps": 14.0,
+      "power_mw": 0.00028000000000000003,
+      "max_congestion": 96,
+      "mean_congestion": 0.0384,
+      "median_congestion": 0.0,
+      "std_congestion": 1.919615961592318
+    }
+  },
+  {
+    "name": "adaptec3_s23_n518",
+    "features": {
+      "n_cells": 518,
+      "n_nets": 380,
+      "avg_net_size": 4.978947368421053,
+      "max_net_size": 58,
+      "avg_cell_degree": 3.6525096525096523,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 518,
+      "timing_ps": 25.900000000000002,
+      "power_mw": 0.000518,
+      "max_congestion": 380,
+      "mean_congestion": 0.152,
+      "median_congestion": 0.0,
+      "std_congestion": 7.598479847969591
+    }
+  },
+  {
+    "name": "adaptec3_s24_n445",
+    "features": {
+      "n_cells": 445,
+      "n_nets": 325,
+      "avg_net_size": 5.96,
+      "max_net_size": 58,
+      "avg_cell_degree": 4.352808988764045,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 445,
+      "timing_ps": 22.25,
+      "power_mw": 0.00044500000000000003,
+      "max_congestion": 325,
+      "mean_congestion": 0.13,
+      "median_congestion": 0.0,
+      "std_congestion": 6.498699869973994
+    }
+  },
+  {
+    "name": "adaptec3_s25_n554",
+    "features": {
+      "n_cells": 554,
+      "n_nets": 495,
+      "avg_net_size": 3.793939393939394,
+      "max_net_size": 106,
+      "avg_cell_degree": 3.3898916967509027,
+      "max_cell_degree": 23,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 275154.0
+    },
+    "metrics": {
+      "hpwl": 275154,
+      "area": 554,
+      "timing_ps": 165.277,
+      "power_mw": 0.275708,
+      "max_congestion": 435,
+      "mean_congestion": 0.8036,
+      "median_congestion": 0.0,
+      "std_congestion": 8.932918170452476
+    }
+  },
+  {
+    "name": "adaptec3_s26_n356",
+    "features": {
+      "n_cells": 356,
+      "n_nets": 320,
+      "avg_net_size": 4.340625,
+      "max_net_size": 68,
+      "avg_cell_degree": 3.901685393258427,
+      "max_cell_degree": 10,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 356,
+      "timing_ps": 17.8,
+      "power_mw": 0.00035600000000000003,
+      "max_congestion": 320,
+      "mean_congestion": 0.128,
+      "median_congestion": 0.0,
+      "std_congestion": 6.398719871974394
+    }
+  },
+  {
+    "name": "adaptec3_s27_n509",
+    "features": {
+      "n_cells": 509,
+      "n_nets": 317,
+      "avg_net_size": 6.28391167192429,
+      "max_net_size": 41,
+      "avg_cell_degree": 3.913555992141454,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 509,
+      "timing_ps": 25.450000000000003,
+      "power_mw": 0.000509,
+      "max_congestion": 317,
+      "mean_congestion": 0.1268,
+      "median_congestion": 0.0,
+      "std_congestion": 6.338731873174635
+    }
+  },
+  {
+    "name": "adaptec3_s28_n436",
+    "features": {
+      "n_cells": 436,
+      "n_nets": 391,
+      "avg_net_size": 4.498721227621483,
+      "max_net_size": 51,
+      "avg_cell_degree": 4.034403669724771,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 436,
+      "timing_ps": 21.8,
+      "power_mw": 0.000436,
+      "max_congestion": 391,
+      "mean_congestion": 0.1564,
+      "median_congestion": 0.0,
+      "std_congestion": 7.818435843568713
+    }
+  },
+  {
+    "name": "adaptec3_s29_n576",
+    "features": {
+      "n_cells": 576,
+      "n_nets": 493,
+      "avg_net_size": 4.805273833671399,
+      "max_net_size": 444,
+      "avg_cell_degree": 4.112847222222222,
+      "max_cell_degree": 7,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 576,
+      "timing_ps": 28.8,
+      "power_mw": 0.0005760000000000001,
+      "max_congestion": 493,
+      "mean_congestion": 0.1972,
+      "median_congestion": 0.0,
+      "std_congestion": 9.85802780276055
+    }
+  },
+  {
+    "name": "adaptec4_s0_n547",
+    "features": {
+      "n_cells": 547,
+      "n_nets": 494,
+      "avg_net_size": 5.5242914979757085,
+      "max_net_size": 55,
+      "avg_cell_degree": 4.989031078610603,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 547,
+      "timing_ps": 27.35,
+      "power_mw": 0.000547,
+      "max_congestion": 494,
+      "mean_congestion": 0.1976,
+      "median_congestion": 0.0,
+      "std_congestion": 9.87802380236047
+    }
+  },
+  {
+    "name": "adaptec4_s1_n376",
+    "features": {
+      "n_cells": 376,
+      "n_nets": 310,
+      "avg_net_size": 4.935483870967742,
+      "max_net_size": 55,
+      "avg_cell_degree": 4.069148936170213,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 376,
+      "timing_ps": 18.8,
+      "power_mw": 0.00037600000000000003,
+      "max_congestion": 310,
+      "mean_congestion": 0.124,
+      "median_congestion": 0.0,
+      "std_congestion": 6.198759875975193
+    }
+  },
+  {
+    "name": "adaptec4_s2_n426",
+    "features": {
+      "n_cells": 426,
+      "n_nets": 282,
+      "avg_net_size": 4.716312056737588,
+      "max_net_size": 51,
+      "avg_cell_degree": 3.1220657276995305,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 426,
+      "timing_ps": 21.3,
+      "power_mw": 0.00042600000000000005,
+      "max_congestion": 282,
+      "mean_congestion": 0.1128,
+      "median_congestion": 0.0,
+      "std_congestion": 5.638871887177435
+    }
+  },
+  {
+    "name": "adaptec4_s3_n492",
+    "features": {
+      "n_cells": 492,
+      "n_nets": 339,
+      "avg_net_size": 4.07669616519174,
+      "max_net_size": 40,
+      "avg_cell_degree": 2.8089430894308944,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 492,
+      "timing_ps": 24.6,
+      "power_mw": 0.000492,
+      "max_congestion": 339,
+      "mean_congestion": 0.1356,
+      "median_congestion": 0.0,
+      "std_congestion": 6.778643864372874
+    }
+  },
+  {
+    "name": "adaptec4_s4_n428",
+    "features": {
+      "n_cells": 428,
+      "n_nets": 475,
+      "avg_net_size": 4.669473684210526,
+      "max_net_size": 442,
+      "avg_cell_degree": 5.182242990654205,
+      "max_cell_degree": 19,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 69114.0
+    },
+    "metrics": {
+      "hpwl": 69114,
+      "area": 428,
+      "timing_ps": 55.95700000000001,
+      "power_mw": 0.069542,
+      "max_congestion": 475,
+      "mean_congestion": 0.2236,
+      "median_congestion": 0.0,
+      "std_congestion": 9.500905380015107
+    }
+  },
+  {
+    "name": "adaptec4_s5_n355",
+    "features": {
+      "n_cells": 355,
+      "n_nets": 266,
+      "avg_net_size": 4.093984962406015,
+      "max_net_size": 39,
+      "avg_cell_degree": 3.067605633802817,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 355,
+      "timing_ps": 17.75,
+      "power_mw": 0.00035500000000000006,
+      "max_congestion": 266,
+      "mean_congestion": 0.1064,
+      "median_congestion": 0.0,
+      "std_congestion": 5.318935893578713
+    }
+  },
+  {
+    "name": "adaptec4_s6_n392",
+    "features": {
+      "n_cells": 392,
+      "n_nets": 390,
+      "avg_net_size": 4.961538461538462,
+      "max_net_size": 46,
+      "avg_cell_degree": 4.936224489795919,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 392,
+      "timing_ps": 19.6,
+      "power_mw": 0.00039200000000000004,
+      "max_congestion": 390,
+      "mean_congestion": 0.156,
+      "median_congestion": 0.0,
+      "std_congestion": 7.798439843968792
+    }
+  },
+  {
+    "name": "adaptec4_s7_n268",
+    "features": {
+      "n_cells": 268,
+      "n_nets": 401,
+      "avg_net_size": 2.8079800498753116,
+      "max_net_size": 38,
+      "avg_cell_degree": 4.201492537313433,
+      "max_cell_degree": 376,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 3893578.0
+    },
+    "metrics": {
+      "hpwl": 3893578,
+      "area": 268,
+      "timing_ps": 1960.189,
+      "power_mw": 3.8938460000000004,
+      "max_congestion": 261,
+      "mean_congestion": 1.9508,
+      "median_congestion": 0.0,
+      "std_congestion": 19.501948091408718
+    }
+  },
+  {
+    "name": "adaptec4_s8_n408",
+    "features": {
+      "n_cells": 408,
+      "n_nets": 357,
+      "avg_net_size": 5.246498599439776,
+      "max_net_size": 45,
+      "avg_cell_degree": 4.590686274509804,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 408,
+      "timing_ps": 20.400000000000002,
+      "power_mw": 0.000408,
+      "max_congestion": 357,
+      "mean_congestion": 0.1428,
+      "median_congestion": 0.0,
+      "std_congestion": 7.1385718571714305
+    }
+  },
+  {
+    "name": "adaptec4_s9_n236",
+    "features": {
+      "n_cells": 236,
+      "n_nets": 235,
+      "avg_net_size": 4.834042553191489,
+      "max_net_size": 54,
+      "avg_cell_degree": 4.813559322033898,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 236,
+      "timing_ps": 11.8,
+      "power_mw": 0.00023600000000000002,
+      "max_congestion": 235,
+      "mean_congestion": 0.094,
+      "median_congestion": 0.0,
+      "std_congestion": 4.699059905981196
+    }
+  },
+  {
+    "name": "adaptec4_s10_n366",
+    "features": {
+      "n_cells": 366,
+      "n_nets": 336,
+      "avg_net_size": 4.148809523809524,
+      "max_net_size": 47,
+      "avg_cell_degree": 3.808743169398907,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 366,
+      "timing_ps": 18.3,
+      "power_mw": 0.000366,
+      "max_congestion": 336,
+      "mean_congestion": 0.1344,
+      "median_congestion": 0.0,
+      "std_congestion": 6.718655865573112
+    }
+  },
+  {
+    "name": "adaptec4_s11_n415",
+    "features": {
+      "n_cells": 415,
+      "n_nets": 418,
+      "avg_net_size": 5.7368421052631575,
+      "max_net_size": 54,
+      "avg_cell_degree": 5.7783132530120485,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 415,
+      "timing_ps": 20.75,
+      "power_mw": 0.00041500000000000006,
+      "max_congestion": 418,
+      "mean_congestion": 0.1672,
+      "median_congestion": 0.0,
+      "std_congestion": 8.35832783276655
+    }
+  },
+  {
+    "name": "adaptec4_s12_n374",
+    "features": {
+      "n_cells": 374,
+      "n_nets": 596,
+      "avg_net_size": 3.379194630872483,
+      "max_net_size": 204,
+      "avg_cell_degree": 5.385026737967914,
+      "max_cell_degree": 298,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 753788.0
+    },
+    "metrics": {
+      "hpwl": 753788,
+      "area": 374,
+      "timing_ps": 395.594,
+      "power_mw": 0.7541620000000001,
+      "max_congestion": 395,
+      "mean_congestion": 0.3976,
+      "median_congestion": 0.0,
+      "std_congestion": 9.827365579848955
+    }
+  },
+  {
+    "name": "adaptec4_s13_n504",
+    "features": {
+      "n_cells": 504,
+      "n_nets": 506,
+      "avg_net_size": 5.391304347826087,
+      "max_net_size": 48,
+      "avg_cell_degree": 5.412698412698413,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 504,
+      "timing_ps": 25.200000000000003,
+      "power_mw": 0.0005040000000000001,
+      "max_congestion": 506,
+      "mean_congestion": 0.2024,
+      "median_congestion": 0.0,
+      "std_congestion": 10.117975797559511
+    }
+  },
+  {
+    "name": "adaptec4_s14_n221",
+    "features": {
+      "n_cells": 221,
+      "n_nets": 167,
+      "avg_net_size": 5.209580838323354,
+      "max_net_size": 41,
+      "avg_cell_degree": 3.936651583710407,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 221,
+      "timing_ps": 11.05,
+      "power_mw": 0.000221,
+      "max_congestion": 167,
+      "mean_congestion": 0.0668,
+      "median_congestion": 0.0,
+      "std_congestion": 3.3393319331866356
+    }
+  },
+  {
+    "name": "adaptec4_s15_n151",
+    "features": {
+      "n_cells": 151,
+      "n_nets": 126,
+      "avg_net_size": 4.73015873015873,
+      "max_net_size": 55,
+      "avg_cell_degree": 3.947019867549669,
+      "max_cell_degree": 7,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 151,
+      "timing_ps": 7.550000000000001,
+      "power_mw": 0.000151,
+      "max_congestion": 126,
+      "mean_congestion": 0.0504,
+      "median_congestion": 0.0,
+      "std_congestion": 2.5194959495899174
+    }
+  },
+  {
+    "name": "adaptec4_s16_n324",
+    "features": {
+      "n_cells": 324,
+      "n_nets": 335,
+      "avg_net_size": 4.035820895522388,
+      "max_net_size": 59,
+      "avg_cell_degree": 4.172839506172839,
+      "max_cell_degree": 19,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 62330.0
+    },
+    "metrics": {
+      "hpwl": 62330,
+      "area": 324,
+      "timing_ps": 47.364999999999995,
+      "power_mw": 0.06265400000000002,
+      "max_congestion": 335,
+      "mean_congestion": 0.1676,
+      "median_congestion": 0.0,
+      "std_congestion": 6.702918039182636
+    }
+  },
+  {
+    "name": "adaptec4_s17_n343",
+    "features": {
+      "n_cells": 343,
+      "n_nets": 253,
+      "avg_net_size": 5.972332015810276,
+      "max_net_size": 62,
+      "avg_cell_degree": 4.405247813411079,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 343,
+      "timing_ps": 17.150000000000002,
+      "power_mw": 0.00034300000000000004,
+      "max_congestion": 253,
+      "mean_congestion": 0.1012,
+      "median_congestion": 0.0,
+      "std_congestion": 5.058987898779756
+    }
+  },
+  {
+    "name": "adaptec4_s18_n529",
+    "features": {
+      "n_cells": 529,
+      "n_nets": 380,
+      "avg_net_size": 6.186842105263158,
+      "max_net_size": 46,
+      "avg_cell_degree": 4.444234404536862,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 529,
+      "timing_ps": 26.450000000000003,
+      "power_mw": 0.0005290000000000001,
+      "max_congestion": 380,
+      "mean_congestion": 0.152,
+      "median_congestion": 0.0,
+      "std_congestion": 7.598479847969591
+    }
+  },
+  {
+    "name": "adaptec4_s19_n170",
+    "features": {
+      "n_cells": 170,
+      "n_nets": 157,
+      "avg_net_size": 5.044585987261146,
+      "max_net_size": 187,
+      "avg_cell_degree": 4.658823529411765,
+      "max_cell_degree": 19,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 69114.0
+    },
+    "metrics": {
+      "hpwl": 69114,
+      "area": 170,
+      "timing_ps": 43.057,
+      "power_mw": 0.069284,
+      "max_congestion": 157,
+      "mean_congestion": 0.0964,
+      "median_congestion": 0.0,
+      "std_congestion": 3.14920736694172
+    }
+  },
+  {
+    "name": "adaptec4_s20_n496",
+    "features": {
+      "n_cells": 496,
+      "n_nets": 466,
+      "avg_net_size": 4.141630901287554,
+      "max_net_size": 53,
+      "avg_cell_degree": 3.8911290322580645,
+      "max_cell_degree": 117,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 107900.0
+    },
+    "metrics": {
+      "hpwl": 107900,
+      "area": 496,
+      "timing_ps": 78.75,
+      "power_mw": 0.10839600000000002,
+      "max_congestion": 428,
+      "mean_congestion": 0.2616,
+      "median_congestion": 0.0,
+      "std_congestion": 8.614242011924205
+    }
+  },
+  {
+    "name": "adaptec4_s21_n469",
+    "features": {
+      "n_cells": 469,
+      "n_nets": 413,
+      "avg_net_size": 5.411622276029056,
+      "max_net_size": 47,
+      "avg_cell_degree": 4.76545842217484,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 469,
+      "timing_ps": 23.450000000000003,
+      "power_mw": 0.000469,
+      "max_congestion": 413,
+      "mean_congestion": 0.1652,
+      "median_congestion": 0.0,
+      "std_congestion": 8.25834783476695
+    }
+  },
+  {
+    "name": "adaptec4_s22_n527",
+    "features": {
+      "n_cells": 527,
+      "n_nets": 586,
+      "avg_net_size": 4.658703071672355,
+      "max_net_size": 531,
+      "avg_cell_degree": 5.180265654648957,
+      "max_cell_degree": 19,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 69114.0
+    },
+    "metrics": {
+      "hpwl": 69114,
+      "area": 527,
+      "timing_ps": 60.907000000000004,
+      "power_mw": 0.06964100000000001,
+      "max_congestion": 586,
+      "mean_congestion": 0.268,
+      "median_congestion": 0.0,
+      "std_congestion": 11.719802728715187
+    }
+  },
+  {
+    "name": "adaptec4_s23_n599",
+    "features": {
+      "n_cells": 599,
+      "n_nets": 523,
+      "avg_net_size": 5.479923518164436,
+      "max_net_size": 543,
+      "avg_cell_degree": 4.784641068447413,
+      "max_cell_degree": 105,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 10124.0
+    },
+    "metrics": {
+      "hpwl": 10124,
+      "area": 599,
+      "timing_ps": 35.012,
+      "power_mw": 0.010723,
+      "max_congestion": 489,
+      "mean_congestion": 0.2172,
+      "median_congestion": 0.0,
+      "std_congestion": 9.804795977479595
+    }
+  },
+  {
+    "name": "adaptec4_s24_n397",
+    "features": {
+      "n_cells": 397,
+      "n_nets": 300,
+      "avg_net_size": 4.383333333333334,
+      "max_net_size": 42,
+      "avg_cell_degree": 3.3123425692695214,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 397,
+      "timing_ps": 19.85,
+      "power_mw": 0.000397,
+      "max_congestion": 300,
+      "mean_congestion": 0.12,
+      "median_congestion": 0.0,
+      "std_congestion": 5.998799879975994
+    }
+  },
+  {
+    "name": "adaptec4_s25_n237",
+    "features": {
+      "n_cells": 237,
+      "n_nets": 270,
+      "avg_net_size": 4.7518518518518515,
+      "max_net_size": 57,
+      "avg_cell_degree": 5.413502109704641,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 237,
+      "timing_ps": 11.850000000000001,
+      "power_mw": 0.00023700000000000001,
+      "max_congestion": 270,
+      "mean_congestion": 0.108,
+      "median_congestion": 0.0,
+      "std_congestion": 5.398919891978396
+    }
+  },
+  {
+    "name": "adaptec4_s26_n413",
+    "features": {
+      "n_cells": 413,
+      "n_nets": 404,
+      "avg_net_size": 5.034653465346534,
+      "max_net_size": 59,
+      "avg_cell_degree": 4.924939467312349,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 413,
+      "timing_ps": 20.650000000000002,
+      "power_mw": 0.000413,
+      "max_congestion": 404,
+      "mean_congestion": 0.1616,
+      "median_congestion": 0.0,
+      "std_congestion": 8.078383838367671
+    }
+  },
+  {
+    "name": "adaptec4_s27_n437",
+    "features": {
+      "n_cells": 437,
+      "n_nets": 463,
+      "avg_net_size": 6.326133909287257,
+      "max_net_size": 55,
+      "avg_cell_degree": 6.702517162471396,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 437,
+      "timing_ps": 21.85,
+      "power_mw": 0.000437,
+      "max_congestion": 463,
+      "mean_congestion": 0.1852,
+      "median_congestion": 0.0,
+      "std_congestion": 9.258147814762951
+    }
+  },
+  {
+    "name": "adaptec4_s28_n592",
+    "features": {
+      "n_cells": 592,
+      "n_nets": 518,
+      "avg_net_size": 3.3957528957528957,
+      "max_net_size": 54,
+      "avg_cell_degree": 2.9712837837837838,
+      "max_cell_degree": 9,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 592,
+      "timing_ps": 29.6,
+      "power_mw": 0.000592,
+      "max_congestion": 518,
+      "mean_congestion": 0.2072,
+      "median_congestion": 0.0,
+      "std_congestion": 10.357927792758552
+    }
+  },
+  {
+    "name": "adaptec4_s29_n564",
+    "features": {
+      "n_cells": 564,
+      "n_nets": 428,
+      "avg_net_size": 5.567757009345795,
+      "max_net_size": 55,
+      "avg_cell_degree": 4.225177304964539,
+      "max_cell_degree": 8,
+      "die_area": 421536960.0,
+      "die_aspect": 0.7746056241426612,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 564,
+      "timing_ps": 28.200000000000003,
+      "power_mw": 0.000564,
+      "max_congestion": 428,
+      "mean_congestion": 0.1712,
+      "median_congestion": 0.0,
+      "std_congestion": 8.558287828765751
+    }
+  },
+  {
+    "name": "bigblue1_s0_n385",
+    "features": {
+      "n_cells": 385,
+      "n_nets": 395,
+      "avg_net_size": 5.546835443037975,
+      "max_net_size": 42,
+      "avg_cell_degree": 5.6909090909090905,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 385,
+      "timing_ps": 19.25,
+      "power_mw": 0.00038500000000000003,
+      "max_congestion": 395,
+      "mean_congestion": 0.158,
+      "median_congestion": 0.0,
+      "std_congestion": 7.898419841968394
+    }
+  },
+  {
+    "name": "bigblue1_s1_n595",
+    "features": {
+      "n_cells": 595,
+      "n_nets": 545,
+      "avg_net_size": 5.677064220183486,
+      "max_net_size": 48,
+      "avg_cell_degree": 5.2,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 595,
+      "timing_ps": 29.75,
+      "power_mw": 0.000595,
+      "max_congestion": 545,
+      "mean_congestion": 0.218,
+      "median_congestion": 0.0,
+      "std_congestion": 10.89781978195639
+    }
+  },
+  {
+    "name": "bigblue1_s2_n336",
+    "features": {
+      "n_cells": 336,
+      "n_nets": 257,
+      "avg_net_size": 4.385214007782102,
+      "max_net_size": 63,
+      "avg_cell_degree": 3.3541666666666665,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 336,
+      "timing_ps": 16.8,
+      "power_mw": 0.00033600000000000004,
+      "max_congestion": 257,
+      "mean_congestion": 0.1028,
+      "median_congestion": 0.0,
+      "std_congestion": 5.1389718971794345
+    }
+  },
+  {
+    "name": "bigblue1_s3_n235",
+    "features": {
+      "n_cells": 235,
+      "n_nets": 167,
+      "avg_net_size": 5.089820359281437,
+      "max_net_size": 31,
+      "avg_cell_degree": 3.617021276595745,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 235,
+      "timing_ps": 11.75,
+      "power_mw": 0.00023500000000000002,
+      "max_congestion": 167,
+      "mean_congestion": 0.0668,
+      "median_congestion": 0.0,
+      "std_congestion": 3.3393319331866356
+    }
+  },
+  {
+    "name": "bigblue1_s4_n528",
+    "features": {
+      "n_cells": 528,
+      "n_nets": 389,
+      "avg_net_size": 4.868894601542417,
+      "max_net_size": 38,
+      "avg_cell_degree": 3.587121212121212,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 528,
+      "timing_ps": 26.400000000000002,
+      "power_mw": 0.000528,
+      "max_congestion": 389,
+      "mean_congestion": 0.1556,
+      "median_congestion": 0.0,
+      "std_congestion": 7.778443844368871
+    }
+  },
+  {
+    "name": "bigblue1_s5_n413",
+    "features": {
+      "n_cells": 413,
+      "n_nets": 270,
+      "avg_net_size": 5.17037037037037,
+      "max_net_size": 64,
+      "avg_cell_degree": 3.3801452784503634,
+      "max_cell_degree": 7,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 413,
+      "timing_ps": 20.650000000000002,
+      "power_mw": 0.000413,
+      "max_congestion": 270,
+      "mean_congestion": 0.108,
+      "median_congestion": 0.0,
+      "std_congestion": 5.398919891978396
+    }
+  },
+  {
+    "name": "bigblue1_s6_n574",
+    "features": {
+      "n_cells": 574,
+      "n_nets": 428,
+      "avg_net_size": 6.609813084112149,
+      "max_net_size": 67,
+      "avg_cell_degree": 4.928571428571429,
+      "max_cell_degree": 66,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 467544.0
+    },
+    "metrics": {
+      "hpwl": 467544,
+      "area": 574,
+      "timing_ps": 262.472,
+      "power_mw": 0.46811800000000003,
+      "max_congestion": 426,
+      "mean_congestion": 0.3428,
+      "median_congestion": 0.0,
+      "std_congestion": 8.842515940613284
+    }
+  },
+  {
+    "name": "bigblue1_s7_n579",
+    "features": {
+      "n_cells": 579,
+      "n_nets": 456,
+      "avg_net_size": 5.098684210526316,
+      "max_net_size": 55,
+      "avg_cell_degree": 4.015544041450777,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 579,
+      "timing_ps": 28.950000000000003,
+      "power_mw": 0.000579,
+      "max_congestion": 456,
+      "mean_congestion": 0.1824,
+      "median_congestion": 0.0,
+      "std_congestion": 9.118175817563511
+    }
+  },
+  {
+    "name": "bigblue1_s8_n173",
+    "features": {
+      "n_cells": 173,
+      "n_nets": 148,
+      "avg_net_size": 5.135135135135135,
+      "max_net_size": 41,
+      "avg_cell_degree": 4.393063583815029,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 173,
+      "timing_ps": 8.65,
+      "power_mw": 0.000173,
+      "max_congestion": 148,
+      "mean_congestion": 0.0592,
+      "median_congestion": 0.0,
+      "std_congestion": 2.9594079407881573
+    }
+  },
+  {
+    "name": "bigblue1_s9_n564",
+    "features": {
+      "n_cells": 564,
+      "n_nets": 300,
+      "avg_net_size": 5.28,
+      "max_net_size": 37,
+      "avg_cell_degree": 2.8085106382978724,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 564,
+      "timing_ps": 28.200000000000003,
+      "power_mw": 0.000564,
+      "max_congestion": 300,
+      "mean_congestion": 0.12,
+      "median_congestion": 0.0,
+      "std_congestion": 5.998799879975994
+    }
+  },
+  {
+    "name": "bigblue1_s10_n234",
+    "features": {
+      "n_cells": 234,
+      "n_nets": 260,
+      "avg_net_size": 5.1461538461538465,
+      "max_net_size": 46,
+      "avg_cell_degree": 5.717948717948718,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 234,
+      "timing_ps": 11.700000000000001,
+      "power_mw": 0.000234,
+      "max_congestion": 260,
+      "mean_congestion": 0.104,
+      "median_congestion": 0.0,
+      "std_congestion": 5.1989598959791925
+    }
+  },
+  {
+    "name": "bigblue1_s11_n480",
+    "features": {
+      "n_cells": 480,
+      "n_nets": 417,
+      "avg_net_size": 5.4556354916067145,
+      "max_net_size": 44,
+      "avg_cell_degree": 4.739583333333333,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 480,
+      "timing_ps": 24.0,
+      "power_mw": 0.00048000000000000007,
+      "max_congestion": 417,
+      "mean_congestion": 0.1668,
+      "median_congestion": 0.0,
+      "std_congestion": 8.338331833166631
+    }
+  },
+  {
+    "name": "bigblue1_s12_n203",
+    "features": {
+      "n_cells": 203,
+      "n_nets": 208,
+      "avg_net_size": 2.9375,
+      "max_net_size": 19,
+      "avg_cell_degree": 3.0098522167487687,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 203,
+      "timing_ps": 10.15,
+      "power_mw": 0.000203,
+      "max_congestion": 208,
+      "mean_congestion": 0.0832,
+      "median_congestion": 0.0,
+      "std_congestion": 4.159167916783355
+    }
+  },
+  {
+    "name": "bigblue1_s13_n437",
+    "features": {
+      "n_cells": 437,
+      "n_nets": 442,
+      "avg_net_size": 4.726244343891403,
+      "max_net_size": 370,
+      "avg_cell_degree": 4.780320366132723,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 437,
+      "timing_ps": 21.85,
+      "power_mw": 0.000437,
+      "max_congestion": 442,
+      "mean_congestion": 0.1768,
+      "median_congestion": 0.0,
+      "std_congestion": 8.83823182316463
+    }
+  },
+  {
+    "name": "bigblue1_s14_n170",
+    "features": {
+      "n_cells": 170,
+      "n_nets": 145,
+      "avg_net_size": 4.344827586206897,
+      "max_net_size": 40,
+      "avg_cell_degree": 3.7058823529411766,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 170,
+      "timing_ps": 8.5,
+      "power_mw": 0.00017,
+      "max_congestion": 145,
+      "mean_congestion": 0.058,
+      "median_congestion": 0.0,
+      "std_congestion": 2.899419941988397
+    }
+  },
+  {
+    "name": "bigblue1_s15_n358",
+    "features": {
+      "n_cells": 358,
+      "n_nets": 292,
+      "avg_net_size": 4.280821917808219,
+      "max_net_size": 80,
+      "avg_cell_degree": 3.4916201117318435,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 33056.0
+    },
+    "metrics": {
+      "hpwl": 33056,
+      "area": 358,
+      "timing_ps": 34.428,
+      "power_mw": 0.033414,
+      "max_congestion": 292,
+      "mean_congestion": 0.156,
+      "median_congestion": 0.0,
+      "std_congestion": 5.844626934202047
+    }
+  },
+  {
+    "name": "bigblue1_s16_n550",
+    "features": {
+      "n_cells": 550,
+      "n_nets": 555,
+      "avg_net_size": 4.225225225225225,
+      "max_net_size": 48,
+      "avg_cell_degree": 4.263636363636364,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 550,
+      "timing_ps": 27.5,
+      "power_mw": 0.00055,
+      "max_congestion": 555,
+      "mean_congestion": 0.222,
+      "median_congestion": 0.0,
+      "std_congestion": 11.09777977795559
+    }
+  },
+  {
+    "name": "bigblue1_s17_n257",
+    "features": {
+      "n_cells": 257,
+      "n_nets": 166,
+      "avg_net_size": 5.373493975903615,
+      "max_net_size": 33,
+      "avg_cell_degree": 3.470817120622568,
+      "max_cell_degree": 6,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 257,
+      "timing_ps": 12.850000000000001,
+      "power_mw": 0.000257,
+      "max_congestion": 166,
+      "mean_congestion": 0.0664,
+      "median_congestion": 0.0,
+      "std_congestion": 3.319335933586718
+    }
+  },
+  {
+    "name": "bigblue1_s18_n426",
+    "features": {
+      "n_cells": 426,
+      "n_nets": 317,
+      "avg_net_size": 4.337539432176656,
+      "max_net_size": 56,
+      "avg_cell_degree": 3.227699530516432,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 426,
+      "timing_ps": 21.3,
+      "power_mw": 0.00042600000000000005,
+      "max_congestion": 317,
+      "mean_congestion": 0.1268,
+      "median_congestion": 0.0,
+      "std_congestion": 6.338731873174635
+    }
+  },
+  {
+    "name": "bigblue1_s19_n426",
+    "features": {
+      "n_cells": 426,
+      "n_nets": 307,
+      "avg_net_size": 4.335504885993485,
+      "max_net_size": 35,
+      "avg_cell_degree": 3.124413145539906,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 426,
+      "timing_ps": 21.3,
+      "power_mw": 0.00042600000000000005,
+      "max_congestion": 307,
+      "mean_congestion": 0.1228,
+      "median_congestion": 0.0,
+      "std_congestion": 6.138771877175435
+    }
+  },
+  {
+    "name": "bigblue1_s20_n437",
+    "features": {
+      "n_cells": 437,
+      "n_nets": 270,
+      "avg_net_size": 3.9555555555555557,
+      "max_net_size": 39,
+      "avg_cell_degree": 2.4439359267734555,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 437,
+      "timing_ps": 21.85,
+      "power_mw": 0.000437,
+      "max_congestion": 270,
+      "mean_congestion": 0.108,
+      "median_congestion": 0.0,
+      "std_congestion": 5.398919891978396
+    }
+  },
+  {
+    "name": "bigblue1_s21_n349",
+    "features": {
+      "n_cells": 349,
+      "n_nets": 208,
+      "avg_net_size": 5.100961538461538,
+      "max_net_size": 37,
+      "avg_cell_degree": 3.0401146131805157,
+      "max_cell_degree": 7,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 349,
+      "timing_ps": 17.45,
+      "power_mw": 0.000349,
+      "max_congestion": 208,
+      "mean_congestion": 0.0832,
+      "median_congestion": 0.0,
+      "std_congestion": 4.159167916783355
+    }
+  },
+  {
+    "name": "bigblue1_s22_n302",
+    "features": {
+      "n_cells": 302,
+      "n_nets": 238,
+      "avg_net_size": 4.525210084033613,
+      "max_net_size": 37,
+      "avg_cell_degree": 3.566225165562914,
+      "max_cell_degree": 7,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 302,
+      "timing_ps": 15.100000000000001,
+      "power_mw": 0.000302,
+      "max_congestion": 238,
+      "mean_congestion": 0.0952,
+      "median_congestion": 0.0,
+      "std_congestion": 4.759047904780956
+    }
+  },
+  {
+    "name": "bigblue1_s23_n391",
+    "features": {
+      "n_cells": 391,
+      "n_nets": 361,
+      "avg_net_size": 4.861495844875346,
+      "max_net_size": 51,
+      "avg_cell_degree": 4.4884910485933505,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 391,
+      "timing_ps": 19.55,
+      "power_mw": 0.00039100000000000007,
+      "max_congestion": 361,
+      "mean_congestion": 0.1444,
+      "median_congestion": 0.0,
+      "std_congestion": 7.218555855571111
+    }
+  },
+  {
+    "name": "bigblue1_s24_n269",
+    "features": {
+      "n_cells": 269,
+      "n_nets": 176,
+      "avg_net_size": 4.670454545454546,
+      "max_net_size": 63,
+      "avg_cell_degree": 3.0557620817843865,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 269,
+      "timing_ps": 13.450000000000001,
+      "power_mw": 0.00026900000000000003,
+      "max_congestion": 176,
+      "mean_congestion": 0.0704,
+      "median_congestion": 0.0,
+      "std_congestion": 3.519295929585916
+    }
+  },
+  {
+    "name": "bigblue1_s25_n212",
+    "features": {
+      "n_cells": 212,
+      "n_nets": 154,
+      "avg_net_size": 4.1688311688311686,
+      "max_net_size": 30,
+      "avg_cell_degree": 3.0283018867924527,
+      "max_cell_degree": 8,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 212,
+      "timing_ps": 10.600000000000001,
+      "power_mw": 0.00021200000000000003,
+      "max_congestion": 154,
+      "mean_congestion": 0.0616,
+      "median_congestion": 0.0,
+      "std_congestion": 3.079383938387678
+    }
+  },
+  {
+    "name": "bigblue1_s26_n520",
+    "features": {
+      "n_cells": 520,
+      "n_nets": 510,
+      "avg_net_size": 4.627450980392157,
+      "max_net_size": 46,
+      "avg_cell_degree": 4.538461538461538,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 520,
+      "timing_ps": 26.0,
+      "power_mw": 0.00052,
+      "max_congestion": 510,
+      "mean_congestion": 0.204,
+      "median_congestion": 0.0,
+      "std_congestion": 10.19795979595919
+    }
+  },
+  {
+    "name": "bigblue1_s27_n377",
+    "features": {
+      "n_cells": 377,
+      "n_nets": 268,
+      "avg_net_size": 4.779850746268656,
+      "max_net_size": 59,
+      "avg_cell_degree": 3.3978779840848805,
+      "max_cell_degree": 7,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 377,
+      "timing_ps": 18.85,
+      "power_mw": 0.000377,
+      "max_congestion": 268,
+      "mean_congestion": 0.1072,
+      "median_congestion": 0.0,
+      "std_congestion": 5.358927892778557
+    }
+  },
+  {
+    "name": "bigblue1_s28_n384",
+    "features": {
+      "n_cells": 384,
+      "n_nets": 311,
+      "avg_net_size": 3.643086816720257,
+      "max_net_size": 26,
+      "avg_cell_degree": 2.9505208333333335,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 384,
+      "timing_ps": 19.200000000000003,
+      "power_mw": 0.00038400000000000006,
+      "max_congestion": 311,
+      "mean_congestion": 0.1244,
+      "median_congestion": 0.0,
+      "std_congestion": 6.218755875575116
+    }
+  },
+  {
+    "name": "bigblue1_s29_n518",
+    "features": {
+      "n_cells": 518,
+      "n_nets": 483,
+      "avg_net_size": 4.670807453416149,
+      "max_net_size": 42,
+      "avg_cell_degree": 4.355212355212355,
+      "max_cell_degree": 9,
+      "die_area": 106800000.0,
+      "die_aspect": 0.9363295880149812,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 518,
+      "timing_ps": 25.900000000000002,
+      "power_mw": 0.000518,
+      "max_congestion": 483,
+      "mean_congestion": 0.1932,
+      "median_congestion": 0.0,
+      "std_congestion": 9.658067806761352
+    }
+  },
+  {
+    "name": "bigblue2_s0_n214",
+    "features": {
+      "n_cells": 214,
+      "n_nets": 173,
+      "avg_net_size": 5.2601156069364166,
+      "max_net_size": 159,
+      "avg_cell_degree": 4.252336448598131,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 14535.0
+    },
+    "metrics": {
+      "hpwl": 14535,
+      "area": 214,
+      "timing_ps": 17.9675,
+      "power_mw": 0.014749,
+      "max_congestion": 173,
+      "mean_congestion": 0.0764,
+      "median_congestion": 0.0,
+      "std_congestion": 3.4622771466189706
+    }
+  },
+  {
+    "name": "bigblue2_s1_n170",
+    "features": {
+      "n_cells": 170,
+      "n_nets": 159,
+      "avg_net_size": 3.0754716981132075,
+      "max_net_size": 41,
+      "avg_cell_degree": 2.876470588235294,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 404771.0
+    },
+    "metrics": {
+      "hpwl": 404771,
+      "area": 170,
+      "timing_ps": 210.8855,
+      "power_mw": 0.4049410000000001,
+      "max_congestion": 113,
+      "mean_congestion": 0.3184,
+      "median_congestion": 0.0,
+      "std_congestion": 3.3760659709194076
+    }
+  },
+  {
+    "name": "bigblue2_s2_n531",
+    "features": {
+      "n_cells": 531,
+      "n_nets": 289,
+      "avg_net_size": 8.294117647058824,
+      "max_net_size": 364,
+      "avg_cell_degree": 4.5141242937853105,
+      "max_cell_degree": 14,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 570249.0
+    },
+    "metrics": {
+      "hpwl": 570249,
+      "area": 531,
+      "timing_ps": 311.6745,
+      "power_mw": 0.5707800000000001,
+      "max_congestion": 135,
+      "mean_congestion": 1.7884,
+      "median_congestion": 0.0,
+      "std_congestion": 4.164952033337239
+    }
+  },
+  {
+    "name": "bigblue2_s3_n262",
+    "features": {
+      "n_cells": 262,
+      "n_nets": 129,
+      "avg_net_size": 4.751937984496124,
+      "max_net_size": 36,
+      "avg_cell_degree": 2.3396946564885495,
+      "max_cell_degree": 5,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 262,
+      "timing_ps": 13.100000000000001,
+      "power_mw": 0.00026199999999999997,
+      "max_congestion": 129,
+      "mean_congestion": 0.0516,
+      "median_congestion": 0.0,
+      "std_congestion": 2.5794839483896776
+    }
+  },
+  {
+    "name": "bigblue2_s4_n404",
+    "features": {
+      "n_cells": 404,
+      "n_nets": 354,
+      "avg_net_size": 4.861581920903955,
+      "max_net_size": 112,
+      "avg_cell_degree": 4.25990099009901,
+      "max_cell_degree": 9,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 404,
+      "timing_ps": 20.200000000000003,
+      "power_mw": 0.000404,
+      "max_congestion": 354,
+      "mean_congestion": 0.1416,
+      "median_congestion": 0.0,
+      "std_congestion": 7.078583858371672
+    }
+  },
+  {
+    "name": "bigblue2_s5_n512",
+    "features": {
+      "n_cells": 512,
+      "n_nets": 366,
+      "avg_net_size": 4.508196721311475,
+      "max_net_size": 160,
+      "avg_cell_degree": 3.22265625,
+      "max_cell_degree": 18,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 169842.0
+    },
+    "metrics": {
+      "hpwl": 169842,
+      "area": 512,
+      "timing_ps": 110.52100000000002,
+      "power_mw": 0.17035400000000003,
+      "max_congestion": 348,
+      "mean_congestion": 0.3128,
+      "median_congestion": 0.0,
+      "std_congestion": 7.088678026261315
+    }
+  },
+  {
+    "name": "bigblue2_s6_n347",
+    "features": {
+      "n_cells": 347,
+      "n_nets": 239,
+      "avg_net_size": 5.2259414225941425,
+      "max_net_size": 69,
+      "avg_cell_degree": 3.599423631123919,
+      "max_cell_degree": 16,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 63406.0
+    },
+    "metrics": {
+      "hpwl": 63406,
+      "area": 347,
+      "timing_ps": 49.053,
+      "power_mw": 0.06375300000000002,
+      "max_congestion": 225,
+      "mean_congestion": 0.1092,
+      "median_congestion": 0.0,
+      "std_congestion": 4.530571195776533
+    }
+  },
+  {
+    "name": "bigblue2_s7_n566",
+    "features": {
+      "n_cells": 566,
+      "n_nets": 424,
+      "avg_net_size": 4.580188679245283,
+      "max_net_size": 68,
+      "avg_cell_degree": 3.431095406360424,
+      "max_cell_degree": 9,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 75144.0
+    },
+    "metrics": {
+      "hpwl": 75144,
+      "area": 566,
+      "timing_ps": 65.872,
+      "power_mw": 0.07571,
+      "max_congestion": 424,
+      "mean_congestion": 0.6184,
+      "median_congestion": 0.0,
+      "std_congestion": 8.53664930988734
+    }
+  },
+  {
+    "name": "bigblue2_s8_n180",
+    "features": {
+      "n_cells": 180,
+      "n_nets": 119,
+      "avg_net_size": 4.2521008403361344,
+      "max_net_size": 37,
+      "avg_cell_degree": 2.811111111111111,
+      "max_cell_degree": 7,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 110367.0
+    },
+    "metrics": {
+      "hpwl": 110367,
+      "area": 180,
+      "timing_ps": 64.18350000000001,
+      "power_mw": 0.110547,
+      "max_congestion": 117,
+      "mean_congestion": 0.0956,
+      "median_congestion": 0.0,
+      "std_congestion": 2.401179010403014
+    }
+  },
+  {
+    "name": "bigblue2_s9_n258",
+    "features": {
+      "n_cells": 258,
+      "n_nets": 123,
+      "avg_net_size": 5.569105691056911,
+      "max_net_size": 60,
+      "avg_cell_degree": 2.6550387596899223,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 25316.0
+    },
+    "metrics": {
+      "hpwl": 25316,
+      "area": 258,
+      "timing_ps": 25.558,
+      "power_mw": 0.025574,
+      "max_congestion": 123,
+      "mean_congestion": 0.0548,
+      "median_congestion": 0.0,
+      "std_congestion": 2.461665484991817
+    }
+  },
+  {
+    "name": "bigblue2_s10_n594",
+    "features": {
+      "n_cells": 594,
+      "n_nets": 429,
+      "avg_net_size": 5.258741258741258,
+      "max_net_size": 41,
+      "avg_cell_degree": 3.797979797979798,
+      "max_cell_degree": 9,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 3066356.0
+    },
+    "metrics": {
+      "hpwl": 3066356,
+      "area": 594,
+      "timing_ps": 1562.8780000000002,
+      "power_mw": 3.0669500000000003,
+      "max_congestion": 429,
+      "mean_congestion": 3.2368,
+      "median_congestion": 0.0,
+      "std_congestion": 29.95334915764846
+    }
+  },
+  {
+    "name": "bigblue2_s11_n282",
+    "features": {
+      "n_cells": 282,
+      "n_nets": 339,
+      "avg_net_size": 2.8289085545722714,
+      "max_net_size": 31,
+      "avg_cell_degree": 3.400709219858156,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 375437.0
+    },
+    "metrics": {
+      "hpwl": 375437,
+      "area": 282,
+      "timing_ps": 201.8185,
+      "power_mw": 0.375719,
+      "max_congestion": 100,
+      "mean_congestion": 0.4072,
+      "median_congestion": 0.0,
+      "std_congestion": 3.952187768818683
+    }
+  },
+  {
+    "name": "bigblue2_s12_n558",
+    "features": {
+      "n_cells": 558,
+      "n_nets": 674,
+      "avg_net_size": 3.2596439169139466,
+      "max_net_size": 260,
+      "avg_cell_degree": 3.9372759856630823,
+      "max_cell_degree": 11,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 2076826.0
+    },
+    "metrics": {
+      "hpwl": 2076826,
+      "area": 558,
+      "timing_ps": 1066.313,
+      "power_mw": 2.077384,
+      "max_congestion": 186,
+      "mean_congestion": 2.8984,
+      "median_congestion": 0.0,
+      "std_congestion": 12.605938181666607
+    }
+  },
+  {
+    "name": "bigblue2_s13_n334",
+    "features": {
+      "n_cells": 334,
+      "n_nets": 608,
+      "avg_net_size": 5.618421052631579,
+      "max_net_size": 221,
+      "avg_cell_degree": 10.22754491017964,
+      "max_cell_degree": 16,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 1000306.0
+    },
+    "metrics": {
+      "hpwl": 1000306,
+      "area": 334,
+      "timing_ps": 516.8530000000001,
+      "power_mw": 1.0006400000000002,
+      "max_congestion": 132,
+      "mean_congestion": 2.262,
+      "median_congestion": 0.0,
+      "std_congestion": 6.445134288748373
+    }
+  },
+  {
+    "name": "bigblue2_s14_n450",
+    "features": {
+      "n_cells": 450,
+      "n_nets": 298,
+      "avg_net_size": 8.204697986577182,
+      "max_net_size": 333,
+      "avg_cell_degree": 5.433333333333334,
+      "max_cell_degree": 14,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 614820.0
+    },
+    "metrics": {
+      "hpwl": 614820,
+      "area": 450,
+      "timing_ps": 329.91,
+      "power_mw": 0.6152700000000001,
+      "max_congestion": 138,
+      "mean_congestion": 1.8416,
+      "median_congestion": 0.0,
+      "std_congestion": 4.378368353622157
+    }
+  },
+  {
+    "name": "bigblue2_s15_n269",
+    "features": {
+      "n_cells": 269,
+      "n_nets": 244,
+      "avg_net_size": 4.94672131147541,
+      "max_net_size": 74,
+      "avg_cell_degree": 4.4869888475836435,
+      "max_cell_degree": 11,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 85429.0
+    },
+    "metrics": {
+      "hpwl": 85429,
+      "area": 269,
+      "timing_ps": 56.164500000000004,
+      "power_mw": 0.08569800000000001,
+      "max_congestion": 235,
+      "mean_congestion": 0.144,
+      "median_congestion": 0.0,
+      "std_congestion": 4.723988145624415
+    }
+  },
+  {
+    "name": "bigblue2_s16_n230",
+    "features": {
+      "n_cells": 230,
+      "n_nets": 83,
+      "avg_net_size": 8.144578313253012,
+      "max_net_size": 137,
+      "avg_cell_degree": 2.9391304347826086,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 2024.0
+    },
+    "metrics": {
+      "hpwl": 2024,
+      "area": 230,
+      "timing_ps": 12.512,
+      "power_mw": 0.002254,
+      "max_congestion": 83,
+      "mean_congestion": 0.0332,
+      "median_congestion": 0.0,
+      "std_congestion": 1.659667966793359
+    }
+  },
+  {
+    "name": "bigblue2_s17_n499",
+    "features": {
+      "n_cells": 499,
+      "n_nets": 260,
+      "avg_net_size": 4.046153846153846,
+      "max_net_size": 37,
+      "avg_cell_degree": 2.1082164328657313,
+      "max_cell_degree": 7,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 106191.0
+    },
+    "metrics": {
+      "hpwl": 106191,
+      "area": 499,
+      "timing_ps": 78.0455,
+      "power_mw": 0.10669,
+      "max_congestion": 258,
+      "mean_congestion": 0.1472,
+      "median_congestion": 0.0,
+      "std_congestion": 5.184045925722496
+    }
+  },
+  {
+    "name": "bigblue2_s18_n497",
+    "features": {
+      "n_cells": 497,
+      "n_nets": 444,
+      "avg_net_size": 4.547297297297297,
+      "max_net_size": 140,
+      "avg_cell_degree": 4.062374245472837,
+      "max_cell_degree": 16,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 36492.0
+    },
+    "metrics": {
+      "hpwl": 36492,
+      "area": 497,
+      "timing_ps": 43.096000000000004,
+      "power_mw": 0.036989,
+      "max_congestion": 444,
+      "mean_congestion": 0.1776,
+      "median_congestion": 0.0,
+      "std_congestion": 8.87822382236447
+    }
+  },
+  {
+    "name": "bigblue2_s19_n599",
+    "features": {
+      "n_cells": 599,
+      "n_nets": 464,
+      "avg_net_size": 5.3469827586206895,
+      "max_net_size": 127,
+      "avg_cell_degree": 4.141903171953255,
+      "max_cell_degree": 18,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 212542.0
+    },
+    "metrics": {
+      "hpwl": 212542,
+      "area": 599,
+      "timing_ps": 136.221,
+      "power_mw": 0.213141,
+      "max_congestion": 448,
+      "mean_congestion": 0.3216,
+      "median_congestion": 0.0,
+      "std_congestion": 9.033879202203229
+    }
+  },
+  {
+    "name": "bigblue2_s20_n301",
+    "features": {
+      "n_cells": 301,
+      "n_nets": 266,
+      "avg_net_size": 4.7631578947368425,
+      "max_net_size": 73,
+      "avg_cell_degree": 4.209302325581396,
+      "max_cell_degree": 14,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 108370.0
+    },
+    "metrics": {
+      "hpwl": 108370,
+      "area": 301,
+      "timing_ps": 69.235,
+      "power_mw": 0.108671,
+      "max_congestion": 254,
+      "mean_congestion": 0.596,
+      "median_congestion": 0.0,
+      "std_congestion": 5.245186745960529
+    }
+  },
+  {
+    "name": "bigblue2_s21_n287",
+    "features": {
+      "n_cells": 287,
+      "n_nets": 120,
+      "avg_net_size": 4.5,
+      "max_net_size": 68,
+      "avg_cell_degree": 1.8815331010452963,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 32586.0
+    },
+    "metrics": {
+      "hpwl": 32586,
+      "area": 287,
+      "timing_ps": 30.643,
+      "power_mw": 0.032873,
+      "max_congestion": 120,
+      "mean_congestion": 0.0648,
+      "median_congestion": 0.0,
+      "std_congestion": 2.4061174036193664
+    }
+  },
+  {
+    "name": "bigblue2_s22_n392",
+    "features": {
+      "n_cells": 392,
+      "n_nets": 169,
+      "avg_net_size": 8.29585798816568,
+      "max_net_size": 36,
+      "avg_cell_degree": 3.576530612244898,
+      "max_cell_degree": 7,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 392,
+      "timing_ps": 19.6,
+      "power_mw": 0.00039200000000000004,
+      "max_congestion": 169,
+      "mean_congestion": 0.0676,
+      "median_congestion": 0.0,
+      "std_congestion": 3.3793239323864768
+    }
+  },
+  {
+    "name": "bigblue2_s23_n578",
+    "features": {
+      "n_cells": 578,
+      "n_nets": 225,
+      "avg_net_size": 10.408888888888889,
+      "max_net_size": 644,
+      "avg_cell_degree": 4.051903114186851,
+      "max_cell_degree": 14,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 540598.0
+    },
+    "metrics": {
+      "hpwl": 540598,
+      "area": 578,
+      "timing_ps": 299.19899999999996,
+      "power_mw": 0.5411760000000001,
+      "max_congestion": 72,
+      "mean_congestion": 1.7476,
+      "median_congestion": 0.0,
+      "std_congestion": 3.466741155609977
+    }
+  },
+  {
+    "name": "bigblue2_s24_n494",
+    "features": {
+      "n_cells": 494,
+      "n_nets": 281,
+      "avg_net_size": 3.3523131672597866,
+      "max_net_size": 80,
+      "avg_cell_degree": 1.9068825910931173,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 494,
+      "timing_ps": 24.700000000000003,
+      "power_mw": 0.0004940000000000001,
+      "max_congestion": 281,
+      "mean_congestion": 0.1124,
+      "median_congestion": 0.0,
+      "std_congestion": 5.618875887577513
+    }
+  },
+  {
+    "name": "bigblue2_s25_n329",
+    "features": {
+      "n_cells": 329,
+      "n_nets": 173,
+      "avg_net_size": 5.971098265895954,
+      "max_net_size": 67,
+      "avg_cell_degree": 3.139817629179331,
+      "max_cell_degree": 15,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 32253.0
+    },
+    "metrics": {
+      "hpwl": 32253,
+      "area": 329,
+      "timing_ps": 32.576499999999996,
+      "power_mw": 0.03258200000000001,
+      "max_congestion": 160,
+      "mean_congestion": 0.0852,
+      "median_congestion": 0.0,
+      "std_congestion": 3.225824074558315
+    }
+  },
+  {
+    "name": "bigblue2_s26_n303",
+    "features": {
+      "n_cells": 303,
+      "n_nets": 460,
+      "avg_net_size": 2.5369565217391306,
+      "max_net_size": 40,
+      "avg_cell_degree": 3.8514851485148514,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 938666.0
+    },
+    "metrics": {
+      "hpwl": 938666,
+      "area": 303,
+      "timing_ps": 484.483,
+      "power_mw": 0.938969,
+      "max_congestion": 185,
+      "mean_congestion": 0.8032,
+      "median_congestion": 0.0,
+      "std_congestion": 7.725986652848944
+    }
+  },
+  {
+    "name": "bigblue2_s27_n362",
+    "features": {
+      "n_cells": 362,
+      "n_nets": 151,
+      "avg_net_size": 7.662251655629139,
+      "max_net_size": 119,
+      "avg_cell_degree": 3.196132596685083,
+      "max_cell_degree": 6,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 32700.0
+    },
+    "metrics": {
+      "hpwl": 32700,
+      "area": 362,
+      "timing_ps": 34.45,
+      "power_mw": 0.033062,
+      "max_congestion": 151,
+      "mean_congestion": 0.0724,
+      "median_congestion": 0.0,
+      "std_congestion": 3.0250881375589715
+    }
+  },
+  {
+    "name": "bigblue2_s28_n541",
+    "features": {
+      "n_cells": 541,
+      "n_nets": 440,
+      "avg_net_size": 4.670454545454546,
+      "max_net_size": 191,
+      "avg_cell_degree": 3.798521256931608,
+      "max_cell_degree": 16,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 101381.0
+    },
+    "metrics": {
+      "hpwl": 101381,
+      "area": 541,
+      "timing_ps": 77.7405,
+      "power_mw": 0.101922,
+      "max_congestion": 427,
+      "mean_congestion": 0.2744,
+      "median_congestion": 0.0,
+      "std_congestion": 8.575447780728421
+    }
+  },
+  {
+    "name": "bigblue2_s29_n382",
+    "features": {
+      "n_cells": 382,
+      "n_nets": 166,
+      "avg_net_size": 4.367469879518072,
+      "max_net_size": 45,
+      "avg_cell_degree": 1.8979057591623036,
+      "max_cell_degree": 7,
+      "die_area": 339571440.0,
+      "die_aspect": 0.9615793954874414,
+      "hpwl": 57186.0
+    },
+    "metrics": {
+      "hpwl": 57186,
+      "area": 382,
+      "timing_ps": 47.693,
+      "power_mw": 0.057568,
+      "max_congestion": 159,
+      "mean_congestion": 0.116,
+      "median_congestion": 0.0,
+      "std_congestion": 3.2154850333969835
+    }
+  },
+  {
+    "name": "bigblue3_s0_n420",
+    "features": {
+      "n_cells": 420,
+      "n_nets": 390,
+      "avg_net_size": 4.694871794871795,
+      "max_net_size": 97,
+      "avg_cell_degree": 4.359523809523809,
+      "max_cell_degree": 13,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 252649.0
+    },
+    "metrics": {
+      "hpwl": 252649,
+      "area": 420,
+      "timing_ps": 147.3245,
+      "power_mw": 0.25306900000000004,
+      "max_congestion": 330,
+      "mean_congestion": 0.4568,
+      "median_congestion": 0.0,
+      "std_congestion": 6.75385325277356
+    }
+  },
+  {
+    "name": "bigblue3_s1_n437",
+    "features": {
+      "n_cells": 437,
+      "n_nets": 347,
+      "avg_net_size": 3.7463976945244957,
+      "max_net_size": 26,
+      "avg_cell_degree": 2.9748283752860414,
+      "max_cell_degree": 9,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 437,
+      "timing_ps": 21.85,
+      "power_mw": 0.000437,
+      "max_congestion": 347,
+      "mean_congestion": 0.1388,
+      "median_congestion": 0.0,
+      "std_congestion": 6.938611861172233
+    }
+  },
+  {
+    "name": "bigblue3_s2_n560",
+    "features": {
+      "n_cells": 560,
+      "n_nets": 756,
+      "avg_net_size": 4.794973544973545,
+      "max_net_size": 246,
+      "avg_cell_degree": 6.473214285714286,
+      "max_cell_degree": 16,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 1407717.0
+    },
+    "metrics": {
+      "hpwl": 1407717,
+      "area": 560,
+      "timing_ps": 731.8585,
+      "power_mw": 1.408277,
+      "max_congestion": 290,
+      "mean_congestion": 1.0388,
+      "median_congestion": 0.0,
+      "std_congestion": 9.486901209562584
+    }
+  },
+  {
+    "name": "bigblue3_s3_n442",
+    "features": {
+      "n_cells": 442,
+      "n_nets": 846,
+      "avg_net_size": 5.777777777777778,
+      "max_net_size": 369,
+      "avg_cell_degree": 11.058823529411764,
+      "max_cell_degree": 16,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 1649009.0
+    },
+    "metrics": {
+      "hpwl": 1649009,
+      "area": 442,
+      "timing_ps": 846.6045,
+      "power_mw": 1.649451,
+      "max_congestion": 226,
+      "mean_congestion": 1.17,
+      "median_congestion": 0.0,
+      "std_congestion": 10.648206421740706
+    }
+  },
+  {
+    "name": "bigblue3_s4_n411",
+    "features": {
+      "n_cells": 411,
+      "n_nets": 758,
+      "avg_net_size": 3.926121372031662,
+      "max_net_size": 623,
+      "avg_cell_degree": 7.240875912408759,
+      "max_cell_degree": 16,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 1621238.0
+    },
+    "metrics": {
+      "hpwl": 1621238,
+      "area": 411,
+      "timing_ps": 831.169,
+      "power_mw": 1.6216490000000001,
+      "max_congestion": 374,
+      "mean_congestion": 2.7056,
+      "median_congestion": 0.0,
+      "std_congestion": 10.61616355563534
+    }
+  },
+  {
+    "name": "bigblue3_s5_n321",
+    "features": {
+      "n_cells": 321,
+      "n_nets": 176,
+      "avg_net_size": 5.215909090909091,
+      "max_net_size": 41,
+      "avg_cell_degree": 2.8598130841121496,
+      "max_cell_degree": 7,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 321,
+      "timing_ps": 16.05,
+      "power_mw": 0.00032100000000000005,
+      "max_congestion": 176,
+      "mean_congestion": 0.0704,
+      "median_congestion": 0.0,
+      "std_congestion": 3.519295929585916
+    }
+  },
+  {
+    "name": "bigblue3_s6_n305",
+    "features": {
+      "n_cells": 305,
+      "n_nets": 284,
+      "avg_net_size": 3.5492957746478875,
+      "max_net_size": 40,
+      "avg_cell_degree": 3.3049180327868855,
+      "max_cell_degree": 9,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 305,
+      "timing_ps": 15.25,
+      "power_mw": 0.00030500000000000004,
+      "max_congestion": 284,
+      "mean_congestion": 0.1136,
+      "median_congestion": 0.0,
+      "std_congestion": 5.678863886377272
+    }
+  },
+  {
+    "name": "bigblue3_s7_n304",
+    "features": {
+      "n_cells": 304,
+      "n_nets": 169,
+      "avg_net_size": 4.928994082840236,
+      "max_net_size": 41,
+      "avg_cell_degree": 2.7401315789473686,
+      "max_cell_degree": 14,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 304,
+      "timing_ps": 15.200000000000001,
+      "power_mw": 0.000304,
+      "max_congestion": 169,
+      "mean_congestion": 0.0676,
+      "median_congestion": 0.0,
+      "std_congestion": 3.3793239323864768
+    }
+  },
+  {
+    "name": "bigblue3_s8_n490",
+    "features": {
+      "n_cells": 490,
+      "n_nets": 412,
+      "avg_net_size": 4.58252427184466,
+      "max_net_size": 147,
+      "avg_cell_degree": 3.853061224489796,
+      "max_cell_degree": 207,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 378960.0
+    },
+    "metrics": {
+      "hpwl": 378960,
+      "area": 490,
+      "timing_ps": 213.98,
+      "power_mw": 0.37945,
+      "max_congestion": 349,
+      "mean_congestion": 0.3168,
+      "median_congestion": 0.0,
+      "std_congestion": 7.227145893089471
+    }
+  },
+  {
+    "name": "bigblue3_s9_n321",
+    "features": {
+      "n_cells": 321,
+      "n_nets": 247,
+      "avg_net_size": 2.8502024291497974,
+      "max_net_size": 42,
+      "avg_cell_degree": 2.1931464174454827,
+      "max_cell_degree": 4,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 321,
+      "timing_ps": 16.05,
+      "power_mw": 0.00032100000000000005,
+      "max_congestion": 247,
+      "mean_congestion": 0.0988,
+      "median_congestion": 0.0,
+      "std_congestion": 4.939011901180235
+    }
+  },
+  {
+    "name": "bigblue3_s10_n396",
+    "features": {
+      "n_cells": 396,
+      "n_nets": 265,
+      "avg_net_size": 4.313207547169811,
+      "max_net_size": 33,
+      "avg_cell_degree": 2.8863636363636362,
+      "max_cell_degree": 8,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 396,
+      "timing_ps": 19.8,
+      "power_mw": 0.000396,
+      "max_congestion": 265,
+      "mean_congestion": 0.106,
+      "median_congestion": 0.0,
+      "std_congestion": 5.298939893978796
+    }
+  },
+  {
+    "name": "bigblue3_s11_n560",
+    "features": {
+      "n_cells": 560,
+      "n_nets": 192,
+      "avg_net_size": 5.40625,
+      "max_net_size": 29,
+      "avg_cell_degree": 1.8535714285714286,
+      "max_cell_degree": 4,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 560,
+      "timing_ps": 28.0,
+      "power_mw": 0.0005600000000000001,
+      "max_congestion": 192,
+      "mean_congestion": 0.0768,
+      "median_congestion": 0.0,
+      "std_congestion": 3.839231923184636
+    }
+  },
+  {
+    "name": "bigblue3_s12_n546",
+    "features": {
+      "n_cells": 546,
+      "n_nets": 782,
+      "avg_net_size": 3.921994884910486,
+      "max_net_size": 492,
+      "avg_cell_degree": 5.617216117216117,
+      "max_cell_degree": 16,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 1584842.0
+    },
+    "metrics": {
+      "hpwl": 1584842,
+      "area": 546,
+      "timing_ps": 819.721,
+      "power_mw": 1.585388,
+      "max_congestion": 402,
+      "mean_congestion": 2.4248,
+      "median_congestion": 0.0,
+      "std_congestion": 11.055837596491727
+    }
+  },
+  {
+    "name": "bigblue3_s13_n168",
+    "features": {
+      "n_cells": 168,
+      "n_nets": 177,
+      "avg_net_size": 3.073446327683616,
+      "max_net_size": 24,
+      "avg_cell_degree": 3.238095238095238,
+      "max_cell_degree": 8,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 168,
+      "timing_ps": 8.4,
+      "power_mw": 0.00016800000000000002,
+      "max_congestion": 177,
+      "mean_congestion": 0.0708,
+      "median_congestion": 0.0,
+      "std_congestion": 3.539291929185836
+    }
+  },
+  {
+    "name": "bigblue3_s14_n329",
+    "features": {
+      "n_cells": 329,
+      "n_nets": 204,
+      "avg_net_size": 4.063725490196078,
+      "max_net_size": 23,
+      "avg_cell_degree": 2.519756838905775,
+      "max_cell_degree": 9,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 329,
+      "timing_ps": 16.45,
+      "power_mw": 0.000329,
+      "max_congestion": 204,
+      "mean_congestion": 0.0816,
+      "median_congestion": 0.0,
+      "std_congestion": 4.079183918383675
+    }
+  },
+  {
+    "name": "bigblue3_s15_n343",
+    "features": {
+      "n_cells": 343,
+      "n_nets": 360,
+      "avg_net_size": 4.541666666666667,
+      "max_net_size": 171,
+      "avg_cell_degree": 4.766763848396502,
+      "max_cell_degree": 15,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 427619.0
+    },
+    "metrics": {
+      "hpwl": 427619,
+      "area": 343,
+      "timing_ps": 230.95950000000002,
+      "power_mw": 0.42796200000000006,
+      "max_congestion": 322,
+      "mean_congestion": 1.2732,
+      "median_congestion": 0.0,
+      "std_congestion": 7.3024490248135265
+    }
+  },
+  {
+    "name": "bigblue3_s16_n347",
+    "features": {
+      "n_cells": 347,
+      "n_nets": 198,
+      "avg_net_size": 3.712121212121212,
+      "max_net_size": 40,
+      "avg_cell_degree": 2.118155619596542,
+      "max_cell_degree": 7,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 347,
+      "timing_ps": 17.35,
+      "power_mw": 0.00034700000000000003,
+      "max_congestion": 198,
+      "mean_congestion": 0.0792,
+      "median_congestion": 0.0,
+      "std_congestion": 3.959207920784156
+    }
+  },
+  {
+    "name": "bigblue3_s17_n468",
+    "features": {
+      "n_cells": 468,
+      "n_nets": 240,
+      "avg_net_size": 4.045833333333333,
+      "max_net_size": 38,
+      "avg_cell_degree": 2.074786324786325,
+      "max_cell_degree": 5,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 468,
+      "timing_ps": 23.400000000000002,
+      "power_mw": 0.000468,
+      "max_congestion": 240,
+      "mean_congestion": 0.096,
+      "median_congestion": 0.0,
+      "std_congestion": 4.799039903980796
+    }
+  },
+  {
+    "name": "bigblue3_s18_n185",
+    "features": {
+      "n_cells": 185,
+      "n_nets": 139,
+      "avg_net_size": 4.266187050359712,
+      "max_net_size": 40,
+      "avg_cell_degree": 3.2054054054054055,
+      "max_cell_degree": 16,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 185,
+      "timing_ps": 9.25,
+      "power_mw": 0.000185,
+      "max_congestion": 139,
+      "mean_congestion": 0.0556,
+      "median_congestion": 0.0,
+      "std_congestion": 2.7794439443888765
+    }
+  },
+  {
+    "name": "bigblue3_s19_n502",
+    "features": {
+      "n_cells": 502,
+      "n_nets": 254,
+      "avg_net_size": 4.783464566929134,
+      "max_net_size": 55,
+      "avg_cell_degree": 2.4203187250996017,
+      "max_cell_degree": 7,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 502,
+      "timing_ps": 25.1,
+      "power_mw": 0.0005020000000000001,
+      "max_congestion": 254,
+      "mean_congestion": 0.1016,
+      "median_congestion": 0.0,
+      "std_congestion": 5.0789838983796765
+    }
+  },
+  {
+    "name": "bigblue3_s20_n461",
+    "features": {
+      "n_cells": 461,
+      "n_nets": 342,
+      "avg_net_size": 5.5321637426900585,
+      "max_net_size": 71,
+      "avg_cell_degree": 4.10412147505423,
+      "max_cell_degree": 17,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 461,
+      "timing_ps": 23.05,
+      "power_mw": 0.00046100000000000004,
+      "max_congestion": 342,
+      "mean_congestion": 0.1368,
+      "median_congestion": 0.0,
+      "std_congestion": 6.838631863172632
+    }
+  },
+  {
+    "name": "bigblue3_s21_n311",
+    "features": {
+      "n_cells": 311,
+      "n_nets": 367,
+      "avg_net_size": 3.7711171662125342,
+      "max_net_size": 108,
+      "avg_cell_degree": 4.45016077170418,
+      "max_cell_degree": 15,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 374502.0
+    },
+    "metrics": {
+      "hpwl": 374502,
+      "area": 311,
+      "timing_ps": 202.80100000000002,
+      "power_mw": 0.37481300000000006,
+      "max_congestion": 229,
+      "mean_congestion": 0.5332,
+      "median_congestion": 0.0,
+      "std_congestion": 5.191849165759729
+    }
+  },
+  {
+    "name": "bigblue3_s22_n341",
+    "features": {
+      "n_cells": 341,
+      "n_nets": 229,
+      "avg_net_size": 4.401746724890829,
+      "max_net_size": 62,
+      "avg_cell_degree": 2.9560117302052786,
+      "max_cell_degree": 6,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 341,
+      "timing_ps": 17.05,
+      "power_mw": 0.000341,
+      "max_congestion": 229,
+      "mean_congestion": 0.0916,
+      "median_congestion": 0.0,
+      "std_congestion": 4.579083908381675
+    }
+  },
+  {
+    "name": "bigblue3_s23_n599",
+    "features": {
+      "n_cells": 599,
+      "n_nets": 1303,
+      "avg_net_size": 5.742900997697621,
+      "max_net_size": 560,
+      "avg_cell_degree": 12.492487479131887,
+      "max_cell_degree": 70,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 3778759.0
+    },
+    "metrics": {
+      "hpwl": 3778759,
+      "area": 599,
+      "timing_ps": 1919.3295,
+      "power_mw": 3.7793580000000007,
+      "max_congestion": 683,
+      "mean_congestion": 2.6968,
+      "median_congestion": 0.0,
+      "std_congestion": 21.701006192340483
+    }
+  },
+  {
+    "name": "bigblue3_s24_n454",
+    "features": {
+      "n_cells": 454,
+      "n_nets": 315,
+      "avg_net_size": 4.5777777777777775,
+      "max_net_size": 59,
+      "avg_cell_degree": 3.1762114537444934,
+      "max_cell_degree": 10,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 454,
+      "timing_ps": 22.700000000000003,
+      "power_mw": 0.00045400000000000003,
+      "max_congestion": 315,
+      "mean_congestion": 0.126,
+      "median_congestion": 0.0,
+      "std_congestion": 6.298739873974795
+    }
+  },
+  {
+    "name": "bigblue3_s25_n452",
+    "features": {
+      "n_cells": 452,
+      "n_nets": 303,
+      "avg_net_size": 3.6765676567656764,
+      "max_net_size": 42,
+      "avg_cell_degree": 2.4646017699115044,
+      "max_cell_degree": 6,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 452,
+      "timing_ps": 22.6,
+      "power_mw": 0.00045200000000000004,
+      "max_congestion": 303,
+      "mean_congestion": 0.1212,
+      "median_congestion": 0.0,
+      "std_congestion": 6.058787878775753
+    }
+  },
+  {
+    "name": "bigblue3_s26_n354",
+    "features": {
+      "n_cells": 354,
+      "n_nets": 261,
+      "avg_net_size": 3.053639846743295,
+      "max_net_size": 41,
+      "avg_cell_degree": 2.251412429378531,
+      "max_cell_degree": 9,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 354,
+      "timing_ps": 17.7,
+      "power_mw": 0.00035400000000000004,
+      "max_congestion": 261,
+      "mean_congestion": 0.1044,
+      "median_congestion": 0.0,
+      "std_congestion": 5.218955895579115
+    }
+  },
+  {
+    "name": "bigblue3_s27_n525",
+    "features": {
+      "n_cells": 525,
+      "n_nets": 234,
+      "avg_net_size": 6.534188034188034,
+      "max_net_size": 41,
+      "avg_cell_degree": 2.9123809523809525,
+      "max_cell_degree": 8,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 525,
+      "timing_ps": 26.25,
+      "power_mw": 0.0005250000000000001,
+      "max_congestion": 234,
+      "mean_congestion": 0.0936,
+      "median_congestion": 0.0,
+      "std_congestion": 4.679063906381276
+    }
+  },
+  {
+    "name": "bigblue3_s28_n534",
+    "features": {
+      "n_cells": 534,
+      "n_nets": 1037,
+      "avg_net_size": 5.915139826422372,
+      "max_net_size": 455,
+      "avg_cell_degree": 11.486891385767791,
+      "max_cell_degree": 16,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 1649009.0
+    },
+    "metrics": {
+      "hpwl": 1649009,
+      "area": 534,
+      "timing_ps": 851.2045,
+      "power_mw": 1.6495429999999998,
+      "max_congestion": 417,
+      "mean_congestion": 1.2464,
+      "median_congestion": 0.0,
+      "std_congestion": 12.740678437194779
+    }
+  },
+  {
+    "name": "bigblue3_s29_n189",
+    "features": {
+      "n_cells": 189,
+      "n_nets": 143,
+      "avg_net_size": 3.8811188811188813,
+      "max_net_size": 40,
+      "avg_cell_degree": 2.9365079365079363,
+      "max_cell_degree": 8,
+      "die_area": 502201440.0,
+      "die_aspect": 0.6501871042026482,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 189,
+      "timing_ps": 9.450000000000001,
+      "power_mw": 0.000189,
+      "max_congestion": 143,
+      "mean_congestion": 0.0572,
+      "median_congestion": 0.0,
+      "std_congestion": 2.859427942788557
+    }
+  },
+  {
+    "name": "bigblue4_s0_n562",
+    "features": {
+      "n_cells": 562,
+      "n_nets": 478,
+      "avg_net_size": 4.468619246861925,
+      "max_net_size": 58,
+      "avg_cell_degree": 3.800711743772242,
+      "max_cell_degree": 8,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 114360.0
+    },
+    "metrics": {
+      "hpwl": 114360,
+      "area": 562,
+      "timing_ps": 85.28,
+      "power_mw": 0.11492200000000001,
+      "max_congestion": 472,
+      "mean_congestion": 0.216,
+      "median_congestion": 0.0,
+      "std_congestion": 9.445154524940287
+    }
+  },
+  {
+    "name": "bigblue4_s1_n330",
+    "features": {
+      "n_cells": 330,
+      "n_nets": 624,
+      "avg_net_size": 5.075320512820513,
+      "max_net_size": 280,
+      "avg_cell_degree": 9.596969696969698,
+      "max_cell_degree": 16,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 924760.0
+    },
+    "metrics": {
+      "hpwl": 924760,
+      "area": 330,
+      "timing_ps": 478.88,
+      "power_mw": 0.9250900000000001,
+      "max_congestion": 214,
+      "mean_congestion": 1.2004,
+      "median_congestion": 0.0,
+      "std_congestion": 8.056118161993405
+    }
+  },
+  {
+    "name": "bigblue4_s2_n250",
+    "features": {
+      "n_cells": 250,
+      "n_nets": 121,
+      "avg_net_size": 6.487603305785124,
+      "max_net_size": 112,
+      "avg_cell_degree": 3.14,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 250,
+      "timing_ps": 12.5,
+      "power_mw": 0.00025000000000000006,
+      "max_congestion": 121,
+      "mean_congestion": 0.0484,
+      "median_congestion": 0.0,
+      "std_congestion": 2.4195159515903173
+    }
+  },
+  {
+    "name": "bigblue4_s3_n584",
+    "features": {
+      "n_cells": 584,
+      "n_nets": 523,
+      "avg_net_size": 4.277246653919694,
+      "max_net_size": 64,
+      "avg_cell_degree": 3.8304794520547945,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 59268.0
+    },
+    "metrics": {
+      "hpwl": 59268,
+      "area": 584,
+      "timing_ps": 58.834,
+      "power_mw": 0.059852,
+      "max_congestion": 523,
+      "mean_congestion": 0.2308,
+      "median_congestion": 0.0,
+      "std_congestion": 10.459518696383693
+    }
+  },
+  {
+    "name": "bigblue4_s4_n343",
+    "features": {
+      "n_cells": 343,
+      "n_nets": 358,
+      "avg_net_size": 5.033519553072626,
+      "max_net_size": 63,
+      "avg_cell_degree": 5.253644314868804,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 78712.0
+    },
+    "metrics": {
+      "hpwl": 78712,
+      "area": 343,
+      "timing_ps": 56.506,
+      "power_mw": 0.07905500000000003,
+      "max_congestion": 358,
+      "mean_congestion": 0.1616,
+      "median_congestion": 0.0,
+      "std_congestion": 7.160746151065542
+    }
+  },
+  {
+    "name": "bigblue4_s5_n509",
+    "features": {
+      "n_cells": 509,
+      "n_nets": 458,
+      "avg_net_size": 5.058951965065503,
+      "max_net_size": 64,
+      "avg_cell_degree": 4.552062868369352,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 119679.0
+    },
+    "metrics": {
+      "hpwl": 119679,
+      "area": 509,
+      "timing_ps": 85.2895,
+      "power_mw": 0.120188,
+      "max_congestion": 451,
+      "mean_congestion": 0.2376,
+      "median_congestion": 0.0,
+      "std_congestion": 9.03125385757703
+    }
+  },
+  {
+    "name": "bigblue4_s6_n315",
+    "features": {
+      "n_cells": 315,
+      "n_nets": 328,
+      "avg_net_size": 5.137195121951219,
+      "max_net_size": 64,
+      "avg_cell_degree": 5.349206349206349,
+      "max_cell_degree": 10,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 149452.0
+    },
+    "metrics": {
+      "hpwl": 149452,
+      "area": 315,
+      "timing_ps": 90.476,
+      "power_mw": 0.149767,
+      "max_congestion": 320,
+      "mean_congestion": 0.392,
+      "median_congestion": 0.0,
+      "std_congestion": 6.473572120552918
+    }
+  },
+  {
+    "name": "bigblue4_s7_n474",
+    "features": {
+      "n_cells": 474,
+      "n_nets": 679,
+      "avg_net_size": 4.755522827687776,
+      "max_net_size": 850,
+      "avg_cell_degree": 6.812236286919831,
+      "max_cell_degree": 262,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 1062229.0
+    },
+    "metrics": {
+      "hpwl": 1062229,
+      "area": 474,
+      "timing_ps": 554.8145000000001,
+      "power_mw": 1.0627030000000002,
+      "max_congestion": 279,
+      "mean_congestion": 1.4872,
+      "median_congestion": 0.0,
+      "std_congestion": 7.235042236227788
+    }
+  },
+  {
+    "name": "bigblue4_s8_n547",
+    "features": {
+      "n_cells": 547,
+      "n_nets": 1432,
+      "avg_net_size": 4.670391061452514,
+      "max_net_size": 592,
+      "avg_cell_degree": 12.226691042047532,
+      "max_cell_degree": 16,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 1882467.0
+    },
+    "metrics": {
+      "hpwl": 1882467,
+      "area": 547,
+      "timing_ps": 968.5835000000001,
+      "power_mw": 1.8830140000000002,
+      "max_congestion": 249,
+      "mean_congestion": 2.3136,
+      "median_congestion": 0.0,
+      "std_congestion": 11.956222440219149
+    }
+  },
+  {
+    "name": "bigblue4_s9_n193",
+    "features": {
+      "n_cells": 193,
+      "n_nets": 188,
+      "avg_net_size": 5.196808510638298,
+      "max_net_size": 52,
+      "avg_cell_degree": 5.062176165803109,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 83964.0
+    },
+    "metrics": {
+      "hpwl": 83964,
+      "area": 193,
+      "timing_ps": 51.632,
+      "power_mw": 0.08415700000000001,
+      "max_congestion": 188,
+      "mean_congestion": 0.1016,
+      "median_congestion": 0.0,
+      "std_congestion": 3.76564435920335
+    }
+  },
+  {
+    "name": "bigblue4_s10_n236",
+    "features": {
+      "n_cells": 236,
+      "n_nets": 103,
+      "avg_net_size": 9.79611650485437,
+      "max_net_size": 97,
+      "avg_cell_degree": 4.27542372881356,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 236,
+      "timing_ps": 11.8,
+      "power_mw": 0.00023600000000000002,
+      "max_congestion": 103,
+      "mean_congestion": 0.0412,
+      "median_congestion": 0.0,
+      "std_congestion": 2.0595879587917585
+    }
+  },
+  {
+    "name": "bigblue4_s11_n490",
+    "features": {
+      "n_cells": 490,
+      "n_nets": 494,
+      "avg_net_size": 5.153846153846154,
+      "max_net_size": 65,
+      "avg_cell_degree": 5.1959183673469385,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 41642.0
+    },
+    "metrics": {
+      "hpwl": 41642,
+      "area": 490,
+      "timing_ps": 45.321,
+      "power_mw": 0.042131999999999996,
+      "max_congestion": 494,
+      "mean_congestion": 0.2216,
+      "median_congestion": 0.0,
+      "std_congestion": 9.879943999841293
+    }
+  },
+  {
+    "name": "bigblue4_s12_n555",
+    "features": {
+      "n_cells": 555,
+      "n_nets": 540,
+      "avg_net_size": 5.087037037037037,
+      "max_net_size": 74,
+      "avg_cell_degree": 4.949549549549549,
+      "max_cell_degree": 14,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 75312.0
+    },
+    "metrics": {
+      "hpwl": 75312,
+      "area": 555,
+      "timing_ps": 65.406,
+      "power_mw": 0.075867,
+      "max_congestion": 528,
+      "mean_congestion": 0.256,
+      "median_congestion": 0.0,
+      "std_congestion": 10.569014334364393
+    }
+  },
+  {
+    "name": "bigblue4_s13_n425",
+    "features": {
+      "n_cells": 425,
+      "n_nets": 326,
+      "avg_net_size": 6.144171779141105,
+      "max_net_size": 93,
+      "avg_cell_degree": 4.712941176470588,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 83792.0
+    },
+    "metrics": {
+      "hpwl": 83792,
+      "area": 425,
+      "timing_ps": 63.146,
+      "power_mw": 0.084217,
+      "max_congestion": 326,
+      "mean_congestion": 0.1568,
+      "median_congestion": 0.0,
+      "std_congestion": 6.522163273025293
+    }
+  },
+  {
+    "name": "bigblue4_s14_n316",
+    "features": {
+      "n_cells": 316,
+      "n_nets": 383,
+      "avg_net_size": 4.736292428198434,
+      "max_net_size": 90,
+      "avg_cell_degree": 5.7405063291139244,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 68966.0
+    },
+    "metrics": {
+      "hpwl": 68966,
+      "area": 316,
+      "timing_ps": 50.283,
+      "power_mw": 0.06928200000000001,
+      "max_congestion": 383,
+      "mean_congestion": 0.1676,
+      "median_congestion": 0.0,
+      "std_congestion": 7.660046360173023
+    }
+  },
+  {
+    "name": "bigblue4_s15_n291",
+    "features": {
+      "n_cells": 291,
+      "n_nets": 393,
+      "avg_net_size": 5.229007633587786,
+      "max_net_size": 70,
+      "avg_cell_degree": 7.061855670103093,
+      "max_cell_degree": 8,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 118292.0
+    },
+    "metrics": {
+      "hpwl": 118292,
+      "area": 291,
+      "timing_ps": 73.696,
+      "power_mw": 0.11858300000000001,
+      "max_congestion": 391,
+      "mean_congestion": 0.1716,
+      "median_congestion": 0.0,
+      "std_congestion": 7.822311259468007
+    }
+  },
+  {
+    "name": "bigblue4_s16_n576",
+    "features": {
+      "n_cells": 576,
+      "n_nets": 367,
+      "avg_net_size": 4.3732970027247955,
+      "max_net_size": 56,
+      "avg_cell_degree": 2.7864583333333335,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 161504.0
+    },
+    "metrics": {
+      "hpwl": 161504,
+      "area": 576,
+      "timing_ps": 109.55199999999999,
+      "power_mw": 0.16208,
+      "max_congestion": 360,
+      "mean_congestion": 0.3212,
+      "median_congestion": 0.0,
+      "std_congestion": 7.244061744629183
+    }
+  },
+  {
+    "name": "bigblue4_s17_n471",
+    "features": {
+      "n_cells": 471,
+      "n_nets": 1153,
+      "avg_net_size": 4.810928013876843,
+      "max_net_size": 516,
+      "avg_cell_degree": 11.777070063694268,
+      "max_cell_degree": 16,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 1628963.0
+    },
+    "metrics": {
+      "hpwl": 1628963,
+      "area": 471,
+      "timing_ps": 838.0314999999999,
+      "power_mw": 1.629434,
+      "max_congestion": 249,
+      "mean_congestion": 1.8676,
+      "median_congestion": 0.0,
+      "std_congestion": 11.599813370912482
+    }
+  },
+  {
+    "name": "bigblue4_s18_n524",
+    "features": {
+      "n_cells": 524,
+      "n_nets": 502,
+      "avg_net_size": 4.229083665338646,
+      "max_net_size": 163,
+      "avg_cell_degree": 4.051526717557252,
+      "max_cell_degree": 6,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 524,
+      "timing_ps": 26.200000000000003,
+      "power_mw": 0.0005239999999999999,
+      "max_congestion": 502,
+      "mean_congestion": 0.2008,
+      "median_congestion": 0.0,
+      "std_congestion": 10.037991799159828
+    }
+  },
+  {
+    "name": "bigblue4_s19_n414",
+    "features": {
+      "n_cells": 414,
+      "n_nets": 825,
+      "avg_net_size": 4.787878787878788,
+      "max_net_size": 438,
+      "avg_cell_degree": 9.541062801932368,
+      "max_cell_degree": 223,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 5519304.0
+    },
+    "metrics": {
+      "hpwl": 5519304,
+      "area": 414,
+      "timing_ps": 2780.352,
+      "power_mw": 5.519718,
+      "max_congestion": 314,
+      "mean_congestion": 2.682,
+      "median_congestion": 0.0,
+      "std_congestion": 18.215358245173217
+    }
+  },
+  {
+    "name": "bigblue4_s20_n382",
+    "features": {
+      "n_cells": 382,
+      "n_nets": 339,
+      "avg_net_size": 5.109144542772861,
+      "max_net_size": 64,
+      "avg_cell_degree": 4.534031413612565,
+      "max_cell_degree": 10,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 83954.0
+    },
+    "metrics": {
+      "hpwl": 83954,
+      "area": 382,
+      "timing_ps": 61.077000000000005,
+      "power_mw": 0.084336,
+      "max_congestion": 331,
+      "mean_congestion": 0.1516,
+      "median_congestion": 0.0,
+      "std_congestion": 6.626961403237535
+    }
+  },
+  {
+    "name": "bigblue4_s21_n262",
+    "features": {
+      "n_cells": 262,
+      "n_nets": 211,
+      "avg_net_size": 5.4170616113744074,
+      "max_net_size": 67,
+      "avg_cell_degree": 4.362595419847328,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 47332.0
+    },
+    "metrics": {
+      "hpwl": 47332,
+      "area": 262,
+      "timing_ps": 36.766000000000005,
+      "power_mw": 0.047594000000000004,
+      "max_congestion": 211,
+      "mean_congestion": 0.0876,
+      "median_congestion": 0.0,
+      "std_congestion": 4.219849077869966
+    }
+  },
+  {
+    "name": "bigblue4_s22_n258",
+    "features": {
+      "n_cells": 258,
+      "n_nets": 242,
+      "avg_net_size": 5.12396694214876,
+      "max_net_size": 48,
+      "avg_cell_degree": 4.8062015503875966,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 54710.0
+    },
+    "metrics": {
+      "hpwl": 54710,
+      "area": 258,
+      "timing_ps": 40.255,
+      "power_mw": 0.054968,
+      "max_congestion": 242,
+      "mean_congestion": 0.1192,
+      "median_congestion": 0.0,
+      "std_congestion": 4.843159233393013
+    }
+  },
+  {
+    "name": "bigblue4_s23_n347",
+    "features": {
+      "n_cells": 347,
+      "n_nets": 616,
+      "avg_net_size": 5.1185064935064934,
+      "max_net_size": 259,
+      "avg_cell_degree": 9.086455331412104,
+      "max_cell_degree": 16,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 809768.0
+    },
+    "metrics": {
+      "hpwl": 809768,
+      "area": 347,
+      "timing_ps": 422.23400000000004,
+      "power_mw": 0.810115,
+      "max_congestion": 219,
+      "mean_congestion": 1.1356,
+      "median_congestion": 0.0,
+      "std_congestion": 7.626874368966621
+    }
+  },
+  {
+    "name": "bigblue4_s24_n266",
+    "features": {
+      "n_cells": 266,
+      "n_nets": 107,
+      "avg_net_size": 6.074766355140187,
+      "max_net_size": 33,
+      "avg_cell_degree": 2.443609022556391,
+      "max_cell_degree": 5,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 266,
+      "timing_ps": 13.3,
+      "power_mw": 0.000266,
+      "max_congestion": 107,
+      "mean_congestion": 0.0428,
+      "median_congestion": 0.0,
+      "std_congestion": 2.139571957191438
+    }
+  },
+  {
+    "name": "bigblue4_s25_n508",
+    "features": {
+      "n_cells": 508,
+      "n_nets": 394,
+      "avg_net_size": 6.388324873096447,
+      "max_net_size": 58,
+      "avg_cell_degree": 4.9547244094488185,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 163992.0
+    },
+    "metrics": {
+      "hpwl": 163992,
+      "area": 508,
+      "timing_ps": 107.396,
+      "power_mw": 0.1645,
+      "max_congestion": 388,
+      "mean_congestion": 0.204,
+      "median_congestion": 0.0,
+      "std_congestion": 7.771433844536026
+    }
+  },
+  {
+    "name": "bigblue4_s26_n164",
+    "features": {
+      "n_cells": 164,
+      "n_nets": 86,
+      "avg_net_size": 4.3023255813953485,
+      "max_net_size": 36,
+      "avg_cell_degree": 2.2560975609756095,
+      "max_cell_degree": 9,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 0.0
+    },
+    "metrics": {
+      "hpwl": 0,
+      "area": 164,
+      "timing_ps": 8.200000000000001,
+      "power_mw": 0.000164,
+      "max_congestion": 86,
+      "mean_congestion": 0.0344,
+      "median_congestion": 0.0,
+      "std_congestion": 1.7196559655931183
+    }
+  },
+  {
+    "name": "bigblue4_s27_n259",
+    "features": {
+      "n_cells": 259,
+      "n_nets": 247,
+      "avg_net_size": 4.995951417004049,
+      "max_net_size": 65,
+      "avg_cell_degree": 4.764478764478764,
+      "max_cell_degree": 8,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 58600.0
+    },
+    "metrics": {
+      "hpwl": 58600,
+      "area": 259,
+      "timing_ps": 42.25,
+      "power_mw": 0.058859,
+      "max_congestion": 247,
+      "mean_congestion": 0.1236,
+      "median_congestion": 0.0,
+      "std_congestion": 4.943472771240882
+    }
+  },
+  {
+    "name": "bigblue4_s28_n382",
+    "features": {
+      "n_cells": 382,
+      "n_nets": 266,
+      "avg_net_size": 5.7518796992481205,
+      "max_net_size": 58,
+      "avg_cell_degree": 4.005235602094241,
+      "max_cell_degree": 13,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 128752.0
+    },
+    "metrics": {
+      "hpwl": 128752,
+      "area": 382,
+      "timing_ps": 83.476,
+      "power_mw": 0.12913400000000003,
+      "max_congestion": 255,
+      "mean_congestion": 0.1528,
+      "median_congestion": 0.0,
+      "std_congestion": 5.124046463489572
+    }
+  },
+  {
+    "name": "bigblue4_s29_n543",
+    "features": {
+      "n_cells": 543,
+      "n_nets": 663,
+      "avg_net_size": 4.2368024132730016,
+      "max_net_size": 541,
+      "avg_cell_degree": 5.173112338858195,
+      "max_cell_degree": 15,
+      "die_area": 584166960.0,
+      "die_aspect": 0.5589581786686464,
+      "hpwl": 958009.0
+    },
+    "metrics": {
+      "hpwl": 958009,
+      "area": 543,
+      "timing_ps": 506.1545,
+      "power_mw": 0.9585520000000001,
+      "max_congestion": 308,
+      "mean_congestion": 1.4088,
+      "median_congestion": 0.0,
+      "std_congestion": 7.19750530114428
+    }
+  }
+]

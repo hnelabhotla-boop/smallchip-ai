@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chipplacer"
+version = "0.1.0"
+description = "Open-source ML chip placement platform"
+authors = [{name = "Harshith"}]
+license = {text = "MIT"}
+requires-python = ">=3.10"
+dependencies = [
+    "torch>=2.0",
+    "torch-geometric>=2.4",
+    "numpy",
+    "fastapi",
+    "uvicorn",
+    "python-multipart",
+    "pydantic",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourname/chipplacer"
+
+[tool.setuptools.packages.find]
+include = ["chipmind*"]

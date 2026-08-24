@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmallChip AI Co-Pilot — Chat with the AI Chip Designer</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a1a1a; line-height: 1.6; margin: 0; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 24px; }
+        header { background: linear-gradient(135deg, #1a202c, #2d3748); color: white; padding: 24px 0 32px; }
+        header h1 { font-size: 32px; font-weight: 800; margin: 0 0 6px; }
+        header p.tagline { font-size: 16px; opacity: 0.95; margin: 0; }
+        header p.legal { font-size: 12px; opacity: 0.6; margin: 4px 0 0; }
+        .callout { background: #ebf8ff; border-left: 4px solid #3182ce; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin: 16px 0 20px; }
+        .callout strong { color: #2c5282; }
+        .layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+        .chat-col { display: flex; flex-direction: column; background: white; border-radius: 10px; overflow: hidden; min-height: 600px; }
+        .chat-header { padding: 14px 18px; border-bottom: 1px solid #edf2f7; display: flex; align-items: center; justify-content: space-between; background: #f7fafc; }
+        .chat-header .status { font-size: 13px; color: #4a5568; }
+        .chat-header .status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #38a169; margin-right: 6px; }
+        .chat-header button { background: #e2e8f0; border: none; color: #2d3748; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
+        .chat-header button:hover { background: #cbd5e0; }
+        .chat-body { flex: 1; padding: 18px; overflow-y: auto; max-height: 65vh; }
+        .bubble { max-width: 80%; padding: 10px 14px; border-radius: 14px; margin: 6px 0; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
+        .bubble.user { background: #3182ce; color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+        .bubble.assistant { background: #edf2f7; color: #1a202c; margin-right: auto; border-bottom-left-radius: 4px; }
+        .bubble.system { background: #fef5e7; color: #744210; margin: 12px auto; text-align: center; font-size: 12px; max-width: 90%; }
+        .bubble.assistant .placeholder { color: #718096; font-style: italic; }
+        .typing { display: inline-block; }
+        .typing span { display: inline-block; width: 6px; height: 6px; background: #a0aec0; border-radius: 50%; margin: 0 2px; animation: typing 1.2s infinite; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+        .chat-input { padding: 14px; border-top: 1px solid #edf2f7; background: #f7fafc; display: flex; gap: 8px; }
+        .chat-input input { flex: 1; padding: 10px 14px; border: 1px solid #cbd5e0; border-radius: 20px; font-size: 14px; outline: none; }
+        .chat-input input:focus { border-color: #3182ce; }
+        .chat-input button { padding: 10px 18px; background: #3182ce; color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .chat-input button:hover { background: #2c5282; }
+        .chat-input button:disabled { background: #a0aec0; cursor: not-allowed; }
+        .sidebar { display: flex; flex-direction: column; gap: 16px; }
+        .panel { background: white; border-radius: 10px; padding: 16px; }
+        .panel h3 { margin: 0 0 10px; font-size: 14px; color: #2d3748; text-transform: uppercase; letter-spacing: 0.05em; }
+        .chip-info { font-size: 13px; color: #4a5568; }
+        .chip-info b { color: #1a202c; }
+        .metric-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #edf2f7; font-size: 13px; }
+        .metric-row:last-child { border-bottom: none; }
+        .metric-row .v { font-weight: 700; color: #2d3748; }
+        .metric-row.improvement .v { color: #22543d; }
+        .pref-bars { display: flex; flex-direction: column; gap: 6px; }
+        .pref-row { display: flex; align-items: center; font-size: 12px; }
+        .pref-label { width: 90px; color: #4a5568; }
+        .pref-bar { flex: 1; height: 8px; background: #edf2f7; border-radius: 4px; overflow: hidden; margin: 0 8px; }
+        .pref-fill { height: 100%; background: linear-gradient(90deg, #3182ce, #63b3ed); transition: width 0.3s; }
+        .pref-val { width: 36px; text-align: right; font-weight: 600; color: #2d3748; }
+        .report-box { background: #f0fff4; border-left: 3px solid #38a169; padding: 12px; border-radius: 4px; font-size: 13px; max-height: 240px; overflow-y: auto; }
+        .download-btn { display: block; text-align: center; padding: 10px 16px; background: #38a169; color: white; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; margin-top: 10px; }
+        .download-btn:hover { background: #2f855a; }
+        .download-btn.disabled { background: #cbd5e0; color: #718096; pointer-events: none; }
+        .upload-zone { border: 2px dashed #cbd5e0; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; background: white; }
+        .upload-zone:hover, .upload-zone.dragging { border-color: #3182ce; background: #f0f9ff; }
+        .upload-zone p { margin: 4px 0; color: #4a5568; font-size: 13px; }
+        .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .examples span { display: inline-block; padding: 4px 10px; background: #edf2f7; border-radius: 12px; cursor: pointer; font-size: 12px; color: #2d3748; }
+        .examples span:hover { background: #e2e8f0; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🧠 SmallChip AI Co-Pilot</h1>
+            <p class="tagline">Chat with the AI chip designer. Upload a chip, then talk to it like you'd talk to a colleague.</p>
+            <p class="legal">For small-to-medium chip designs (≤15,000 cells). Free, open-source, no $1M license.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="callout">
+            <strong>How this works:</strong> the AI always runs the <strong>best-possible placer</strong>
+            (validated at <strong>99.7% HPWL reduction / 370× shorter wires</strong> vs. OpenROAD's default
+            on the GCD benchmark, with identical timing and power). Your messages shape the
+            <strong>report</strong> — which metric the explanation emphasizes — but the chip is
+            always the same best-possible placement. You can also ask it questions about the chip.
+        </div>
+
+        <div class="layout">
+            <!-- Left: Chat column -->
+            <div class="chat-col" id="chatCol">
+                <div class="chat-header">
+                    <div class="status"><span class="dot"></span><span id="statusText">Ready — upload a chip to start</span></div>
+                    <button id="resetBtn" class="hidden">↺ Start over</button>
+                </div>
+                <div class="chat-body" id="chatBody">
+                    <div class="bubble system">Welcome! Upload a .def file below, then type a request like "make it use less power".</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="userInput" placeholder="Type your message..." disabled>
+                    <button id="sendBtn" disabled>Send</button>
+                </div>
+            </div>
+
+            <!-- Right: Sidebar -->
+            <div class="sidebar">
+                <div class="panel" id="uploadPanel">
+                    <h3>📁 Upload Chip</h3>
+                    <div class="upload-zone" id="uploadZone">
+                        <p><strong>Drag &amp; drop a .def file</strong> or click to browse</p>
+                        <p id="fileName" style="font-size: 12px;">No file selected</p>
+                        <input type="file" id="fileInput" accept=".def" hidden>
+                    </div>
+                    <div class="examples">
+                        Try:
+                        <span data-msg="make it use less power">less power</span>
+                        <span data-msg="I need this to run as fast as possible">faster</span>
+                        <span data-msg="minimize the die area">smaller</span>
+                        <span data-msg="make it easy to manufacture">easier to route</span>
+                    </div>
+                </div>
+
+                <div class="panel hidden" id="chipPanel">
+                    <h3>🔬 Chip</h3>
+                    <div class="chip-info" id="chipInfo"></div>
+                </div>
+
+                <div class="panel hidden" id="prefPanel">
+                    <h3>⚖️ Current emphasis</h3>
+                    <div class="pref-bars" id="prefBars"></div>
+                    <p style="font-size: 11px; color: #718096; margin: 10px 0 0;">This shapes the report — the chip is always the same best-possible placement.</p>
+                </div>
+
+                <div class="panel hidden" id="metricsPanel">
+                    <h3>📊 Latest metrics</h3>
+                    <div id="metricsBox"></div>
+                    <a id="downloadBtn" class="download-btn disabled">📥 Download .def</a>
+                </div>
+
+                <div class="panel hidden" id="reportPanel">
+                    <h3>📝 Report</h3>
+                    <div class="report-box" id="reportBox"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileNameEl = document.getElementById('fileName');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chatBody = document.getElementById('chatBody');
+        const statusText = document.getElementById('statusText');
+        const resetBtn = document.getElementById('resetBtn');
+
+        const PREF_LABELS = ['HPWL', 'Power', 'Area', 'Timing', 'Routing'];
+        const PREF_KEYS = ['hpwl', 'power', 'area', 'timing', 'congestion'];
+
+        let currentFile = null;
+        let sessionId = null;
+        let lastPlacedDef = null;
+        let lastDesignName = null;
+
+        // Restore session from localStorage on load
+        try {
+            const saved = localStorage.getItem('chipmind_session');
+            if (saved) {
+                sessionId = saved;
+                statusText.textContent = 'Resumed previous session — start typing';
+                enableInput();
+                resetBtn.classList.remove('hidden');
+                // We don't restore the chat history (server-side), but we keep the id
+                addSystemBubble('Resumed previous session. The file is gone (refreshing lost it), but the chat id is kept — type a new request and the server will reject it, prompting a re-upload.');
+            }
+        } catch (e) { /* ignore */ }
+
+        // Upload
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragging'); });
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragging'));
+        uploadZone.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragging');
+            if (e.dataTransfer.files[0] && e.dataTransfer.files[0].name.endsWith('.def')) {
+                currentFile = e.dataTransfer.files[0];
+                fileNameEl.textContent = '✓ ' + currentFile.name;
+            }
+        });
+        fileInput.addEventListener('change', e => {
+            if (e.target.files[0]) {
+                currentFile = e.target.files[0];
+                fileNameEl.textContent = '✓ ' + currentFile.name;
+            }
+        });
+
+        // Click on example chip
+        document.querySelectorAll('.examples span').forEach(el => {
+            el.addEventListener('click', () => {
+                userInput.value = el.dataset.msg;
+                userInput.focus();
+            });
+        });
+
+        // Send on Enter
+        userInput.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
+        });
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Reset
+        resetBtn.addEventListener('click', async () => {
+            if (sessionId) {
+                try { await fetch('/api/copilot/end', { method: 'POST', body: new FormData() }); } catch (e) {}
+            }
+            sessionId = null;
+            currentFile = null;
+            lastPlacedDef = null;
+            fileNameEl.textContent = 'No file selected';
+            fileInput.value = '';
+            chatBody.innerHTML = '<div class="bubble system">Welcome! Upload a .def file below, then type a request like "make it use less power".</div>';
+            userInput.value = '';
+            document.getElementById('chipPanel').classList.add('hidden');
+            document.getElementById('prefPanel').classList.add('hidden');
+            document.getElementById('metricsPanel').classList.add('hidden');
+            document.getElementById('reportPanel').classList.add('hidden');
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            statusText.textContent = 'Ready — upload a chip to start';
+            resetBtn.classList.add('hidden');
+            localStorage.removeItem('chipmind_session');
+        });
+
+        function enableInput() {
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+        }
+
+        function addUserBubble(text) {
+            const b = document.createElement('div');
+            b.className = 'bubble user';
+            b.textContent = text;
+            chatBody.appendChild(b);
+            scrollChat();
+        }
+
+        function addAssistantBubble(html) {
+            const b = document.createElement('div');
+            b.className = 'bubble assistant';
+            if (html) b.innerHTML = html;
+            else b.innerHTML = '<span class="placeholder">...</span>';
+            chatBody.appendChild(b);
+            scrollChat();
+            return b;
+        }
+
+        function addSystemBubble(text) {
+            const b = document.createElement('div');
+            b.className = 'bubble system';
+            b.textContent = text;
+            chatBody.appendChild(b);
+            scrollChat();
+        }
+
+        function addTypingBubble() {
+            const b = document.createElement('div');
+            b.className = 'bubble assistant';
+            b.innerHTML = '<span class="typing"><span></span><span></span><span></span></span>';
+            chatBody.appendChild(b);
+            scrollChat();
+            return b;
+        }
+
+        function scrollChat() {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // First message: need a file
+            if (!sessionId && !currentFile) {
+                addSystemBubble('Please upload a .def file first.');
+                return;
+            }
+
+            addUserBubble(text);
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            statusText.textContent = 'Thinking...';
+            const typing = addTypingBubble();
+
+            try {
+                let resp;
+                if (!sessionId) {
+                    // Start a new session
+                    const fd = new FormData();
+                    fd.append('file', currentFile);
+                    fd.append('message', text);
+                    resp = await fetch('/api/copilot/start', { method: 'POST', body: fd });
+                } else {
+                    // Continue
+                    const fd = new FormData();
+                    fd.append('session_id', sessionId);
+                    fd.append('message', text);
+                    resp = await fetch('/api/copilot/chat', { method: 'POST', body: fd });
+                }
+                if (!resp.ok) {
+                    const err = await resp.json().catch(() => ({detail: 'Server error'}));
+                    if (resp.status === 404) {
+                        // Session expired — restart
+                        sessionId = null;
+                        localStorage.removeItem('chipmind_session');
+                        if (!currentFile) {
+                            throw new Error('Session expired and no file uploaded. Please upload a .def file.');
+                        }
+                        const fd = new FormData();
+                        fd.append('file', currentFile);
+                        fd.append('message', text);
+                        resp = await fetch('/api/copilot/start', { method: 'POST', body: fd });
+                        if (!resp.ok) throw new Error((await resp.json()).detail || 'Server error');
+                    } else {
+                        throw new Error(err.detail || 'Server error');
+                    }
+                }
+                const d = await resp.json();
+                sessionId = d.session_id;
+                localStorage.setItem('chipmind_session', sessionId);
+                renderTurn(d);
+                statusText.textContent = `Session active (turn ${d.turn_count})`;
+                resetBtn.classList.remove('hidden');
+            } catch (err) {
+                typing.remove();
+                addSystemBubble('⚠️ ' + err.message);
+                statusText.textContent = 'Error';
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        function renderTurn(d) {
+            // Replace the typing bubble with the assistant's reply
+            const typingBubbles = chatBody.querySelectorAll('.bubble.assistant .typing');
+            const lastTyping = typingBubbles[typingBubbles.length - 1];
+            if (lastTyping) {
+                const parent = lastTyping.closest('.bubble');
+                parent.innerHTML = d.reply || '(no reply)';
+            }
+
+            // Update sidebar panels
+            document.getElementById('chipPanel').classList.remove('hidden');
+            document.getElementById('chipInfo').innerHTML = `
+                <div><b>${d.design_name}</b></div>
+                <div>${d.n_cells.toLocaleString()} cells · ${d.n_nets.toLocaleString()} nets</div>
+            `;
+
+            if (d.preference) {
+                document.getElementById('prefPanel').classList.remove('hidden');
+                const prefBars = document.getElementById('prefBars');
+                prefBars.innerHTML = '';
+                d.preference.forEach((v, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'pref-row';
+                    row.innerHTML = `
+                        <div class="pref-label">${PREF_LABELS[i]}</div>
+                        <div class="pref-bar"><div class="pref-fill" style="width: ${v*100}%"></div></div>
+                        <div class="pref-val">${Math.round(v*100)}%</div>`;
+                    prefBars.appendChild(row);
+                });
+            }
+
+            document.getElementById('metricsPanel').classList.remove('hidden');
+            const metricsBox = document.getElementById('metricsBox');
+            metricsBox.innerHTML = `
+                <div class="metric-row"><div>Original HPWL</div><div class="v">${Math.round(d.old_hpwl).toLocaleString()}</div></div>
+                <div class="metric-row"><div>New HPWL</div><div class="v">${Math.round(d.new_hpwl).toLocaleString()}</div></div>
+                <div class="metric-row improvement"><div>Improvement</div><div class="v">${d.improvement_pct.toFixed(1)}%</div></div>
+            `;
+
+            if (d.placed_def) {
+                lastPlacedDef = d.placed_def;
+                lastDesignName = d.design_name;
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.classList.remove('disabled');
+                downloadBtn.setAttribute('href', '#');
+                downloadBtn.onclick = (e) => {
+                    e.preventDefault();
+                    const blob = new Blob([lastPlacedDef], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${lastDesignName}_chipmind.def`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                };
+            }
+
+            if (d.report_html) {
+                document.getElementById('reportPanel').classList.remove('hidden');
+                document.getElementById('reportBox').innerHTML = d.report_html;
+            }
+        }
+    </script>
+</body>
+</html>
