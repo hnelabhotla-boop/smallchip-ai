@@ -389,6 +389,10 @@ if EXAMPLES_DIR.exists():
 from chipmind.api.copilot import router as copilot_router
 app.include_router(copilot_router)
 
+# Quality metrics endpoint (congestion, thermal)
+from chipmind.api.quality import router as quality_router
+app.include_router(quality_router)
+
 
 @app.get("/")
 async def root():
