@@ -407,6 +407,24 @@ async def copilot_page():
     return HTMLResponse("<h1>ChipMind Co-Pilot</h1><p>Frontend not built yet.</p>")
 
 
+@app.get("/sw.js")
+async def service_worker():
+    """Serve the PWA service worker at root so it can control all pages."""
+    sw_path = WEB_DIR / "sw.js"
+    if sw_path.exists():
+        return FileResponse(str(sw_path), media_type="application/javascript")
+    return HTMLResponse("// service worker not found", status_code=404)
+
+
+@app.get("/manifest.json")
+async def pwa_manifest():
+    """Serve the PWA manifest at root."""
+    manifest_path = WEB_DIR / "manifest.json"
+    if manifest_path.exists():
+        return FileResponse(str(manifest_path), media_type="application/manifest+json")
+    return HTMLResponse("{}", media_type="application/manifest+json")
+
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.environ.get("PORT", 8000))

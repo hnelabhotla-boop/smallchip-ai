@@ -66,6 +66,9 @@
         .examples span:hover { background: #e2e8f0; }
         .hidden { display: none !important; }
     </style>
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#3182ce">
+  <link rel="apple-touch-icon" href="/static/icon-192.png">
 </head>
 <body>
     <header>
@@ -410,3 +413,9 @@
     </script>
 </body>
 </html>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>

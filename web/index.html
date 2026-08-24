@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmallChip AI — AI chip placement co-pilot for small-to-medium chips</title>
     <link rel="stylesheet" href="/static/style.css">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#3182ce">
+  <link rel="apple-touch-icon" href="/static/icon-192.png">
 </head>
 <body>
     <header>
@@ -225,3 +228,9 @@
     <script src="/static/app.js"></script>
 </body>
 </html>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
