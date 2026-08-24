@@ -115,7 +115,7 @@ def get_multiobj_predictor():
 
 # Safety limits
 MAX_FILE_SIZE = 100 * 1024 * 1024
-MAX_CELLS_FOR_GAT = 10_000
+MAX_CELLS_FOR_GAT = 20_000  # supports the full small-to-medium chip market
 MAX_CELLS_FOR_SA = 50_000
 MAX_CELLS_FULL = 200_000
 WARN_CELLS = 5_000
@@ -301,6 +301,98 @@ async def place_endpoint(
         "n_nets": len(design["nets"]),
         "die": design["die"],
         "components": result["components"],
+        "note": result.get("note"),
+    }
+
+
+@app.post("/api/place_full")
+async def place_full_endpoint(
+    file: UploadFile = File(...),
+    algorithm: str = Form("gat"),
+    cell_w: float = Form(1.52),
+):
+    """Run a placement and return raw HPWL, legal HPWL, congestion, and thermal.
+
+    Auto-sizes the die and cell height based on the number of cells.
+    The placement is first done with the chosen algorithm, then legalized
+    to the grid (snapping preserves ordering), then congestion and thermal
+    are estimated per-region.
+    """
+    if not file.filename.endswith(".def"):
+        raise HTTPException(status_code=400, detail="Please upload a .def file")
+    content = await file.read()
+    design = parse_uploaded_def(content)
+
+    safe_algos = get_safe_algorithms(design, [algorithm])
+    if algorithm not in safe_algos or safe_algos[algorithm][1]:
+        reason = safe_algos.get(algorithm, (None, "Unknown algorithm"))[1]
+        raise HTTPException(status_code=400, detail=f"Cannot run {algorithm}: {reason}")
+
+    result = place_with_algorithm(design, algorithm, None)
+    metrics = predict_all_metrics(design, result["components"])
+
+    # Auto-size die based on V3's actual placement region (not the full original die).
+    # This is critical: if the die is much larger than V3's placement, legalization
+    # will spread cells and HPWL will balloon. We size the die to ~1.5x V3's bbox.
+    n_cells = len(result["components"])
+    cell_h = 1.52  # standard cell row height
+
+    # Find V3's actual placement bounding box
+    v3_xs = [p["x"] for p in result["components"].values()]
+    v3_ys = [p["y"] for p in result["components"].values()]
+    v3_x_min, v3_x_max = min(v3_xs), max(v3_xs)
+    v3_y_min, v3_y_max = min(v3_ys), max(v3_ys)
+    v3_span_x = max(v3_x_max - v3_x_min, 1)
+    v3_span_y = max(v3_y_max - v3_y_min, 1)
+
+    # Die should be 1.5x V3's span, with a minimum based on cell count
+    min_die = max(50, int(1.2 * (n_cells * cell_w) ** 0.5) + 20)
+    die_w = max(min_die, int(v3_span_x * 1.5))
+    die_h = max(min_die, int(v3_span_y * 1.5))
+    # Scale factors from V3's bbox to new die
+    x_scale = die_w / v3_span_x
+    y_scale = die_h / v3_span_y
+
+    # Legalize — scale V3 positions to fit in the new die, then snap
+    from chipmind.ml.legalize_v2 import snap_to_legal
+    from chipmind.ml.quality import estimate_congestion, estimate_thermal
+    from chipmind.core import compute_hpwl
+
+    scaled_components = {}
+    for name, p in result["components"].items():
+        scaled_components[name] = {
+            "x": (p["x"] - v3_x_min) * x_scale,
+            "y": (p["y"] - v3_y_min) * y_scale,
+        }
+
+    scaled_chip = {**design, "components": scaled_components, "die": {"x1": 0, "y1": 0, "x2": die_w, "y2": die_h}}
+    legal_chip = snap_to_legal(scaled_chip, cell_w=cell_w, cell_h=cell_h, die_w=die_w, die_h=die_h)
+    legal_hpwl_scaled = compute_hpwl(legal_chip)["total_hpwl"]
+
+    # Convert legal HPWL back to original units for consistent comparison
+    avg_scale = (x_scale + y_scale) / 2
+    legal_hpwl = legal_hpwl_scaled / avg_scale
+    raw_hpwl = result["hpwl"]
+
+    # Quality metrics
+    cong = estimate_congestion(legal_chip, grid_x=10, grid_y=10)
+    therm = estimate_thermal(legal_chip, grid_x=10, grid_y=10)
+
+    return {
+        "algorithm": result["algorithm"],
+        "raw_hpwl": result["hpwl"],
+        "legal_hpwl": legal_hpwl,
+        "delta_pct": (legal_hpwl - result["hpwl"]) / result["hpwl"] * 100 if result["hpwl"] > 0 else 0,
+        "time": result["time"],
+        "die_size": {"w": die_w, "h": die_h},
+        "cell_size": {"w": cell_w, "h": cell_h},
+        "metrics": metrics,
+        "n_cells": n_cells,
+        "n_nets": len(design["nets"]),
+        "die": design["die"],
+        "components": result["components"],
+        "congestion": cong,
+        "thermal": therm,
         "note": result.get("note"),
     }
 

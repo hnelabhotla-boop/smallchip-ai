@@ -229,13 +229,17 @@ def _build_chat_response(session: Dict[str, Any], user_message: str) -> Dict[str
     session['messages'].append({"role": "user", "content": user_message})
 
     # Build chip_info (used by question and ack branches)
+    # NOTE: session.get(key, default) returns None if the key exists with value None.
+    # We need explicit None checks for fields that start as None.
+    cur_hpwl = session.get('current_hpwl')
+    cur_impr = session.get('improvement_pct')
     chip_info = {
         "design_name": session['design_name'],
         "n_cells": session['n_cells'],
         "n_nets": session['n_nets'],
         "old_hpwl": session['old_hpwl'],
-        "new_hpwl": session.get('current_hpwl', session['old_hpwl']),
-        "improvement_pct": session.get('improvement_pct', 0.0) or 0.0,
+        "new_hpwl": cur_hpwl if cur_hpwl is not None else session['old_hpwl'],
+        "improvement_pct": cur_impr if cur_impr is not None else 0.0,
         "preference": session.get('current_preference') or [0.2]*5,
     }
 
