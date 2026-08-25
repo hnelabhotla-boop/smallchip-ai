@@ -1,0 +1,2 @@
+# SmallChip AI Desktop App dependencies
+pywebview>=6.0
