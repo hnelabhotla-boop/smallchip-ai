@@ -1,0 +1,46 @@
+{
+  "design": "bigblue1_15k_subset",
+  "n_cells": 15000,
+  "n_nets": 13155,
+  "die_dbu": {
+    "x1": 10692, "y1": 459, "x2": 20692, "y2": 11139,
+    "width": 10000, "height": 10680, "units": "DBU @ 1000 DBU/um"
+  },
+  "v3_model": "results/gat_v3_combined_60ep/gat_v3_model_best.pt",
+  "training": {
+    "data": "results/training_data/combined_training_data.json",
+    "n_chips": 510,
+    "max_cells_in_data": 1858,
+    "epochs": 60,
+    "lr": 0.0005,
+    "final_loss": 0.5210
+  },
+  "v3_raw_hpwl_dbu": 6020661,
+  "v3_legal_hpwl_dbu": 538577,
+  "v3_legal_cell_width_um": 5.32,
+  "raw_to_legal_reduction_pct": 91.1,
+  "all_legal_runs": [
+    {"cell_w_um": 1.90, "legal_hpwl_dbu": 622177},
+    {"cell_w_um": 2.28, "legal_hpwl_dbu": 600137},
+    {"cell_w_um": 2.66, "legal_hpwl_dbu": 586457},
+    {"cell_w_um": 3.04, "legal_hpwl_dbu": 593297},
+    {"cell_w_um": 3.80, "legal_hpwl_dbu": 568977},
+    {"cell_w_um": 4.56, "legal_hpwl_dbu": 575057},
+    {"cell_w_um": 5.32, "legal_hpwl_dbu": 538577},
+    {"cell_w_um": 6.08, "legal_hpwl_dbu": 538577}
+  ],
+  "per_net_avg_dbu": 41,
+  "per_cell_avg_dbu": 35.9,
+  "comparison_to_openroad": "OpenROAD GPL failed to converge on this 15K design at any die size (100x100um, 200x200um, 22000x12000um) or density/overflow target we tried. RePlAce diverged at iteration ~2700 with overflow stuck at 0.999.",
+  "comparison_to_gcd": {
+    "gcd_per_net_um": 46,
+    "15k_per_net_um": 41,
+    "ratio": "15K achieves BETTER per-net wire quality than the 734-cell GCD reference, despite 20x more cells"
+  },
+  "comparison_to_old_v3": {
+    "old_v3_legal_hpwl_dbu": 3296509,
+    "new_v3_legal_hpwl_dbu": 538577,
+    "improvement_factor": 6.12,
+    "improvement_pct": 83.7
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "v3_model": "/Users/harshith/Documents/RLChip_ISEF/results/gat_v3_combined_60ep/gat_v3_model_best.pt",
+  "runs": [
+    {
+      "label": "5k",
+      "n_cells": 5000,
+      "n_nets": 4167,
+      "die_dbu": {
+        "x1": 10692,
+        "y1": 459,
+        "x2": 20692,
+        "y2": 11139
+      },
+      "v3_raw_hpwl_dbu": 2090455.7682189941,
+      "v3_legal_hpwl_dbu": 542348.5714285716,
+      "best_cell_w_um": 1.25,
+      "per_net_dbu": 130.15324488326652,
+      "per_cell_dbu": 108.46971428571432,
+      "raw_to_legal_reduction_pct": 74.05596522663399
+    },
+    {
+      "label": "8k",
+      "n_cells": 8000,
+      "n_nets": 6635,
+      "die_dbu": {
+        "x1": 10692,
+        "y1": 459,
+        "x2": 20692,
+        "y2": 11139
+      },
+      "v3_raw_hpwl_dbu": 5366517.2744140625,
+      "v3_legal_hpwl_dbu": 544185.7142857144,
+      "best_cell_w_um": 1.25,
+      "per_net_dbu": 82.01743998277534,
+      "per_cell_dbu": 68.0232142857143,
+      "raw_to_legal_reduction_pct": 89.85961124395838
+    },
+    {
+      "label": "10k",
+      "n_cells": 10000,
+      "n_nets": 8439,
+      "die_dbu": {
+        "x1": 10692,
+        "y1": 459,
+        "x2": 20692,
+        "y2": 11139
+      },
+      "v3_raw_hpwl_dbu": 5506630.111450195,
+      "v3_legal_hpwl_dbu": 631538.5714285714,
+      "best_cell_w_um": 1.25,
+      "per_net_dbu": 74.83571174648316,
+      "per_cell_dbu": 63.153857142857134,
+      "raw_to_legal_reduction_pct": 88.5313057415027
+    },
+    {
+      "label": "15k",
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "die_dbu": {
+        "x1": 10692,
+        "y1": 459,
+        "x2": 20692,
+        "y2": 11139
+      },
+      "v3_raw_hpwl_dbu": 6020661.303039551,
+      "v3_legal_hpwl_dbu": 704827.1428571425,
+      "best_cell_w_um": 1.25,
+      "per_net_dbu": 53.57865016017807,
+      "per_cell_dbu": 46.98847619047616,
+      "raw_to_legal_reduction_pct": 88.29319393035266
+    }
+  ]
+}
