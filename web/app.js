@@ -44,18 +44,32 @@ function setFile(file) {
     runBtn.disabled = false;
 }
 
-exampleLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    try {
-        const response = await fetch('/examples/gcd_nangate45.def');
-        if (!response.ok) throw new Error('Could not load example');
-        const blob = await response.blob();
-        const file = new File([blob], 'gcd_nangate45.def', { type: 'text/plain' });
-        setFile(file);
-    } catch (err) {
-        alert('Could not load example: ' + err.message);
-    }
-});
+function loadExample(filename, displayName) {
+    return async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`/static/examples/${filename}`);
+            if (!response.ok) throw new Error(`Could not load ${filename}`);
+            const blob = await response.blob();
+            const file = new File([blob], filename, { type: 'text/plain' });
+            setFile(file);
+            showStatus(`Loaded example: ${displayName} (${(file.size / 1024).toFixed(0)} KB). Click "Run comparison" to see results.`, 'info');
+        } catch (err) {
+            alert('Could not load example: ' + err.message);
+        }
+    };
+}
+
+exampleLink.addEventListener('click', loadExample('gcd_734cells.def', 'GCD (734 cells)'));
+
+const example5k = document.getElementById('loadExample5k');
+if (example5k) example5k.addEventListener('click', loadExample('bigblue1_5k_subset.def', '5K bigblue1 subset (5,000 cells)'));
+
+const example8k = document.getElementById('loadExample8k');
+if (example8k) example8k.addEventListener('click', loadExample('bigblue1_8k_subset.def', '8K bigblue1 subset (8,000 cells)'));
+
+const example15k = document.getElementById('loadExample15k');
+if (example15k) example15k.addEventListener('click', loadExample('bigblue1_15k_subset.def', '15K bigblue1 subset (15,000 cells)'));
 
 runBtn.addEventListener('click', async () => {
     if (!currentFile) return;

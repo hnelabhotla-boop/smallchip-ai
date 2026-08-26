@@ -67,7 +67,13 @@
             </div>
             <p class="limit-note">Best for small-to-medium chips: up to <strong>15,000 cells</strong>. Designs larger than this will fall back to a simpler heuristic — for full large-chip placement, use OpenROAD.</p>
             <div class="example">
-                <p>Don't have a file? <a href="#" id="loadExample">Try the GCD example (45nm, 692 cells)</a></p>
+                <p>Don't have a file? Try one of these:</p>
+                <ul style="list-style: none; padding: 0; margin: 8px 0;">
+                    <li>🟢 <a href="#" id="loadExample">GCD example</a> — 734 cells, 463 nets, 45nm (the headline 99.7% win)</li>
+                    <li>🟡 <a href="#" id="loadExample5k">5K bigblue1 subset</a> — 5,000 cells, 4,167 nets (~30s)</li>
+                    <li>🟠 <a href="#" id="loadExample8k">8K bigblue1 subset</a> — 8,000 cells, 6,635 nets (~1 min)</li>
+                    <li>🔴 <a href="#" id="loadExample15k">15K bigblue1 subset</a> — 15,000 cells, 13,155 nets (~3 min)</li>
+                </ul>
             </div>
         </section>
 
