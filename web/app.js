@@ -48,7 +48,7 @@ function loadExample(filename, displayName) {
     return async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`/examples/${filename}`);
+            const response = await fetch(`/static/examples/${filename}`);
             if (!response.ok) throw new Error(`Could not load ${filename}`);
             const blob = await response.blob();
             const file = new File([blob], filename, { type: 'text/plain' });

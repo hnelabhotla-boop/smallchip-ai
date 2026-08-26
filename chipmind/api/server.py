@@ -471,6 +471,7 @@ async def savings_endpoint(hpwl: float, baseline_hpwl: float = 4054220,
 
 WEB_DIR = PROJECT_ROOT / "web"
 EXAMPLES_DIR = WEB_DIR / "examples"  # in web/ so the .app bundle ships it too
+# App fetches from /static/examples/X (which maps to web/examples/X)
 if WEB_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(WEB_DIR)), name="static")
 if EXAMPLES_DIR.exists():
