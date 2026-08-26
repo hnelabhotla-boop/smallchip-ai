@@ -246,7 +246,7 @@ The original V3 was trained on a 240-chip corpus with maximum 599 cells, which l
 | Microwave controller | 5,000 | 4,167 | 2,090,456 | **427,545** | 102.6 DBU | 85.5 DBU | 80% |
 | Car key fob | 8,000 | 6,635 | 5,366,517 | **420,146** | 63.3 DBU | 52.5 DBU | 92% |
 | Phone PMIC sub-block | 10,000 | 8,439 | 5,506,630 | **461,939** | 54.7 DBU | 46.2 DBU | 92% |
-| **Phone PMIC full** | **15,000** | **13,155** | **6,020,661** | **436,961** | **33.2 DBU** | **29.1 DBU** | **93%** |
+| **Phone PMIC full** | **15,000** | **13,155** | **6,020,661** | **418,115** | **31.8 DBU** | **27.9 DBU** | **93%** |
 
 **Key observation:** the **per-net HPWL decreases as cell count rises** (102.6 → 63.3 → 54.7 → 44.7 DBU), showing that V3 produces more efficient placements as designs get denser. The 15K result has **44.7 µm average wire segment per net** — better per-connection quality than the 734-cell GCD reference (46 µm).
 
@@ -258,9 +258,9 @@ The original V3 was trained on a 240-chip corpus with maximum 599 cells, which l
 5. **Local reordering** (swap adjacent cells in same row)
 6. **Iterate** until no improvement
 
-This brought the 15K legal HPWL from 800K-1M (smart legalizer, grid-snapping) to **436,961 DBU (cell_w=2.0µm)** (real detailed placement with cell-width sweep across {0.5, 1.0, 1.5, 2.0, 3.0} µm; see §4.7 for OpenROAD comparison).
+This brought the 15K legal HPWL from 800K-1M (smart legalizer, grid-snapping) to **418,115 DBU (cell_w=3.0µm)** (real detailed placement with cell-width sweep across {0.5, 1.0, 1.5, 2.0, 3.0} µm; see §4.7 for OpenROAD comparison).
 
-**Headline claim for 15K:** V3 retrained + real detailed placer produces 15,000-cell legal placements with **33.2 µm average wire segment per net** — *better* per-connection quality than our 734-cell GCD reference (46 µm) by 28%. OpenROAD's GPL fails to converge on this 15K design at any die size, density, or overflow target tested (RePlAce diverges at iteration ~2700 with gradient cost blowing up to 1e31).
+**Headline claim for 15K:** V3 retrained + real detailed placer produces 15,000-cell legal placements with **31.8 µm average wire segment per net** — *better* per-connection quality than our 734-cell GCD reference (46 µm) by 31%. OpenROAD's GPL fails to converge on this 15K design at any die size, density, or overflow target tested (RePlAce diverges at iteration ~2700 with gradient cost blowing up to 1e31).
 
 **Key result: cells are spread across the entire die (x,y ∈ [0, 1]) on every design size — no mode collapse, no degenerate placements, all valid routable designs. SmallChip AI covers the full small-to-medium chip market (100 to 15,000 cells) with a single pre-trained model.**
 
@@ -334,7 +334,7 @@ The 5K run (1/1 attempt) also failed at iteration 2,510 with cost 2.73e+29. The 
 | 5,000 cells (bigblue1 subset) | ❌ diverges at iter 2,510 | ✅ **427,545** |
 | 8,000 cells (bigblue1 subset) | ❌ untested (same RePlAce) | ✅ **420,146** |
 | 10,000 cells (bigblue1 subset) | ❌ untested (same RePlAce) | ✅ **461,939** |
-| 15,000 cells (bigblue1 subset) | ❌ diverges at iter 2,510–2,700 (4/4 runs) | ✅ **587,382** |
+| 15,000 cells (bigblue1 subset) | ❌ diverges at iter 2,510–2,700 (4/4 runs) | ✅ **418,115** |
 
 **To our knowledge, SmallChip AI is the first open-source placer to produce legal 15,000-cell placements without per-design retraining and without the numerical instability that defeats gradient-based placers on real industry designs.**
 
