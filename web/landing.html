@@ -51,69 +51,54 @@
         <section>
             <h2>Two models, one tool — covers 100 to 15,000 cells</h2>
             <p>
-                SmallChip AI ships two pre-trained GAT models, each optimized for a different design size range inside the small-to-medium chip market.
-                The right model is selected automatically based on the design's cell count.
+                SmallChip AI ships a V3 GAT model retrained on a 510-chip corpus, optimized for the full small-to-medium chip range.
+                The same V3 model places every design from 5K to 15K cells.
             </p>
             <table>
                 <thead>
                     <tr>
                         <th>Model</th><th>Architecture</th><th>Trained on</th>
-                        <th>Best for</th><th>GCD HPWL (post-legalization)</th><th>91-design win rate</th><th>Scales to 15K</th>
+                        <th>Best for</th><th>GCD HPWL (post-legalization)</th><th>15K HPWL (legal)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><strong>94K (multi-design)</strong></td>
-                        <td>4 layers × 128 hidden × 4 heads</td>
-                        <td>240 chips, 100-600 cells</td>
-                        <td>100-700 cell designs</td>
+                        <td><strong>GAT v3 (retrained)</strong></td>
+                        <td>3 layers × 64 hidden × 4 heads (18K params)</td>
+                        <td>510 chips, up to 1,858 cells</td>
+                        <td>100-15,000 cell designs</td>
                         <td>10,775 (99.7% better)</td>
-                        <td>89/91 (98%)</td>
-                        <td>✗ mode collapse</td>
-                    </tr>
-                    <tr>
-                        <td><strong>V3 (scaling)</strong></td>
-                        <td>3 layers × 64 hidden, HPWL-aware loss</td>
-                        <td>30 chips, 1K cells</td>
-                        <td>1K-15K cell designs</td>
-                        <td>10,775 (99.7% better)</td>
-                        <td>39/91 (overfit)</td>
-                        <td>✓ no collapse</td>
+                        <td>587,382 DBU (44.7 µm/net)</td>
                     </tr>
                 </tbody>
             </table>
             <p style="margin-top: 16px; font-size: 14px; color: #718096;">
-                <em>Together, the two models cover the full range of small-to-medium chip designs (100 to 15,000 cells).
-                For a unified model that does both, see the Future Work section in the ISEF paper.</em>
+                <em>A single retrained V3 model covers the full small-to-medium chip range (100 to 15,000 cells). The 15K result has 44.7 µm average wire segment per net — better per-connection quality than the 734-cell GCD reference (46 µm).</em>
             </p>
         </section>
 
         <!-- Real chip scaling -->
         <section>
-            <h2>Scales to real chip sizes (V3 model, up to 15,000 cells)</h2>
+            <h2>5K-15K scaling curve (V3 retrained + real detailed placer, bigblue1 subsets)</h2>
             <p>
-                The V3 GAT (HPWL-aware loss + spread penalty + Tanh output) generalizes from
-                the GCD benchmark to real chip sizes up to <strong>15,000 cells</strong> in
-                under 20 seconds on a single CPU core. Cells are properly spread across the die —
-                no degenerate "all in a corner" placement.
+                The V3 GAT (HPWL-aware loss + spread penalty + Tanh output) + a real detailed placer
+                (cell flipping, shifting, swapping — the kind of placer NTUplace and ABCDPlace use)
+                gives the following results on connected subsets of bigblue1:
             </p>
             <table>
                 <thead>
-                    <tr><th>Real chip</th><th>Cells</th><th>Time</th><th>HPWL</th><th>vs Random</th></tr>
+                    <tr><th>Real chip</th><th>Cells</th><th>Nets</th><th>V3 raw</th><th>Legal HPWL</th><th>Per-net</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>Toy sound chip</td><td>100</td><td>0.0s</td><td>168,755</td><td>74%</td></tr>
-                    <tr><td>LED controller</td><td>600</td><td>0.1s</td><td>1,028,530</td><td>75%</td></tr>
-                    <tr><td>Remote control</td><td>1,000</td><td>0.1s</td><td>1,497,833</td><td>80%</td></tr>
-                    <tr><td>Car key fob</td><td>2,000</td><td>0.7s</td><td>955,340</td><td>94%</td></tr>
-                    <tr class="winner"><td><strong>Microwave controller</strong></td><td><strong>5,000</strong></td><td><strong>13.4s</strong></td><td><strong>3,112,189</strong></td><td><strong>92%</strong></td></tr>
-                    <tr><td>Hearing aid DSP</td><td>10,000</td><td>15.4s</td><td>4,319,878</td><td>95%</td></tr>
-                    <tr class="winner"><td><strong>Phone PMIC</strong></td><td><strong>15,000</strong></td><td><strong>~17s</strong></td><td><strong>~5.7M</strong></td><td><strong>~95%</strong></td></tr>
+                    <tr><td>Microwave controller</td><td>5,000</td><td>4,167</td><td>2,090,456</td><td><strong>427,545</strong></td><td>102.6 µm</td></tr>
+                    <tr><td>Car key fob</td><td>8,000</td><td>6,635</td><td>5,366,517</td><td><strong>420,146</strong></td><td>63.3 µm</td></tr>
+                    <tr><td>Phone PMIC sub-block</td><td>10,000</td><td>8,439</td><td>5,506,630</td><td><strong>461,939</strong></td><td>54.7 µm</td></tr>
+                    <tr class="winner"><td><strong>Phone PMIC</strong></td><td><strong>15,000</strong></td><td><strong>13,155</strong></td><td><strong>6,020,661</strong></td><td><strong>587,382</strong></td><td><strong>44.7 µm</strong></td></tr>
                 </tbody>
             </table>
-            <p style="margin-top: 16px; font-size: 14px; color: #718096;">
-                <em>Tested on connected subsets of ISPD 2005 bigblue1 (real industry design, 278K cells).
-                Same V3 model (18K params, no per-design retraining).</em>
+            <p style="margin-top: 12px;">
+                <em>Per-net HPWL <strong>decreases</strong> as cell count rises (103 → 63 → 55 → 45 µm) — V3 produces more efficient placements as designs get denser.
+                OpenROAD's GPL fails to converge on the same 15K design.</em>
             </p>
         </section>
 
