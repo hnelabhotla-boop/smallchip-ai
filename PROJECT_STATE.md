@@ -70,7 +70,7 @@
 - Required for Grand Prize. Currently HPWL-only.
 
 **BLOCKER 5 — GitHub PAT in remote URL:**
-- Token `REDACTED-PAT` was used during push then unset. **Verify it's not still in `.git/config`.** Consider revoking the token.
+- A GitHub PAT was used during a previous push and was unset from the remote URL after. **Action: rotate the token immediately** — the original value appeared in chat history and is now in this file's git history; assume it is compromised.
 
 ---
 
@@ -118,3 +118,35 @@
 ## 7. Cron to disable
 
 `5f957189-c782-4fc4-9c26-219b1ea54f46` — "Check 15K OpenROAD run" loop on wedged session. Every tick errors. Kill it.
+
+---
+
+## 8. Progress (Aug 26 19:20 EDT — fresh session)
+
+**Just completed:**
+- ✅ Saved full context to PROJECT_STATE.md (this file)
+- ✅ Generated plateau chart (`results/plateau_chart.png`) + headline chart (`results/headline_chart.png`)
+- ✅ Drafted §3.8 Mathematical Foundations (HPWL, GAT attention, V3 loss, complexity)
+- ✅ Drafted §4.7 The Scalability Wall (4/4 OpenROAD 15K + 1/1 5K runs diverge)
+- ✅ Both new sections merged into `ISEF_paper_draft.md`
+- ✅ Wrote 10-min NEOSEF pitch script (`PITCH_10MIN.md`)
+- ✅ Wrote IEEE Computer Society special award application (`IEEE_CS_SPECIAL_AWARD_APPLICATION.md`)
+- ✅ Git committed: `506b984` on main
+- 🔄 15K polish loop running in background (PID 37528)
+- 🔄 Cron monitoring: every 25 min
+
+**Deliverables to ship next:**
+- Push to GitHub (after GCD OpenROAD full-flow result lands)
+- 1-page project summary for NEOSEF booth
+- Side-by-side routing congestion heatmap (wow demo)
+- Real-routed GCD power number (needs OpenROAD install, blocked)
+- Polish 15K to <500K (running, may not hit)
+- Rehearse the 10-min pitch
+
+**Files now in repo (not yet pushed to GitHub):**
+- `PROJECT_STATE.md` (this file)
+- `paper/OPENROAD_DIVERGENCE_SECTION.md` (working draft, content merged into main paper)
+- `paper/SECTION_3_8_MATHEMATICAL_FOUNDATIONS.md` (working draft, content merged into main paper)
+- `PITCH_10MIN.md`
+- `IEEE_CS_SPECIAL_AWARD_APPLICATION.md`
+- `results/plateau_chart.png` + `results/headline_chart.png` + `results/make_plateau_chart.py`
