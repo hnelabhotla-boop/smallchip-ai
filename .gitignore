@@ -1,15 +1,37 @@
+# Python
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.DS_Store
-*.swp
-.idea/
+*.egg-info/
+.eggs/
+*.egg
+
+# IDE
 .vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
 build/
 dist/
-*.egg-info/
-.ipynb_checkpoints/
-node_modules/
+*.app/
+*.spec
+
+# Large model files (already in git via LFS or separate)
+*.pt.tmp
+*.pkl.tmp
+
+# Test outputs
+*.log
+!docs/*.log
+
+# Local environment
 .env
-results/cache/
+.venv/
+venv/
+
+# Don't track the .app folder (it's huge and rebuilt each release)
+releases/*.app/

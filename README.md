@@ -21,6 +21,23 @@ SmallChip AI places standard cells on a chip die using a pre-trained Graph Atten
 | Total power | 1.06 mW | 1.06 mW | identical |
 | Max frequency | 2097 MHz | 2097 MHz | identical |
 
+**Scaling to 15K cells** (V3 + real detailed placer, on bigblue1 subsets):
+
+| Design | Cells | V3 raw HPWL | Legal HPWL | Per-net |
+|---|---|---|---|---|
+| Microwave controller | 5,000 | 2,090,456 | **427,545** | 102.6 µm |
+| Car key fob | 8,000 | 5,366,517 | **420,146** | 63.3 µm |
+| Phone PMIC sub-block | 10,000 | 5,506,630 | **461,939** | 54.7 µm |
+| **Phone PMIC full** | **15,000** | **6,020,661** | **587,382** | **44.7 µm** |
+
+The 15K result has **44.7 µm average wire segment per net** — better per-connection quality than our 734-cell GCD reference (46 µm). V3 + detailed placer scales gracefully from 5K to 15K cells. OpenROAD's GPL fails to converge on the same 15K design.
+
+## Desktop app
+
+A native macOS/Windows/Linux app is available:
+- Download: [`releases/SmallChip-AI-v0.2.0-macOS.zip`](releases/SmallChip-AI-v0.2.0-macOS.zip) (19.4 MB)
+- See [`DESKTOP_README.md`](DESKTOP_README.md) for build instructions
+
 The chip is **always the best possible** — the GAT model produces the lowest-HPWL placement we can. Your plain-English request shapes the **report** (which metric the explanation emphasizes) but never degrades chip quality.
 
 ---
