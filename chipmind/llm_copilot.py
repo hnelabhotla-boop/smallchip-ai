@@ -130,73 +130,140 @@ def default_preference() -> List[float]:
 def keyword_to_preference(text: str):
     """Rule-based fallback: map keywords to preference weights.
 
+    Robust to casual language (typos, slang, dropped words).
+
     Returns (preference, matched_keywords).
     """
+    import re
     text = text.lower()
+    # Normalize: strip punctuation, collapse repeated chars
+    norm = re.sub(r"[^a-z0-9 ]", " ", text)
+    norm = re.sub(r"(.)\1{2,}", r"\1", norm)  # loooow -> low
+    norm = re.sub(r"\s+", " ", norm).strip()
     pref = default_preference()
     keywords = {
+        # Power
         "low power": {"power": +0.4, "hpwl": +0.1},
         "less power": {"power": +0.4, "hpwl": +0.1},
+        "lower power": {"power": +0.4, "hpwl": +0.1},
+        "save power": {"power": +0.4, "hpwl": +0.1},
         "power": {"power": +0.2},
         "energy": {"power": +0.2},
         "battery": {"power": +0.3},
         "cool": {"power": +0.2, "congestion": +0.1},
         "thermal": {"power": +0.2},
+        "watt": {"power": +0.2},
+        # Area / die size
         "small": {"area": +0.4, "hpwl": +0.1},
         "smaller": {"area": +0.4, "hpwl": +0.1},
+        "smaller die": {"area": +0.5, "hpwl": +0.1},
+        "shrink": {"area": +0.4, "hpwl": +0.1},
         "compact": {"area": +0.4},
         "tiny": {"area": +0.4, "hpwl": +0.1},
+        "die size": {"area": +0.5},
         "area": {"area": +0.2},
+        "size": {"area": +0.2},
+        # Timing / speed
         "fast": {"timing": +0.4, "hpwl": +0.2},
         "faster": {"timing": +0.4, "hpwl": +0.2},
         "speed": {"timing": +0.3},
         "clock": {"timing": +0.3},
         "performance": {"timing": +0.3, "hpwl": +0.2},
+        "freq": {"timing": +0.4},
+        "high speed": {"timing": +0.4, "hpwl": +0.2},
+        "low latency": {"timing": +0.4, "hpwl": +0.2},
+        # HPWL / wires
         "short wires": {"hpwl": +0.4, "power": +0.1},
+        "short": {"hpwl": +0.3},
+        "shorter": {"hpwl": +0.3},
         "wirelength": {"hpwl": +0.3},
+        "wire length": {"hpwl": +0.3},
+        "lower hpwl": {"hpwl": +0.5},
+        "reduce hpwl": {"hpwl": +0.5},
+        "lower the hpwl": {"hpwl": +0.5},
+        "decrease the hpwl": {"hpwl": +0.5},
+        "decrease hpwl": {"hpwl": +0.5},
+        "shorter wires": {"hpwl": +0.4, "power": +0.1},
+        "less wire": {"hpwl": +0.4},
+        "wires": {"hpwl": +0.2},
+        "shorter wire": {"hpwl": +0.4, "power": +0.1},
+        "short wire": {"hpwl": +0.3, "power": +0.1},
+        "less wirelength": {"hpwl": +0.5},
+        "less wires": {"hpwl": +0.4},
+        "minimize wirelength": {"hpwl": +0.5},
+        "min wire": {"hpwl": +0.3},
+        "tight wires": {"hpwl": +0.3},
+        "close together": {"hpwl": +0.3, "area": +0.1},
+        "compact layout": {"hpwl": +0.3, "area": +0.2},
+        # Routing
         "routing": {"congestion": +0.3, "hpwl": +0.2},
         "no congestion": {"congestion": +0.4, "hpwl": +0.1},
         "less congestion": {"congestion": +0.4, "hpwl": +0.1},
         "easy to route": {"congestion": +0.3},
-        "balanced": {},
-        "optimal": {},
-        "best": {},
+        "routable": {"congestion": +0.4, "hpwl": +0.1},
     }
     deltas = {"hpwl": 0, "power": 0, "area": 0, "timing": 0, "congestion": 0}
     matched = []
-    for kw, delta in keywords.items():
-        if kw in text:
+    # Sort keywords by length (longest first) so "lower the hpwl" beats "the"
+    sorted_kws = sorted(keywords.keys(), key=lambda k: -len(k))
+    for kw in sorted_kws:
+        delta = keywords[kw]
+        if kw in norm:
             for k, v in delta.items():
                 deltas[k] += v
             matched.append(kw)
     if matched:
         pref = [deltas[k] + 0.2 for k in PREF_LABELS]
         total = sum(pref)
-        pref = [p / total for p in pref]
+        if total > 0:
+            pref = [p / total for p in pref]
         return pref, matched
     return pref, []
 
 
 def llm_to_preference(text: str, history: List[Dict[str, str]] = None,
                      api_key: str = None) -> Tuple[List[float], str]:
-    """Use an LLM (or keyword fallback) to convert plain English → preference vector."""
+    """Use an LLM (or keyword fallback) to convert plain English → preference vector.
+
+    Order:
+      1. Keyword matcher (robust to casual language)
+      2. LLM (constrained prompt, must follow schema exactly)
+      3. Balanced default
+    """
+    # Step 1: keyword matcher (fast + robust)
+    pref, matched = keyword_to_preference(text)
+    if matched:
+        # Build a reasoning string from the matched keywords
+        reason = interpret_matched_keywords(matched)
+        return pref, reason
+
+    # Step 2: LLM
     history_str = ""
     if history:
         history_str = "\n\nConversation so far:\n" + "\n".join(
             f"  {m['role'].upper()}: {m['content']}" for m in history[-6:])
 
-    prompt = f"""You are a chip design preference mapper.{history_str}
+    prompt = f"""You are a chip design preference mapper. The user wants to optimize a chip placement. {history_str}
 
 User's latest message: "{text}"
 
 Map to a 5-dim preference vector: [hpwl, power, area, timing, congestion], each 0-1, sum 1.
-- hpwl: shortest wires
-- power: lowest switching/leakage power
-- area: smallest die (tight packing)
-- timing: highest clock frequency
-- congestion: lowest routing congestion
+Definitions (use these EXACT definitions):
+- hpwl: shortest wirelength, tightest layout
+- power: lowest switching power, longest battery life
+- area: smallest die, tightest packing
+- timing: highest clock frequency, fastest chip
+- congestion: lowest routing congestion, easiest to manufacture
 
-Reply ONLY with JSON: {{"preference": [h, p, a, t, c], "reasoning": "one sentence"}}"""
+Examples of correct mappings:
+- "make it use less power" -> [0.2, 0.6, 0.1, 0.05, 0.05] (power dominant)
+- "lowk like lower the hpwl and decrease the die size" -> [0.4, 0.05, 0.4, 0.05, 0.1] (hpwl + area)
+- "I need this to run as fast as possible" -> [0.1, 0.05, 0.05, 0.7, 0.1] (timing dominant)
+- "make it small" -> [0.15, 0.05, 0.7, 0.05, 0.05] (area dominant)
+- "balanced" -> [0.2, 0.2, 0.2, 0.2, 0.2]
+
+Reply ONLY with valid JSON on a single line: {{"preference": [h, p, a, t, c], "reasoning": "one short sentence"}}
+No other text. No markdown."""
 
     # Try OpenAI first
     if _has_openai():
@@ -232,11 +299,100 @@ Reply ONLY with JSON: {{"preference": [h, p, a, t, c], "reasoning": "one sentenc
                 except Exception:
                     pass
 
-    # Keyword fallback
+    # Keyword fallback (last resort)
     pref, matched = keyword_to_preference(text)
     reasoning = (f"Interpreted: {', '.join(matched)}"
                  if matched else "Using balanced defaults (no specific keywords matched)")
     return pref, reasoning
+
+
+def interpret_matched_keywords(matched: List[str]) -> str:
+    """Build a one-sentence human-readable interpretation from matched keywords.
+
+    Strategy: re-derive the actual delta weights by re-running the
+    keyword-to-preference matcher over a virtual text made of the
+    matched keywords. Use the resulting delta ordering to pick the
+    user-visible phrase. This is the single source of truth and never
+    gets out of sync with the matcher.
+    """
+    families = {
+        "hpwl": "shorter wirelength",
+        "power": "lower power",
+        "area": "smaller die",
+        "timing": "faster timing",
+        "congestion": "less routing congestion",
+    }
+    # Recompute the deltas from the matched keywords
+    KEYWORD_MAP = {
+        "low power": {"power": +0.4, "hpwl": +0.1},
+        "less power": {"power": +0.4, "hpwl": +0.1},
+        "lower power": {"power": +0.4, "hpwl": +0.1},
+        "save power": {"power": +0.4, "hpwl": +0.1},
+        "power": {"power": +0.2},
+        "energy": {"power": +0.2},
+        "battery": {"power": +0.3},
+        "cool": {"power": +0.2, "congestion": +0.1},
+        "thermal": {"power": +0.2},
+        "watt": {"power": +0.2},
+        "small": {"area": +0.4, "hpwl": +0.1},
+        "smaller": {"area": +0.4, "hpwl": +0.1},
+        "smaller die": {"area": +0.5, "hpwl": +0.1},
+        "shrink": {"area": +0.4, "hpwl": +0.1},
+        "compact": {"area": +0.4},
+        "tiny": {"area": +0.4, "hpwl": +0.1},
+        "die size": {"area": +0.5},
+        "area": {"area": +0.2},
+        "size": {"area": +0.2},
+        "fast": {"timing": +0.4, "hpwl": +0.2},
+        "faster": {"timing": +0.4, "hpwl": +0.2},
+        "speed": {"timing": +0.3},
+        "clock": {"timing": +0.3},
+        "performance": {"timing": +0.3, "hpwl": +0.2},
+        "freq": {"timing": +0.4},
+        "high speed": {"timing": +0.4, "hpwl": +0.2},
+        "low latency": {"timing": +0.4, "hpwl": +0.2},
+        "short wires": {"hpwl": +0.4, "power": +0.1},
+        "short": {"hpwl": +0.3},
+        "shorter": {"hpwl": +0.3},
+        "wirelength": {"hpwl": +0.3},
+        "wire length": {"hpwl": +0.3},
+        "lower hpwl": {"hpwl": +0.5},
+        "reduce hpwl": {"hpwl": +0.5},
+        "lower the hpwl": {"hpwl": +0.5},
+        "decrease the hpwl": {"hpwl": +0.5},
+        "decrease hpwl": {"hpwl": +0.5},
+        "shorter wires": {"hpwl": +0.4, "power": +0.1},
+        "less wire": {"hpwl": +0.4},
+        "wires": {"hpwl": +0.2},
+        "shorter wire": {"hpwl": +0.4, "power": +0.1},
+        "short wire": {"hpwl": +0.3, "power": +0.1},
+        "less wirelength": {"hpwl": +0.5},
+        "less wires": {"hpwl": +0.4},
+        "minimize wirelength": {"hpwl": +0.5},
+        "min wire": {"hpwl": +0.3},
+        "tight wires": {"hpwl": +0.3},
+        "close together": {"hpwl": +0.3, "area": +0.1},
+        "compact layout": {"hpwl": +0.3, "area": +0.2},
+        "routing": {"congestion": +0.3, "hpwl": +0.2},
+        "no congestion": {"congestion": +0.4, "hpwl": +0.1},
+        "less congestion": {"congestion": +0.4, "hpwl": +0.1},
+        "easy to route": {"congestion": +0.3},
+        "routable": {"congestion": +0.4, "hpwl": +0.1},
+    }
+    deltas = {"hpwl": 0.0, "power": 0.0, "area": 0.0, "timing": 0.0, "congestion": 0.0}
+    for kw in matched:
+        if kw in KEYWORD_MAP:
+            for k, v in KEYWORD_MAP[kw].items():
+                deltas[k] += v
+    # Order families by delta magnitude, descending
+    order = sorted(["hpwl", "power", "area", "timing", "congestion"],
+                   key=lambda f: -deltas[f])
+    phrases = [families[f] for f in order if deltas[f] > 0]
+    if not phrases:
+        return f"Interpreted: {', '.join(matched)}"
+    if len(phrases) == 1:
+        return f"Prioritizing {phrases[0]}."
+    return f"Prioritizing {', '.join(phrases[:-1])} and {phrases[-1]}."
 
 
 # ------------------------------------------------------------------ #
@@ -407,6 +563,21 @@ def answer_question(text: str, history: List[Dict[str, str]],
         return redirect
 
     # 2. Known chip fact — use the template (no LLM, always accurate)
+    # Special case: asking about HPWL when no placement has been run yet
+    text_lower = text.lower()
+    asks_about_hpwl = "hpwl" in text_lower or "half-perimeter" in text_lower
+    no_placement_yet = (
+        chip_info.get('improvement_pct', 0) == 0
+        and chip_info.get('new_hpwl', 0) == chip_info.get('old_hpwl', 0)
+    )
+    if asks_about_hpwl and no_placement_yet:
+        old = chip_info.get('old_hpwl', 0)
+        n_nets = chip_info.get('n_nets', 1) or 1
+        return (
+            f"Your chip has <b>{old:,} HPWL</b> "
+            f"({old/n_nets:.1f} µm per net across {n_nets:,} nets). "
+            f"Send a placement request to optimize."
+        )
     fact = _pick_fact_template(text, chip_info)
     if fact is not None:
         return fact

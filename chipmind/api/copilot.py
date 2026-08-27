@@ -97,6 +97,14 @@ def _new_session(file_name: str, def_text: str) -> Dict[str, Any]:
         Path(tmp).unlink(missing_ok=True)
 
     old_hpwl = compute_hpwl(chip)['total_hpwl']
+    # Extract original (input) components — this is the "Before" placement
+    # that we show side-by-side with the V3 GAT output in the 3D viewer.
+    original_components = {}
+    for name, c in chip['components'].items():
+        original_components[name] = {
+            'x': float(c.get('x', 0)),
+            'y': float(c.get('y', 0)),
+        }
     return {
         "design_name": file_name.replace('.def', ''),
         "n_cells": len(chip['components']),
@@ -104,6 +112,7 @@ def _new_session(file_name: str, def_text: str) -> Dict[str, Any]:
         "def_text": def_text,
         "chip": chip,
         "old_hpwl": old_hpwl,
+        "original_components": original_components,
         "current_components": None,
         "current_hpwl": None,
         "current_preference": None,
@@ -200,6 +209,7 @@ def _run_placement_and_build_state(session: Dict[str, Any], user_message: str,
     session['current_hpwl'] = new_hpwl
     session['current_preference'] = preference
     session['current_reasoning'] = reasoning
+    session['current_def_text'] = placed_def
     session['improvement_pct'] = improvement
     session['turn_count'] += 1
 
@@ -246,29 +256,38 @@ def _build_chat_response(session: Dict[str, Any], user_message: str) -> Dict[str
     if intent == "request":
         out = _run_placement_and_build_state(session, user_message, history)
     elif intent == "question":
+        # For question/ack without an active placement, fall back to the
+        # original HPWL as both old and new so the UI shows the value
+        # instead of "—".
+        cur_hpwl = session.get('current_hpwl')
+        new_hpwl = cur_hpwl if cur_hpwl is not None else session['old_hpwl']
+        cur_impr = session.get('improvement_pct')
         out = {
             "reply": answer_question(user_message, history, chip_info),
             "intent": "question",
             "report_html": None,
-            "placed_def": None,
+            "placed_def": session.get('current_def_text'),
             "preference": session.get('current_preference'),
             "reasoning": None,
             "old_hpwl": session['old_hpwl'],
-            "new_hpwl": session.get('current_hpwl', session['old_hpwl']),
-            "improvement_pct": session.get('improvement_pct', 0.0) or 0.0,
+            "new_hpwl": new_hpwl,
+            "improvement_pct": cur_impr if cur_impr is not None else 0.0,
             "place_time_ms": 0,
         }
     else:  # ack
+        cur_hpwl = session.get('current_hpwl')
+        new_hpwl = cur_hpwl if cur_hpwl is not None else session['old_hpwl']
+        cur_impr = session.get('improvement_pct')
         out = {
             "reply": friendly_short_reply("ack", chip_info),
             "intent": "ack",
             "report_html": None,
-            "placed_def": None,
+            "placed_def": session.get('current_def_text'),
             "preference": session.get('current_preference'),
             "reasoning": None,
             "old_hpwl": session['old_hpwl'],
-            "new_hpwl": session.get('current_hpwl', session['old_hpwl']),
-            "improvement_pct": session.get('improvement_pct', 0.0) or 0.0,
+            "new_hpwl": new_hpwl,
+            "improvement_pct": cur_impr if cur_impr is not None else 0.0,
             "place_time_ms": 0,
         }
 
@@ -297,6 +316,10 @@ def _make_payload(session: Dict[str, Any], out: Dict[str, Any],
         "place_time_ms": out.get('place_time_ms', 0),
         "report_html": out.get('report_html'),
         "placed_def": out.get('placed_def'),
+        "original_def": session['def_text'],
+        "original_components": session.get('original_components'),
+        "die": session['chip'].get('die'),
+        "components": session.get('current_components'),
         "reply": out.get('reply'),
         "intent": out.get('intent'),
         "history": session['messages'],
