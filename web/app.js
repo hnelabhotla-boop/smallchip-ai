@@ -367,11 +367,159 @@ class Viz3D {
         this.hpwl = hpwl;
         this.label = label;
         this.mode = 'layout';
-        this._setupScene();
-        this._populate();
-        this._start();
+        this.useWebGL = false;
+        this._isDragging = false;
+        this._dragStart = null;
+        this._cameraYaw = -0.6;  // -PI/2 = top-down, 0 = side view
+        this._cameraPitch = 0.9;  // tilt angle
+        this._cameraZoom = 1.0;
+        // Try WebGL; if anything fails, use 2D canvas fallback
+        try {
+            if (typeof THREE === 'undefined') throw new Error('THREE not loaded');
+            // Quick WebGL probe
+            const probe = document.createElement('canvas');
+            const gl = probe.getContext('webgl2') || probe.getContext('webgl')
+                    || probe.getContext('experimental-webgl');
+            if (!gl) throw new Error('WebGL not supported by this browser/viewer');
+            this._setupScene();
+            this._populate();
+            this._start();
+            this.useWebGL = true;
+        } catch (e) {
+            console.warn(`[Viz3D:${label}] WebGL unavailable, using 2D fallback:`, e.message);
+            this._setup2D();
+            this._populate2D();
+            this.useWebGL = false;
+        }
     }
 
+    // ---------------- 2D fallback ----------------
+    _setup2D() {
+        const w = this.container.clientWidth || 200;
+        const h = this.container.clientHeight || 200;
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.style.cursor = 'grab';
+        canvas.addEventListener('mousedown', e => {
+            this._isDragging = true;
+            this._dragStart = { x: e.clientX, y: e.clientY, yaw: this._cameraYaw, pitch: this._cameraPitch };
+            canvas.style.cursor = 'grabbing';
+        });
+        canvas.addEventListener('mousemove', e => {
+            if (!this._isDragging) return;
+            const dx = e.clientX - this._dragStart.x;
+            const dy = e.clientY - this._dragStart.y;
+            this._cameraYaw = this._dragStart.yaw - dx * 0.005;
+            this._cameraPitch = Math.max(0.05, Math.min(1.5, this._dragStart.pitch + dy * 0.005));
+            this._populate2D();
+        });
+        const stop = () => { this._isDragging = false; canvas.style.cursor = 'grab'; };
+        canvas.addEventListener('mouseup', stop);
+        canvas.addEventListener('mouseleave', stop);
+        canvas.addEventListener('wheel', e => {
+            e.preventDefault();
+            this._cameraZoom *= e.deltaY < 0 ? 1.1 : 0.9;
+            this._cameraZoom = Math.max(0.3, Math.min(5, this._cameraZoom));
+            this._populate2D();
+        }, { passive: false });
+        this._canvas2d = canvas;
+        this.container.appendChild(canvas);
+        const ro = new ResizeObserver(() => {
+            const w2 = this.container.clientWidth, h2 = this.container.clientHeight;
+            if (w2 === 0 || h2 === 0) return;
+            canvas.width = w2; canvas.height = h2;
+            this._populate2D();
+        });
+        ro.observe(this.container);
+        this._ro2d = ro;
+    }
+
+    _populate2D() {
+        const canvas = this._canvas2d;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width, h = canvas.height;
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, w, h);
+        if (!this.die) return;
+        const dieW = this.die.x2 - this.die.x1 || 1;
+        const dieH = this.die.y2 - this.die.y1 || 1;
+        const cells = Object.values(this.components);
+        if (cells.length === 0) return;
+        // Isometric projection: yaw rotates around Z; pitch tilts the view.
+        const yaw = this._cameraYaw;
+        const pitch = this._cameraPitch;
+        const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+        const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+        // Project each cell to (sx, sy)
+        const points = [];
+        let minSx = Infinity, minSy = Infinity, maxSx = -Infinity, maxSy = -Infinity;
+        for (let i = 0; i < cells.length; i++) {
+            const c = cells[i];
+            // First center die coords
+            const x = c.x - (this.die.x1 + this.die.x2) / 2;
+            const y = c.y - (this.die.y1 + this.die.y2) / 2;
+            // Rotate around Z by yaw (in plan view), then tilt by pitch
+            const xr = x * cosY - y * sinY;
+            const yr = x * sinY + y * cosY;
+            // Tilt: y' = y*cos(pitch), z = y*sin(pitch)
+            const sx = xr;
+            const sy = yr * cosP;
+            // z (height) is used to color and offset y in screen space
+            const h01 = (Math.sin((i + 1) * 9.7) * 0.5 + 0.5);
+            const h = this.mode === 'height' ? h01 * dieW * 0.15 : dieW * 0.02;
+            const screenY = sy - h * sinP;
+            points.push({ sx, screenY, h01, h });
+            if (sx < minSx) minSx = sx;
+            if (sx > maxSx) maxSx = sx;
+            if (screenY < minSy) minSy = screenY;
+            if (screenY > maxSy) maxSy = screenY;
+        }
+        const pw = maxSx - minSx || 1;
+        const ph = maxSy - minSy || 1;
+        const scale = Math.min((w - 16) / pw, (h - 16) / ph) * this._cameraZoom;
+        const ox = w / 2 - (minSx + maxSx) / 2 * scale;
+        const oy = h / 2 - (minSy + maxSy) / 2 * scale;
+        // Draw die outline (faint)
+        ctx.strokeStyle = '#222';
+        ctx.lineWidth = 1;
+        const diePts = [[this.die.x1, this.die.y1], [this.die.x2, this.die.y1],
+                        [this.die.x2, this.die.y2], [this.die.x1, this.die.y2]];
+        ctx.beginPath();
+        diePts.forEach(([x, y], i) => {
+            const cx = x - (this.die.x1 + this.die.x2) / 2;
+            const cy = y - (this.die.y1 + this.die.y2) / 2;
+            const xr = cx * cosY - cy * sinY;
+            const yr = cx * sinY + cy * cosY;
+            const sx = ox + xr * scale;
+            const sy = oy + yr * cosP * scale;
+            if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+        });
+        ctx.closePath();
+        ctx.stroke();
+        // Draw cells sorted back-to-front (smaller screenY first)
+        points.sort((a, b) => a.screenY - b.screenY);
+        const cellSize = Math.max(1, scale * 0.012);
+        for (let i = 0; i < points.length; i++) {
+            const p = points[i];
+            const sx = ox + p.sx * scale;
+            const sy = oy + p.screenY * scale;
+            const t = p.h01;
+            // Indigo -> warm
+            const r = Math.round(99 + t * 80);
+            const g = Math.round(102 - t * 30);
+            const b = Math.round(241 - t * 100);
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            const size = cellSize * (this.mode === 'height' ? (1 + t * 2) : 1);
+            ctx.fillRect(sx - size / 2, sy - size / 2, size, size);
+        }
+        // Footer: cell count
+        ctx.fillStyle = '#6b6b6b';
+        ctx.font = '9px "SF Mono", monospace';
+        ctx.fillText(`${cells.length.toLocaleString()} cells`, 4, h - 4);
+    }
+
+    // ---------------- 3D (WebGL) ----------------
     _setupScene() {
         const w = this.container.clientWidth || 200;
         const h = this.container.clientHeight || 200;
@@ -426,14 +574,8 @@ class Viz3D {
         // Cells
         const cells = Object.values(this.components);
         if (cells.length === 0) return;
-        // Determine per-cell heights based on net count (mock — we don't
-        // have per-cell net counts in the simple components payload, so use
-        // a stable hash so the visualization varies and is reproducible).
-        const heights = cells.map((_, i) => {
-            // Pseudo-random but stable per index
-            const v = Math.sin((i + 1) * 9.7) * 0.5 + 0.5;
-            return v;
-        });
+        // Stable per-cell height value
+        const heights = cells.map((_, i) => Math.sin((i + 1) * 9.7) * 0.5 + 0.5);
         // Geometry: instanced for performance
         const baseW = Math.max(dieW, dieH) * 0.012;
         const baseH = Math.max(dieW, dieH) * 0.012;
@@ -443,8 +585,6 @@ class Viz3D {
         const inst = new THREE.InstancedMesh(cellGeo, cellMat, cells.length);
         const dummy = new THREE.Object3D();
         const colorAttr = new Float32Array(cells.length * 3);
-        // Heuristic: cells near the die center are colored green (good),
-        // cells near edges are colored red (likely over the boundary).
         for (let i = 0; i < cells.length; i++) {
             const c = cells[i];
             dummy.position.set(c.x, c.y, baseD / 2);
@@ -452,7 +592,6 @@ class Viz3D {
             dummy.scale.set(1, 1, h / baseD);
             dummy.updateMatrix();
             inst.setMatrixAt(i, dummy.matrix);
-            // Color: cool (indigo) to warm (pink) along height
             const t = heights[i];
             const r = 0.39 + t * 0.4;
             const g = 0.40 - t * 0.2;
@@ -465,11 +604,9 @@ class Viz3D {
         this._inst = inst;
         this._heights = heights;
         this._baseD = baseD;
-        this._cellGeo = cellGeo;
         // Frame the camera on the die
         const maxDim = Math.max(dieW, dieH);
-        cam = this.camera;
-        cam.position.set(0, -maxDim * 1.1, maxDim * 0.7);
+        this.camera.position.set(0, -maxDim * 1.1, maxDim * 0.7);
         this.controls.target.set(cx, cy, 0);
         this.controls.update();
     }
@@ -477,36 +614,45 @@ class Viz3D {
     setMode(mode) {
         if (mode === 'reset') { this.resetCamera(); return; }
         this.mode = mode;
-        if (!this._inst) return;
-        const dummy = new THREE.Object3D();
-        const cells = Object.values(this.components);
-        for (let i = 0; i < cells.length; i++) {
-            const c = cells[i];
-            dummy.position.set(c.x, c.y, this._baseD / 2);
-            const h = (mode === 'height')
-                ? this._baseD * (0.3 + this._heights[i] * 2.5)
-                : this._baseD * 0.4;
-            dummy.scale.set(1, 1, h / this._baseD);
-            dummy.updateMatrix();
-            this._inst.setMatrixAt(i, dummy.matrix);
+        if (this.useWebGL && this._inst) {
+            const dummy = new THREE.Object3D();
+            const cells = Object.values(this.components);
+            for (let i = 0; i < cells.length; i++) {
+                const c = cells[i];
+                dummy.position.set(c.x, c.y, this._baseD / 2);
+                const h = (mode === 'height')
+                    ? this._baseD * (0.3 + this._heights[i] * 2.5)
+                    : this._baseD * 0.4;
+                dummy.scale.set(1, 1, h / this._baseD);
+                dummy.updateMatrix();
+                this._inst.setMatrixAt(i, dummy.matrix);
+            }
+            this._inst.instanceMatrix.needsUpdate = true;
+        } else if (!this.useWebGL) {
+            this._populate2D();
         }
-        this._inst.instanceMatrix.needsUpdate = true;
     }
 
     resetCamera() {
-        if (!this.die) return;
-        const dieW = this.die.x2 - this.die.x1;
-        const dieH = this.die.y2 - this.die.y1;
-        const maxDim = Math.max(dieW, dieH);
-        const cx = (this.die.x1 + this.die.x2) / 2;
-        const cy = (this.die.y1 + this.die.y2) / 2;
-        this.camera.position.set(0, -maxDim * 1.1, maxDim * 0.7);
-        this.controls.target.set(cx, cy, 0);
-        this.controls.update();
+        if (this.useWebGL && this.die) {
+            const dieW = this.die.x2 - this.die.x1;
+            const dieH = this.die.y2 - this.die.y1;
+            const maxDim = Math.max(dieW, dieH);
+            const cx = (this.die.x1 + this.die.x2) / 2;
+            const cy = (this.die.y1 + this.die.y2) / 2;
+            this.camera.position.set(0, -maxDim * 1.1, maxDim * 0.7);
+            this.controls.target.set(cx, cy, 0);
+            this.controls.update();
+        } else if (!this.useWebGL) {
+            this._cameraYaw = -0.6;
+            this._cameraPitch = 0.9;
+            this._cameraZoom = 1.0;
+            this._populate2D();
+        }
     }
 
     _resize() {
-        if (!this.container) return;
+        if (!this.container || !this.renderer) return;
         const w = this.container.clientWidth;
         const h = this.container.clientHeight;
         if (w === 0 || h === 0) return;
@@ -527,11 +673,12 @@ class Viz3D {
     dispose() {
         if (this._raf) cancelAnimationFrame(this._raf);
         if (this._ro) this._ro.disconnect();
+        if (this._ro2d) this._ro2d.disconnect();
         if (this.renderer) {
             this.renderer.dispose();
-            const c = this.container.querySelector('canvas');
-            if (c) c.remove();
         }
+        const c = this.container && this.container.querySelector('canvas');
+        if (c) c.remove();
     }
 }
 
