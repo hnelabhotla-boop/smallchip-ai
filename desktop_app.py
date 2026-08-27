@@ -21,7 +21,7 @@ import webview
 from pathlib import Path
 
 APP_NAME = "SmallChip AI"
-APP_VERSION = "0.2.0"
+APP_VERSION = "0.2.1"
 DEFAULT_PORT = 8000
 DEFAULT_URL = f"http://localhost:{DEFAULT_PORT}"
 
