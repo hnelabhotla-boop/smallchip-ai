@@ -3,449 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmallChip AI — AI chip placement co-pilot for small-to-medium chips</title>
+    <title>SmallChip AI — AI Chip Placement Co-Pilot</title>
     <link rel="stylesheet" href="/static/style.css">
-  <link rel="manifest" href="/static/manifest.json">
-  <meta name="theme-color" content="#3182ce">
-  <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#0d1117">
+    <link rel="apple-touch-icon" href="/static/icon-192.png">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface-2: #1c2128;
+            --border: #30363d;
+            --text: #e6edf3;
+            --text-muted: #7d8590;
+            --accent: #58a6ff;
+            --accent-2: #7ee787;
+            --success: #3fb950;
+            --warn: #d29922;
+            --error: #f85149;
+            --gradient: linear-gradient(135deg, #58a6ff 0%, #7ee787 100%);
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            line-height: 1.5;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .app {
+            display: grid;
+            grid-template-rows: 56px 1fr;
+            grid-template-columns: 320px 1fr 360px;
+            grid-template-areas:
+                "header header header"
+                "left   center right";
+            height: 100vh;
+        }
+        header {
+            grid-area: header;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            gap: 16px;
+        }
+        .logo { font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .logo .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--accent-2);
+            box-shadow: 0 0 8px var(--accent-2);
+        }
+        .badge {
+            font-size: 10px; padding: 2px 6px; border-radius: 4px;
+            background: var(--surface-2); color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+        .header-spacer { flex: 1; }
+        .header-btn {
+            background: var(--surface-2); color: var(--text);
+            border: 1px solid var(--border); border-radius: 6px;
+            padding: 6px 12px; font-size: 13px; cursor: pointer;
+        }
+        .header-btn:hover { background: var(--border); }
+
+        /* LEFT PANEL */
+        .left { grid-area: left; background: var(--surface); border-right: 1px solid var(--border); overflow-y: auto; padding: 16px; }
+        .panel-title {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+            color: var(--text-muted); margin: 0 0 8px; font-weight: 600;
+        }
+        .panel { margin-bottom: 20px; }
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 24px 12px;
+            text-align: center;
+            cursor: pointer;
+            background: var(--surface-2);
+            transition: all 0.2s;
+        }
+        .upload-zone:hover, .upload-zone.dragging {
+            border-color: var(--accent);
+            background: rgba(88, 166, 255, 0.08);
+        }
+        .upload-zone .icon { font-size: 28px; margin-bottom: 8px; }
+        .upload-zone .label { font-size: 13px; color: var(--text); font-weight: 500; }
+        .upload-zone .sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+        .file-info {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        .file-info .name { font-size: 13px; font-weight: 600; }
+        .file-info .meta { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+        .examples { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+        .examples button {
+            font-size: 11px; padding: 4px 8px; background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); cursor: pointer;
+        }
+        .examples button:hover { border-color: var(--accent); }
+
+        .chip-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .stat {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .stat .v { font-size: 18px; font-weight: 700; color: var(--text); }
+        .stat .l { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+
+        /* CENTER - CHAT */
+        .center {
+            grid-area: center;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-header .status { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+        .chat-header .status .dot {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted);
+        }
+        .chat-header .status.online .dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
+        .chat-header .status.thinking .dot { background: var(--warn); animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .chat-body { flex: 1; overflow-y: auto; padding: 20px; }
+        .msg { max-width: 720px; margin: 0 auto 16px; display: flex; gap: 12px; }
+        .msg.user { flex-direction: row-reverse; }
+        .avatar {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; flex-shrink: 0;
+        }
+        .msg.user .avatar { background: var(--accent); color: white; }
+        .msg.ai .avatar { background: var(--gradient); color: #0d1117; }
+        .bubble {
+            padding: 12px 16px; border-radius: 12px;
+            background: var(--surface); border: 1px solid var(--border);
+            font-size: 14px; line-height: 1.5;
+        }
+        .msg.user .bubble { background: var(--accent); color: white; border-color: var(--accent); }
+        .bubble .files { margin-top: 8px; }
+        .bubble .file-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 4px 10px; background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: 6px;
+            font-size: 12px; color: var(--text);
+            text-decoration: none; cursor: pointer;
+        }
+        .bubble .file-chip:hover { border-color: var(--accent); }
+        .bubble code {
+            background: rgba(255,255,255,0.08); padding: 1px 6px; border-radius: 3px;
+            font-family: 'SF Mono', Monaco, monospace; font-size: 12px;
+        }
+        .bubble strong { color: var(--accent-2); }
+        .typing-bubble { display: flex; gap: 4px; padding: 12px 16px; }
+        .typing-bubble span {
+            width: 6px; height: 6px; border-radius: 50%; background: var(--text-muted);
+            animation: typing 1.4s infinite;
+        }
+        .typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); opacity: 0.3; } 30% { transform: translateY(-4px); opacity: 1; } }
+        .welcome {
+            max-width: 720px; margin: 60px auto; text-align: center;
+        }
+        .welcome h1 { font-size: 28px; margin: 0 0 12px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .welcome p { color: var(--text-muted); font-size: 15px; }
+        .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 24px; }
+        .quick-action {
+            padding: 12px 14px; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 8px;
+            cursor: pointer; text-align: left; font-size: 13px;
+            color: var(--text); transition: all 0.2s;
+        }
+        .quick-action:hover { border-color: var(--accent); transform: translateY(-1px); }
+        .quick-action .title { font-weight: 600; margin-bottom: 2px; }
+        .quick-action .sub { font-size: 11px; color: var(--text-muted); }
+
+        .chat-input-wrap {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+        .chat-input-box {
+            max-width: 720px; margin: 0 auto;
+            display: flex; gap: 8px; align-items: flex-end;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 12px; padding: 8px 12px;
+            transition: border-color 0.2s;
+        }
+        .chat-input-box:focus-within { border-color: var(--accent); }
+        .chat-input {
+            flex: 1; background: transparent; border: none; outline: none;
+            color: var(--text); font-size: 14px; resize: none;
+            font-family: inherit; line-height: 1.5;
+            max-height: 120px; min-height: 20px;
+        }
+        .chat-input::placeholder { color: var(--text-muted); }
+        .send-btn {
+            background: var(--accent); color: white; border: none;
+            width: 32px; height: 32px; border-radius: 8px;
+            cursor: pointer; font-size: 16px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .send-btn:hover:not(:disabled) { background: #4493f8; }
+        .send-btn:disabled { background: var(--surface-2); color: var(--text-muted); cursor: not-allowed; }
+
+        /* RIGHT - VIZ + METRICS */
+        .right { grid-area: right; background: var(--surface); border-left: 1px solid var(--border); overflow-y: auto; padding: 16px; }
+        .canvas-wrap {
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px;
+        }
+        canvas { display: block; max-width: 100%; height: auto; }
+        .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+        .metric {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .metric .v { font-size: 16px; font-weight: 700; }
+        .metric .l { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+        .metric.improvement .v { color: var(--success); }
+        .download-area { margin-top: 12px; }
+        .download-btn {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 10px; background: var(--success); color: #0d1117;
+            border: none; border-radius: 8px; font-weight: 600; font-size: 13px;
+            cursor: pointer; text-decoration: none; width: 100%;
+        }
+        .download-btn:hover { background: #2ea043; }
+        .download-btn:disabled { background: var(--surface-2); color: var(--text-muted); cursor: not-allowed; }
+        .download-btn::before { content: '⬇'; }
+        .empty-state { text-align: center; color: var(--text-muted); font-size: 13px; padding: 24px 8px; }
+
+        /* Hide on small screens */
+        @media (max-width: 1100px) {
+            .app { grid-template-columns: 280px 1fr; grid-template-areas: "header header" "left center" "left right"; }
+            .right { border-left: none; border-top: 1px solid var(--border); max-height: 280px; }
+        }
+        @media (max-width: 700px) {
+            .app { grid-template-columns: 1fr; grid-template-areas: "header" "left" "center" "right"; }
+            .left, .right { border: none; border-top: 1px solid var(--border); max-height: 200px; }
+        }
+    </style>
 </head>
 <body>
+<div class="app">
     <header>
-        <div class="container">
-            <h1>🧠 SmallChip AI</h1>
-            <p class="tagline">AI co-pilot for small-to-medium chip placement (≤15,000 cells). Free. 5 quality metrics.</p>
-            <p class="hero-link"><a href="/copilot">→ Try the AI co-pilot: type what you want in plain English</a></p>
-        </div>
+        <div class="logo"><span class="dot"></span> SmallChip AI</div>
+        <span class="badge">v0.2.0</span>
+        <div class="header-spacer"></div>
+        <button class="header-btn" id="resetBtn">Reset</button>
     </header>
 
-    <main class="container">
-        <section class="intro">
-            <p>
-                Most chip placers only optimize wirelength and cost $1M. SmallChip AI is the first
-                free AI for the <strong>small-to-medium chip market</strong> (≤15,000 cells — hearing aids,
-                microwaves, IoT sensors, car key fobs, phone PMICs). It gives you
-                <strong>5 quality metrics at once</strong>: wirelength, timing, power, area, and congestion.
-                Upload a chip design and see how different algorithms compare — all in 20 seconds.
-            </p>
-        </section>
-
-        <section class="benchmark-stats">
-            <h2>🏆 Validated Results (GCD, 692 cells)</h2>
-            <div class="stat-grid">
-                <div class="stat-card primary">
-                    <div class="stat-num">99.7%</div>
-                    <div class="stat-label">post-legalization wirelength reduction vs. OpenROAD (370× better, validated by OpenROAD)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-num">89/91</div>
-                    <div class="stat-label">wins on 91 ISPD 2005 designs (GAT &lt; reference)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-num">75.2%</div>
-                    <div class="stat-label">average improvement on 91-design benchmark</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-num">0</div>
-                    <div class="stat-label">timing or power regression on GCD (identical to OpenROAD)</div>
-                </div>
-            </div>
-            <p class="bench-detail">
-                On the GCD benchmark, after OpenROAD's own legalization step, SmallChip AI produces 10,775 HPWL vs. OpenROAD's 3,987,080 —
-                same timing (0.52 ns WNS, 2097 MHz Fmax), same power (1.06 mW).
-            </p>
-        </section>
-
-        <section class="upload-section">
-            <h2>1. Upload a chip design</h2>
-            <div class="upload-area" id="uploadArea">
+    <aside class="left">
+        <div class="panel">
+            <h3 class="panel-title">📁 Chip</h3>
+            <div class="upload-zone" id="uploadZone">
+                <div class="icon">📐</div>
+                <div class="label">Drop a .def file</div>
+                <div class="sub">or click to browse</div>
                 <input type="file" id="fileInput" accept=".def" hidden>
-                <button onclick="document.getElementById('fileInput').click()" class="btn btn-primary">
-                    Choose .def file
-                </button>
-                <p>or drag and drop here</p>
-                <p id="fileName" class="file-name"></p>
             </div>
-            <p class="limit-note">Best for small-to-medium chips: up to <strong>15,000 cells</strong>. Designs larger than this will fall back to a simpler heuristic — for full large-chip placement, use OpenROAD.</p>
-            <div class="example">
-                <p>Don't have a file? Try one of these:</p>
-                <ul style="list-style: none; padding: 0; margin: 8px 0;">
-                    <li>🟢 <a href="#" id="loadExample">GCD example</a> — 734 cells, 463 nets, 45nm (the headline 99.7% win)</li>
-                    <li>🟡 <a href="#" id="loadExample5k">5K bigblue1 subset</a> — 5,000 cells, 4,167 nets (~30s)</li>
-                    <li>🟠 <a href="#" id="loadExample8k">8K bigblue1 subset</a> — 8,000 cells, 6,635 nets (~1 min)</li>
-                    <li>🔴 <a href="#" id="loadExample15k">15K bigblue1 subset</a> — 15,000 cells, 13,155 nets (~3 min)</li>
-                </ul>
+            <div class="file-info hidden" id="fileInfo">
+                <div class="name" id="fileName"></div>
+                <div class="meta" id="fileMeta"></div>
             </div>
-        </section>
-
-        <section class="config-section">
-            <h2>2. Choose algorithms</h2>
-            <div class="algo-grid">
-                <label class="algo-card">
-                    <input type="checkbox" value="random" checked>
-                    <div>
-                        <strong>Random</strong>
-                        <small>Baseline (random placement)</small>
-                    </div>
-                </label>
-                <label class="algo-card">
-                    <input type="checkbox" value="sa" checked>
-                    <div>
-                        <strong>Simulated Annealing</strong>
-                        <small>Multi-stage SA</small>
-                    </div>
-                </label>
-                <label class="algo-card">
-                    <input type="checkbox" value="ga">
-                    <div>
-                        <strong>Genetic Algorithm</strong>
-                        <small>Population-based</small>
-                    </div>
-                </label>
-                <label class="algo-card">
-                    <input type="checkbox" value="eplace">
-                    <div>
-                        <strong>ePlace</strong>
-                        <small>Analytical gradient descent</small>
-                    </div>
-                </label>
-                <label class="algo-card ml">
-                    <input type="checkbox" value="gat" checked>
-                    <div>
-                        <strong>🧠 GAT (pre-trained ML)</strong>
-                        <small>Our model, trained on ISPD 2005</small>
-                    </div>
-                </label>
+            <div class="examples" id="examples">
+                <button data-file="gcd_734cells.def">🟢 GCD</button>
+                <button data-file="bigblue1_5k_subset.def">🟡 5K</button>
+                <button data-file="bigblue1_8k_subset.def">🟠 8K</button>
+                <button data-file="bigblue1_15k_subset.def">🔴 15K</button>
             </div>
-        </section>
-
-        <section class="run-section">
-            <button id="runBtn" class="btn btn-run" disabled>3. Run placement comparison (5 quality metrics)</button>
-            <button id="runFullBtn" class="btn btn-run-full" disabled style="margin-left: 12px;">4. Run full analysis (legal HPWL + congestion + thermal)</button>
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p id="loadingText">Running...</p>
-            </div>
-        </section>
-
-        <section id="resultsSection" class="results-section hidden">
-            <h2>📊 Multi-objective Results</h2>
-            <div class="results-summary">
-                <p>Chip: <strong id="chipInfo"></strong></p>
-            </div>
-
-            <div class="results-table">
-                <table id="resultsTable">
-                    <thead>
-                        <tr>
-                            <th>Algorithm</th>
-                            <th>HPWL<br><small>wirelength</small></th>
-                            <th>Timing<br><small>ps</small></th>
-                            <th>Power<br><small>mW</small></th>
-                            <th>Area<br><small>units</small></th>
-                            <th>Congestion<br><small>max</small></th>
-                            <th>Time</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultsTableBody"></tbody>
-                </table>
-            </div>
-
-            <div id="savingsSection" class="savings-section hidden">
-                <h3>💰 Real-world Savings (vs. industry EDA baseline)</h3>
-                <div class="savings-grid">
-                    <div class="savings-card">
-                        <div class="savings-num" id="savingsCost">$0</div>
-                        <div class="savings-label">Tool cost saved/year (vs $1M EDA license)</div>
-                    </div>
-                    <div class="savings-card">
-                        <div class="savings-num" id="savingsEnergy">0 GWh</div>
-                        <div class="savings-label">Energy saved/year (at 1B chips)</div>
-                    </div>
-                    <div class="savings-card">
-                        <div class="savings-num" id="savingsHeat">0 BTU/hr</div>
-                        <div class="savings-label">Heat reduced (at 1B chips)</div>
-                    </div>
-                    <div class="savings-card">
-                        <div class="savings-num" id="savingsPower">0%</div>
-                        <div class="savings-label">Power reduction per chip (validated at 99.7% on GCD)</div>
-                    </div>
-                </div>
-                <p class="savings-note">
-                    Power scales linearly with wirelength (a first-order approximation: dynamic power ∝ wire capacitance ∝ wire length).
-                    At 1 billion chips per year, the savings add up. Validated on the GCD benchmark:
-                    SmallChip AI achieves 99.7% lower HPWL than OpenROAD's default after legalization, with identical power.
-                </p>
-            </div>
-
-            <div class="multi-obj-explainer">
-                <h3>What these metrics mean</h3>
-                <ul>
-                    <li><strong>HPWL</strong> — Wirelength. Lower = cheaper to manufacture, faster signals.</li>
-                    <li><strong>Timing</strong> — Estimated critical path delay. Lower = faster chip.</li>
-                    <li><strong>Power</strong> — Estimated dynamic power. Lower = better battery, less heat.</li>
-                    <li><strong>Area</strong> — Silicon area used. Lower = smaller chip, lower cost.</li>
-                    <li><strong>Congestion</strong> — Max routing demand. Lower = easier to manufacture.</li>
-                </ul>
-            </div>
-
-            <div class="visualization">
-                <h3>Placement visualization</h3>
-                <div class="viz-controls">
-                    <label>Show algorithm:
-                        <select id="vizAlgo"></select>
-                    </label>
-                </div>
-                <canvas id="placementCanvas" width="800" height="600"></canvas>
-
-    <div id="fullVizSection" class="hidden" style="margin-top: 20px;">
-        <h3>📐 Legal Placement Visualization (colored by congestion)</h3>
-        <div class="viz-controls">
-            <label>Color by:
-                <select id="fullVizColor">
-                    <option value="congestion">Congestion (nets/region)</option>
-                    <option value="thermal">Thermal (power density)</option>
-                </select>
-            </label>
         </div>
-        <canvas id="fullVizCanvas" width="800" height="600" style="border: 1px solid #cbd5e0; border-radius: 6px;"></canvas>
-    </div>
+
+        <div class="panel hidden" id="chipPanel">
+            <h3 class="panel-title">🔬 Chip info</h3>
+            <div class="chip-stats">
+                <div class="stat"><div class="v" id="statCells">—</div><div class="l">cells</div></div>
+                <div class="stat"><div class="v" id="statNets">—</div><div class="l">nets</div></div>
             </div>
-        </section>
+        </div>
 
-        <section class="info-section">
-            <h2>About SmallChip AI</h2>
-            <p>
-                SmallChip AI is the first free, open-source, AI-powered chip placement tool
-                for the <strong>small-to-medium chip market (≤15,000 cells)</strong>.
-                It predicts <strong>5 quality metrics simultaneously</strong> and ships with a
-                <strong>natural-language AI co-pilot</strong> that lets you describe what you want
-                in plain English. Most industry tools (Synopsys, Cadence) only optimize wirelength.
-                They cost millions and take hours.
+        <div class="panel hidden" id="prefPanel">
+            <h3 class="panel-title">⚖️ Current emphasis</h3>
+            <div id="prefList" style="display: flex; flex-direction: column; gap: 6px;"></div>
+            <p style="font-size: 11px; color: var(--text-muted); margin: 8px 0 0;">
+                Shapes the report. The chip is always the same best-possible placement.
             </p>
-            <p>
-                We pre-trained Graph Attention Networks on real industry benchmarks
-                (ISPD 2005: adaptec, bigblue series) and built small ML models to
-                predict timing, power, area, and congestion from netlist features.
-            </p>
-            <p>
-                <strong>Why this matters:</strong> Most chips are in microwaves, TVs,
-                hearing aids, car keys, phone PMICs, IoT sensors. They're small (under 15K cells) but there
-                are <strong>billions</strong> of them. A free, fast, multi-objective
-                tool helps the 99% of chip designs that don't need a $1M license.
-            </p>
-            <p>
-                <strong>Want the AI co-pilot instead?</strong>
-                <a href="/copilot">Try SmallChip AI Co-Pilot</a> — upload a netlist, type
-                "make it use less power", and get a redesigned chip in 20 seconds.
-            </p>
-        </section>
+        </div>
+    </aside>
 
-        <section id="fullAnalysisSection" class="results-section hidden">
-            <h2>🔬 Full Analysis (Legal HPWL + Quality Maps)</h2>
-            <div class="results-summary">
-                <p>Chip: <strong id="fullChipInfo"></strong> — <span id="fullAlgo"></span></p>
+    <main class="center">
+        <div class="chat-header">
+            <div class="status" id="chatStatus">
+                <span class="dot"></span>
+                <span id="statusText">Ready — upload a chip to start</span>
             </div>
-
-            <div class="metric-row" style="font-size: 16px; margin: 16px 0;">
-                <strong>Raw HPWL (V3, pre-legalization):</strong>
-                <span id="fullRawHpwl">—</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="welcome" id="welcome">
+                <h1>Talk to your chip designer.</h1>
+                <p>Upload a .def file, then tell the AI what you want.<br>
+                   "Make it use less power" • "I need this fast" • "Make it small" • "What's HPWL?"</p>
+                <div class="quick-actions">
+                    <button class="quick-action" data-msg="make it use less power">
+                        <div class="title">⚡ Less power</div>
+                        <div class="sub">Optimize for battery life</div>
+                    </button>
+                    <button class="quick-action" data-msg="I need this to run as fast as possible">
+                        <div class="title">🚀 Fastest possible</div>
+                        <div class="sub">Optimize for clock frequency</div>
+                    </button>
+                    <button class="quick-action" data-msg="minimize the die area">
+                        <div class="title">📐 Smallest die</div>
+                        <div class="sub">Minimize silicon area</div>
+                    </button>
+                    <button class="quick-action" data-msg="what is HPWL?">
+                        <div class="title">❓ What is HPWL?</div>
+                        <div class="sub">Ask a question about the metrics</div>
+                    </button>
+                </div>
             </div>
-            <div class="metric-row" style="font-size: 16px; margin: 16px 0;">
-                <strong>Legal HPWL (post-legalization):</strong>
-                <span id="fullLegalHpwl">—</span>
-                <span id="fullDelta" style="margin-left: 12px; font-size: 13px;"></span>
+        </div>
+        <div class="chat-input-wrap">
+            <div class="chat-input-box">
+                <textarea class="chat-input" id="userInput" placeholder="Type your message..." rows="1" disabled></textarea>
+                <button class="send-btn" id="sendBtn" disabled title="Send">↑</button>
             </div>
-
-            <h3 style="margin-top: 20px;">🌡️ Congestion Map (10×10 grid)</h3>
-            <p style="font-size: 13px; color: #718096;">Nets passing through each region. Hot spots = harder to route.</p>
-            <div id="congestionGrid" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; max-width: 400px; margin: 10px 0;"></div>
-            <div class="metric-row"><strong>Max congestion:</strong> <span id="congestionMax">—</span> &nbsp; <strong>Avg:</strong> <span id="congestionAvg">—</span> &nbsp; <strong>Hot spots:</strong> <span id="congestionHot">—</span></div>
-
-            <h3 style="margin-top: 20px;">🔥 Thermal Map (10×10 grid)</h3>
-            <p style="font-size: 13px; color: #718096;">Power density per region. High = potential hot spot.</p>
-            <div id="thermalGrid" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; max-width: 400px; margin: 10px 0;"></div>
-            <div class="metric-row"><strong>Max power:</strong> <span id="thermalMax">—</span> &nbsp; <strong>Avg:</strong> <span id="thermalAvg">—</span> &nbsp; <strong>Max/avg ratio:</strong> <span id="thermalRatio">—</span></div>
-        </section>
+        </div>
     </main>
 
-    <footer>
-        <p>SmallChip AI — built for ISEF 2027 by Harshith</p>
-    </footer>
+    <aside class="right">
+        <h3 class="panel-title">📊 Placement</h3>
+        <div class="canvas-wrap">
+            <canvas id="placementCanvas" width="320" height="240"></canvas>
+        </div>
+        <div class="empty-state" id="vizEmpty">Upload a chip + ask the AI to place it</div>
+        <div class="metrics hidden" id="metricsPanel">
+            <div class="metric improvement"><div class="v" id="metricImprovement">—</div><div class="l">improvement</div></div>
+            <div class="metric"><div class="v" id="metricOldHpwl">—</div><div class="l">old HPWL</div></div>
+            <div class="metric"><div class="v" id="metricNewHpwl">—</div><div class="l">new HPWL</div></div>
+            <div class="metric"><div class="v" id="metricPerNet">—</div><div class="l">µm / net</div></div>
+        </div>
+        <div class="download-area hidden" id="downloadArea">
+            <a class="download-btn" id="downloadBtn">Download placed .def</a>
+            <a class="download-btn" id="downloadReportBtn" style="background: var(--accent); margin-top: 8px;">Download report</a>
+        </div>
+    </aside>
+</div>
 
-    <script src="/static/app.js"></script>
+<script src="/static/app.js"></script>
 </body>
 </html>
-
-<script>
-  // Full Analysis button — calls /api/place_full and renders results
-  const runFullBtn = document.getElementById('runFullBtn');
-  const fullAnalysisSection = document.getElementById('fullAnalysisSection');
-  if (runFullBtn) {
-    runFullBtn.disabled = false;
-    runFullBtn.addEventListener('click', async () => {
-      if (!currentFile) return;
-      runFullBtn.disabled = true;
-      runFullBtn.innerHTML = '<span class="spinner"></span> Running full analysis...';
-      fullAnalysisSection.classList.add('hidden');
-      const loading = document.getElementById('loading');
-      const loadingText = document.getElementById('loadingText');
-      loading.classList.remove('hidden');
-      loadingText.textContent = 'Running V3 + legalization + quality analysis...';
-      try {
-        const fd = new FormData();
-        fd.append('file', currentFile);
-        fd.append('algorithm', 'gat');
-        const r = await fetch('/api/place_full', { method: 'POST', body: fd });
-        if (!r.ok) {
-          const e = await r.json().catch(() => ({detail: 'Server error'}));
-          throw new Error(e.detail);
-        }
-        const d = await r.json();
-        renderFullAnalysis(d);
-        fullAnalysisSection.classList.remove('hidden');
-        fullAnalysisSection.scrollIntoView({ behavior: 'smooth' });
-      } catch (err) {
-        alert('Error: ' + err.message);
-      } finally {
-        runFullBtn.disabled = false;
-        runFullBtn.innerHTML = '4. Run full analysis (legal HPWL + congestion + thermal)';
-        loading.classList.add('hidden');
-      }
-    });
-  }
-
-  function renderFullAnalysis(d) {
-    if (typeof _lastFullResult !== 'undefined') _lastFullResult = d;
-    document.getElementById('fullChipInfo').textContent = `${d.n_cells.toLocaleString()} cells, ${d.n_nets.toLocaleString()} nets`;
-    document.getElementById('fullAlgo').textContent = d.algorithm;
-    document.getElementById('fullRawHpwl').textContent = Math.round(d.raw_hpwl).toLocaleString();
-    document.getElementById('fullLegalHpwl').textContent = Math.round(d.legal_hpwl).toLocaleString();
-    const deltaEl = document.getElementById('fullDelta');
-    const d_pct = d.delta_pct;
-    deltaEl.textContent = `(${d_pct >= 0 ? '+' : ''}${d_pct.toFixed(1)}% vs raw)`;
-    deltaEl.style.color = d_pct < 0 ? '#22543d' : '#c53030';
-
-    // Render congestion heatmap
-    const congGrid = document.getElementById('congestionGrid');
-    congGrid.innerHTML = '';
-    const congMax = d.congestion.max_congestion || 1;
-    d.congestion.grid.flat().forEach(v => {
-      const cell = document.createElement('div');
-      const intensity = Math.min(v / congMax, 1);
-      const r = Math.round(255 * intensity);
-      const g = Math.round(200 * (1 - intensity));
-      const b = Math.round(200 * (1 - intensity));
-      cell.style.cssText = `background: rgb(${r},${g},${b}); aspect-ratio: 1; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: ${intensity > 0.5 ? 'white' : '#333'};`;
-      cell.textContent = v > 0 ? v : '';
-      cell.title = `Congestion: ${v}`;
-      congGrid.appendChild(cell);
-    });
-    document.getElementById('congestionMax').textContent = congMax.toLocaleString();
-    document.getElementById('congestionAvg').textContent = Math.round(d.congestion.avg_congestion).toLocaleString();
-    document.getElementById('congestionHot').textContent = d.congestion.hot_spots;
-
-    // Render thermal heatmap
-    const thermGrid = document.getElementById('thermalGrid');
-    thermGrid.innerHTML = '';
-    const thermMax = d.thermal.max_power || 1;
-    d.thermal.grid.flat().forEach(v => {
-      const cell = document.createElement('div');
-      const intensity = Math.min(v / thermMax, 1);
-      const r = Math.round(255 * intensity);
-      const g = Math.round(100 * (1 - intensity * 0.5));
-      const b = Math.round(100 * (1 - intensity));
-      cell.style.cssText = `background: rgb(${r},${g},${b}); aspect-ratio: 1; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: ${intensity > 0.5 ? 'white' : '#333'};`;
-      cell.textContent = v > 0 ? Math.round(v) : '';
-      cell.title = `Power density: ${v.toFixed(0)}`;
-      thermGrid.appendChild(cell);
-    });
-    document.getElementById('thermalMax').textContent = Math.round(thermMax);
-    document.getElementById('thermalAvg').textContent = d.thermal.avg_power.toFixed(1);
-    document.getElementById('thermalRatio').textContent = d.thermal.max_avg_ratio.toFixed(2) + 'x';
-
-    // Show + draw the legal placement visualization
-    const fullVizSection = document.getElementById('fullVizSection');
-    if (fullVizSection) fullVizSection.classList.remove('hidden');
-    drawFullViz(d);
-  }
-
-  function drawFullViz(d) {
-    const canvas = document.getElementById('fullVizCanvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const colorBy = document.getElementById('fullVizColor').value;
-    const gridKey = colorBy === 'congestion' ? 'congestion' : 'thermal';
-    const grid = d[gridKey].grid;
-    const maxVal = d[gridKey].max_congestion || d[gridKey].max_power || 1;
-
-    // Compute die bounds from scaled components (they're in 0..die_size units)
-    const comps = d.components || {};
-    const xs = Object.values(comps).map(p => p.x || 0);
-    const ys = Object.values(comps).map(p => p.y || 0);
-    const minX = Math.min(...xs), maxX = Math.max(...xs);
-    const minY = Math.min(...ys), maxY = Math.max(...ys);
-    const dieW = Math.max(maxX - minX, 1);
-    const dieH = Math.max(maxY - minY, 1);
-
-    const w = canvas.width, h = canvas.height, pad = 20;
-    const scale = Math.min((w - 2 * pad) / dieW, (h - 2 * pad) / dieH);
-
-    ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(0, 0, w, h);
-
-    // Draw die outline
-    ctx.strokeStyle = '#2d3748';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(pad, pad, dieW * scale, dieH * scale);
-
-    // Draw cells as small rectangles, colored by their grid cell's congestion/thermal
-    const gW = grid.length, gH = grid[0].length;
-    const cellW = dieW / gW, cellH = dieH / gH;
-    const cellSize = Math.max(2, Math.min(5, scale * 0.5));
-
-    ctx.globalAlpha = 0.7;
-    Object.values(comps).forEach(p => {
-      const gx = Math.min(gW - 1, Math.floor((p.x - minX) / cellW));
-      const gy = Math.min(gH - 1, Math.floor((p.y - minY) / cellH));
-      const v = grid[gy][gx] || 0;
-      const intensity = maxVal > 0 ? v / maxVal : 0;
-      // Color: blue (low) → yellow (mid) → red (high)
-      let r, g, b;
-      if (intensity < 0.5) {
-        // blue to yellow
-        r = Math.round(255 * intensity * 2);
-        g = Math.round(200 * intensity * 2);
-        b = Math.round(255 * (1 - intensity * 2));
-      } else {
-        // yellow to red
-        r = 255;
-        g = Math.round(200 * (1 - (intensity - 0.5) * 2));
-        b = 0;
-      }
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
-      const cx = pad + (p.x - minX) * scale;
-      const cy = pad + (p.y - minY) * scale;
-      ctx.fillRect(cx - cellSize / 2, cy - cellSize / 2, cellSize, cellSize);
-    });
-    ctx.globalAlpha = 1.0;
-
-    // Legend
-    ctx.fillStyle = '#2d3748';
-    ctx.font = '11px sans-serif';
-    ctx.fillText(`Colored by ${colorBy} (max: ${Math.round(maxVal)})`, pad, h - 8);
-  }
-
-  // Color-mode switcher for the full viz
-  let _lastFullResult = null;
-  const fullVizColor = document.getElementById('fullVizColor');
-  if (fullVizColor) {
-    fullVizColor.addEventListener('change', () => {
-      if (_lastFullResult) drawFullViz(_lastFullResult);
-    });
-  }
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
-  }
-</script>

@@ -1,37 +1,35 @@
-// ChipPlacer frontend — multi-objective display
+// SmallChip AI — modern unified app
 let currentFile = null;
-let currentResults = null;
+let sessionId = null;
+let lastResult = null;
+let currentDesign = null;
 
-const ALGO_COLORS = {
-    'random': '#a0aec0',
-    'sa': '#3182ce',
-    'ga': '#38a169',
-    'eplace': '#d69e2e',
-    'gat': '#e53e3e',
-};
+const $ = (id) => document.getElementById(id);
+const chatBody = $('chatBody');
+const userInput = $('userInput');
+const sendBtn = $('sendBtn');
+const statusText = $('statusText');
+const chatStatus = $('chatStatus');
+const welcome = $('welcome');
 
-const fileInput = document.getElementById('fileInput');
-const uploadArea = document.getElementById('uploadArea');
-const fileName = document.getElementById('fileName');
-const runBtn = document.getElementById('runBtn');
-const loading = document.getElementById('loading');
-const loadingText = document.getElementById('loadingText');
-const resultsSection = document.getElementById('resultsSection');
-const exampleLink = document.getElementById('loadExample');
+// ===== File upload =====
+const uploadZone = $('uploadZone');
+const fileInput = $('fileInput');
+const fileInfo = $('fileInfo');
+const fileName = $('fileName');
+const fileMeta = $('fileMeta');
+const examples = $('examples');
 
-fileInput.addEventListener('change', (e) => {
-    if (e.target.files.length > 0) setFile(e.target.files[0]);
-});
-
-uploadArea.addEventListener('dragover', (e) => {
+uploadZone.addEventListener('click', () => fileInput.click());
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragging'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragging'));
+uploadZone.addEventListener('drop', e => {
     e.preventDefault();
-    uploadArea.classList.add('dragging');
+    uploadZone.classList.remove('dragging');
+    if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
 });
-uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragging'));
-uploadArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadArea.classList.remove('dragging');
-    if (e.dataTransfer.files.length > 0) setFile(e.dataTransfer.files[0]);
+fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) setFile(e.target.files[0]);
 });
 
 function setFile(file) {
@@ -40,196 +38,341 @@ function setFile(file) {
         return;
     }
     currentFile = file;
-    fileName.textContent = `✓ ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-    runBtn.disabled = false;
+    fileName.textContent = '✓ ' + file.name;
+    fileMeta.textContent = `${(file.size / 1024).toFixed(1)} KB`;
+    fileInfo.classList.remove('hidden');
+    statusText.textContent = 'Chip loaded — type a request or pick a quick action';
+    chatStatus.classList.add('online');
+    enableInput();
 }
 
-function loadExample(filename, displayName) {
-    return async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch(`/static/examples/${filename}`);
-            if (!response.ok) throw new Error(`Could not load ${filename}`);
-            const blob = await response.blob();
-            const file = new File([blob], filename, { type: 'text/plain' });
-            setFile(file);
-            showStatus(`Loaded example: ${displayName} (${(file.size / 1024).toFixed(0)} KB). Click "Run comparison" to see results.`, 'info');
-        } catch (err) {
-            alert('Could not load example: ' + err.message);
-        }
-    };
-}
-
-exampleLink.addEventListener('click', loadExample('gcd_734cells.def', 'GCD (734 cells)'));
-
-const example5k = document.getElementById('loadExample5k');
-if (example5k) example5k.addEventListener('click', loadExample('bigblue1_5k_subset.def', '5K bigblue1 subset (5,000 cells)'));
-
-const example8k = document.getElementById('loadExample8k');
-if (example8k) example8k.addEventListener('click', loadExample('bigblue1_8k_subset.def', '8K bigblue1 subset (8,000 cells)'));
-
-const example15k = document.getElementById('loadExample15k');
-if (example15k) example15k.addEventListener('click', loadExample('bigblue1_15k_subset.def', '15K bigblue1 subset (15,000 cells)'));
-
-runBtn.addEventListener('click', async () => {
-    if (!currentFile) return;
-
-    const selectedAlgos = Array.from(document.querySelectorAll('.algo-card input:checked'))
-        .map(cb => cb.value);
-    if (selectedAlgos.length === 0) {
-        alert('Please select at least one algorithm');
-        return;
-    }
-
-    runBtn.disabled = true;
-    loading.classList.remove('hidden');
-    resultsSection.classList.add('hidden');
-    loadingText.textContent = `Running ${selectedAlgos.length} algorithms + predicting 5 metrics...`;
-
-    const formData = new FormData();
-    formData.append('file', currentFile);
-    formData.append('algorithms', selectedAlgos.join(','));
-
+examples.addEventListener('click', async e => {
+    if (!e.target.dataset.file) return;
+    const filename = e.target.dataset.file;
+    statusText.textContent = `Loading ${filename}...`;
     try {
-        const response = await fetch('/api/compare', {
-            method: 'POST',
-            body: formData,
-        });
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.detail || 'Server error');
-        }
-        currentResults = await response.json();
-        displayResults(currentResults);
-    } catch (err) {
-        alert('Error: ' + err.message);
-    } finally {
-        runBtn.disabled = false;
-        loading.classList.add('hidden');
+        const r = await fetch(`/static/examples/${filename}`);
+        if (!r.ok) throw new Error('Could not load example');
+        const blob = await r.blob();
+        const file = new File([blob], filename, { type: 'text/plain' });
+        setFile(file);
+    } catch (e) {
+        alert('Failed to load example: ' + e.message);
     }
 });
 
-function fmt(n) {
-    if (n === null || n === undefined) return '—';
-    if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
-    if (n >= 1e3) return (n / 1e3).toFixed(2) + 'K';
-    if (n < 10) return n.toFixed(2);
-    return Math.round(n).toLocaleString();
+// ===== Reset =====
+$('resetBtn').addEventListener('click', () => {
+    if (confirm('Reset session? This clears the chat and uploaded file.')) location.reload();
+});
+
+// ===== Chat =====
+function enableInput() {
+    userInput.disabled = false;
+    sendBtn.disabled = false;
+    userInput.focus();
+    userInput.placeholder = currentFile ? 'Type your message...' : 'Upload a .def file first...';
 }
 
-function displayResults(data) {
-    resultsSection.classList.remove('hidden');
-    document.getElementById('chipInfo').textContent =
-        `${data.n_cells} cells, ${data.n_nets} nets`;
+userInput.addEventListener('input', () => {
+    userInput.style.height = 'auto';
+    userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px';
+});
 
-    const tbody = document.getElementById('resultsTableBody');
-    tbody.innerHTML = '';
-
-    data.results.forEach((result, idx) => {
-        if (result.error) {
-            const row = tbody.insertRow();
-            row.innerHTML = `<td>${result.algorithm}</td><td colspan="6" style="color:#e53e3e">Error: ${result.error}</td>`;
-            return;
-        }
-        const row = tbody.insertRow();
-        if (idx === 0) row.classList.add('winner');
-        const m = result.metrics || {};
-        row.innerHTML = `
-            <td><strong>${result.algorithm}</strong>${result.note ? ` <small style="color:#dd6b20">${result.note}</small>` : ''}</td>
-            <td>${fmt(result.hpwl)}</td>
-            <td>${fmt(m.timing_ps)}</td>
-            <td>${fmt(m.power_mw)}</td>
-            <td>${fmt(m.area)}</td>
-            <td>${fmt(m.max_congestion)}</td>
-            <td>${result.time.toFixed(2)}s</td>
-        `;
-    });
-
-    const vizAlgo = document.getElementById('vizAlgo');
-    vizAlgo.innerHTML = '';
-    data.results.filter(r => !r.error && r.components).forEach(result => {
-        const opt = document.createElement('option');
-        opt.value = result.algo_id;
-        opt.textContent = result.algorithm;
-        vizAlgo.appendChild(opt);
-    });
-
-    vizAlgo.addEventListener('change', () => visualize(vizAlgo.value));
-    if (data.results.length > 0 && !data.results[0].error) {
-        vizAlgo.value = data.results[0].algo_id;
-        visualize(data.results[0].algo_id);
+userInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
     }
+});
+sendBtn.addEventListener('click', sendMessage);
 
-    // Compute savings vs. industry baseline
-    const winner = data.results.find(r => !r.error);
-    if (winner) {
-        computeSavings(winner.hpwl);
-    }
+document.querySelectorAll('.quick-action').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (!currentFile) { alert('Upload a .def file first'); return; }
+        userInput.value = btn.dataset.msg;
+        sendMessage();
+    });
+});
 
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
+function addUserMessage(text) {
+    if (welcome) welcome.style.display = 'none';
+    const msg = document.createElement('div');
+    msg.className = 'msg user';
+    msg.innerHTML = `
+        <div class="avatar">H</div>
+        <div class="bubble">${escapeHtml(text)}</div>
+    `;
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-async function computeSavings(hpwl) {
+function addAIMessage(html, files = null) {
+    if (welcome) welcome.style.display = 'none';
+    const msg = document.createElement('div');
+    msg.className = 'msg ai';
+    let filesHtml = '';
+    if (files && files.length) {
+        filesHtml = '<div class="files">' + files.map(f =>
+            `<a class="file-chip" href="${f.url}" download="${f.name}">⬇ ${escapeHtml(f.name)}</a>`
+        ).join('') + '</div>';
+    }
+    msg.innerHTML = `
+        <div class="avatar">AI</div>
+        <div class="bubble">${html}${filesHtml}</div>
+    `;
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    return msg;
+}
+
+function addTyping() {
+    const msg = document.createElement('div');
+    msg.className = 'msg ai';
+    msg.id = 'typing-msg';
+    msg.innerHTML = `
+        <div class="avatar">AI</div>
+        <div class="bubble"><div class="typing-bubble"><span></span><span></span><span></span></div></div>
+    `;
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+    return msg;
+}
+
+function removeTyping() {
+    const t = $('typing-msg');
+    if (t) t.remove();
+}
+
+function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+}
+
+async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text) return;
+    if (!currentFile && !sessionId) { alert('Upload a .def file first'); return; }
+
+    addUserMessage(text);
+    userInput.value = '';
+    userInput.style.height = 'auto';
+    userInput.disabled = true;
+    sendBtn.disabled = true;
+    chatStatus.classList.remove('online');
+    chatStatus.classList.add('thinking');
+    statusText.textContent = 'Placing chip...';
+    const typing = addTyping();
+
     try {
-        const response = await fetch(`/api/savings?hpwl=${hpwl}`);
-        if (!response.ok) return;
-        const s = await response.json();
-
-        document.getElementById('savingsCost').textContent =
-            `$${(s.tool_cost_saved_usd_per_year / 1000000).toFixed(1)}M`;
-        document.getElementById('savingsEnergy').textContent =
-            `${s.energy_saved_gwh_per_year.toFixed(1)} GWh`;
-        document.getElementById('savingsHeat').textContent =
-            `${(s.heat_saved_btu_hr_at_1B_chips / 1000000).toFixed(1)}M BTU/hr`;
-        document.getElementById('savingsPower').textContent =
-            `${s.power_saved_pct.toFixed(1)}%`;
-
-        document.getElementById('savingsSection').classList.remove('hidden');
+        let resp;
+        if (!sessionId) {
+            const fd = new FormData();
+            fd.append('file', currentFile);
+            fd.append('message', text);
+            resp = await fetch('/api/copilot/start', { method: 'POST', body: fd });
+        } else {
+            const fd = new FormData();
+            fd.append('session_id', sessionId);
+            fd.append('message', text);
+            resp = await fetch('/api/copilot/chat', { method: 'POST', body: fd });
+        }
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({ detail: 'Server error' }));
+            if (resp.status === 404 && currentFile) {
+                sessionId = null;
+                const fd = new FormData();
+                fd.append('file', currentFile);
+                fd.append('message', text);
+                resp = await fetch('/api/copilot/start', { method: 'POST', body: fd });
+            }
+            if (!resp.ok) throw new Error(err.detail || 'Server error');
+        }
+        const data = await resp.json();
+        sessionId = data.session_id;
+        localStorage.setItem('chipmind_session', sessionId);
+        removeTyping();
+        renderTurn(data);
     } catch (err) {
-        // ignore
+        removeTyping();
+        addAIMessage(`<strong>⚠️ Error:</strong> ${escapeHtml(err.message)}`);
+        statusText.textContent = 'Error';
+    } finally {
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+        chatStatus.classList.remove('thinking');
+        chatStatus.classList.add('online');
+        userInput.focus();
     }
 }
 
-function visualize(algoId) {
-    if (!currentResults) return;
-    const result = currentResults.results.find(r => r.algo_id === algoId);
-    if (!result || !result.components) return;
+function renderTurn(data) {
+    lastResult = data;
+    currentDesign = data.design_name;
 
-    const canvas = document.getElementById('placementCanvas');
-    const ctx = canvas.getContext('2d');
-    const die = currentResults.die;
+    // Update chip info
+    if (data.n_cells) {
+        $('statCells').textContent = data.n_cells.toLocaleString();
+        $('statNets').textContent = data.n_nets.toLocaleString();
+        $('chipPanel').classList.remove('hidden');
+    }
 
-    const width = canvas.width;
-    const height = canvas.height;
-    const padding = 20;
-    const drawW = width - 2 * padding;
-    const drawH = height - 2 * padding;
-    const dieW = die.x2 - die.x1;
-    const dieH = die.y2 - die.y1;
-    const scale = Math.min(drawW / dieW, drawH / dieH);
+    // Update preference bars
+    if (data.preference && data.preference.length === 5) {
+        const labels = ['HPWL', 'Power', 'Area', 'Timing', 'Routing'];
+        const list = $('prefList');
+        list.innerHTML = data.preference.map((v, i) => `
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <div style="width: 60px; color: var(--text-muted);">${labels[i]}</div>
+                <div style="flex: 1; height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden;">
+                    <div style="width: ${(v * 100).toFixed(0)}%; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.4s;"></div>
+                </div>
+                <div style="width: 36px; text-align: right; font-weight: 600;">${(v * 100).toFixed(0)}%</div>
+            </div>
+        `).join('');
+        $('prefPanel').classList.remove('hidden');
+    }
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#fafafa';
-    ctx.fillRect(0, 0, width, height);
-    ctx.strokeStyle = '#cbd5e0';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(padding, padding, dieW * scale, dieH * scale);
+    // Update metrics
+    if (data.old_hpwl !== undefined && data.new_hpwl !== undefined) {
+        $('metricOldHpwl').textContent = data.old_hpwl.toLocaleString();
+        $('metricNewHpwl').textContent = data.new_hpwl.toLocaleString();
+        $('metricImprovement').textContent = data.improvement_pct.toFixed(1) + '%';
+        $('metricPerNet').textContent = (data.new_hpwl / (data.n_nets || 1)).toFixed(1) + ' µm';
+        $('metricsPanel').classList.remove('hidden');
+        $('vizEmpty').classList.add('hidden');
+    }
 
-    const color = ALGO_COLORS[algoId] || '#4a5568';
-    ctx.fillStyle = color;
-    ctx.globalAlpha = 0.6;
-    const cellNames = Object.keys(result.components);
-    cellNames.forEach(name => {
-        const pos = result.components[name];
-        const cx = padding + (pos.x - die.x1) * scale;
-        const cy = padding + (pos.y - die.y1) * scale;
-        ctx.beginPath();
-        ctx.arc(cx, cy, 3, 0, Math.PI * 2);
-        ctx.fill();
-    });
-    ctx.globalAlpha = 1.0;
-    ctx.fillStyle = '#2d3748';
-    ctx.font = '12px sans-serif';
-    const m = result.metrics || {};
-    ctx.fillText(`${result.algorithm} — ${fmt(result.hpwl)} HPWL — ${fmt(m.timing_ps)}ps — ${fmt(m.power_mw)}mW — ${fmt(m.area)} area — ${fmt(m.max_congestion)} cong`, padding, height - 8);
+    // Update download buttons
+    if (data.placed_def) {
+        const blob = new Blob([data.placed_def], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const placedName = (data.design_name || 'placed').replace(/\.def$/, '') + '_smallchip.def';
+        $('downloadBtn').href = url;
+        $('downloadBtn').download = placedName;
+        $('downloadBtn').classList.remove('disabled');
+        $('downloadBtn').textContent = `⬇ ${placedName}`;
+        $('downloadArea').classList.remove('hidden');
+
+        // Generate a report file
+        const report = generateReport(data);
+        const reportBlob = new Blob([report], { type: 'text/markdown' });
+        const reportUrl = URL.createObjectURL(reportBlob);
+        $('downloadReportBtn').href = reportUrl;
+        $('downloadReportBtn').download = placedName.replace('.def', '_report.md');
+        $('downloadReportBtn').classList.remove('disabled');
+    }
+
+    // Update visualization
+    if (data.components) {
+        visualize(data.components, data.die, data.design_name);
+    }
+
+    // Add the AI reply
+    const replyHtml = data.reply || 'Done.';
+    addAIMessage(replyHtml);
+
+    statusText.textContent = `Session active — turn ${data.turn_count || 1}`;
 }
+
+function generateReport(data) {
+    const lines = [];
+    lines.push(`# SmallChip AI — Placement Report`);
+    lines.push(``);
+    lines.push(`**Design:** ${data.design_name}`);
+    lines.push(`**Date:** ${new Date().toISOString()}`);
+    lines.push(`**Session:** ${data.session_id}`);
+    lines.push(``);
+    lines.push(`## Metrics`);
+    lines.push(``);
+    lines.push(`| Metric | Value |`);
+    lines.push(`|---|---|`);
+    lines.push(`| Cells | ${data.n_cells?.toLocaleString() || '—'} |`);
+    lines.push(`| Nets | ${data.n_nets?.toLocaleString() || '—'} |`);
+    lines.push(`| Old HPWL (OpenROAD default) | ${data.old_hpwl?.toLocaleString() || '—'} |`);
+    lines.push(`| New HPWL (SmallChip AI) | ${data.new_hpwl?.toLocaleString() || '—'} |`);
+    lines.push(`| Improvement | ${data.improvement_pct?.toFixed(1) || '—'}% |`);
+    lines.push(`| Per-net HPWL | ${((data.new_hpwl || 0) / (data.n_nets || 1)).toFixed(1)} µm |`);
+    lines.push(``);
+    if (data.preference) {
+        lines.push(`## Preference vector`);
+        lines.push(``);
+        const labels = ['HPWL', 'Power', 'Area', 'Timing', 'Routing'];
+        data.preference.forEach((v, i) => lines.push(`- **${labels[i]}:** ${(v * 100).toFixed(0)}%`));
+        lines.push(``);
+    }
+    lines.push(`## Analysis`);
+    lines.push(``);
+    lines.push(data.reply || 'See SmallChip AI co-pilot output for analysis.');
+    lines.push(``);
+    lines.push(`---`);
+    lines.push(`*Generated by SmallChip AI v0.2.0 — github.com/hnelabhotla-boop/smallchip-ai*`);
+    return lines.join('\n');
+}
+
+// ===== Visualization =====
+const canvas = $('placementCanvas');
+const ctx = canvas.getContext('2d');
+
+function visualize(components, die, name) {
+    if (!components || !die) return;
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, w, h);
+
+    const xs = Object.values(components).map(c => c.x);
+    const ys = Object.values(components).map(c => c.y);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const dieW = Math.max(maxX - minX, 1);
+    const dieH = Math.max(maxY - minY, 1);
+    const pad = 8;
+    const scale = Math.min((w - 2 * pad) / dieW, (h - 2 * pad) / dieH);
+
+    // Draw die outline
+    ctx.strokeStyle = '#30363d';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(pad, pad, dieW * scale, dieH * scale);
+
+    // Draw cells
+    ctx.fillStyle = '#7ee787';
+    const cellSize = Math.max(1.5, Math.min(3, scale * 0.4));
+    const vals = Object.values(components);
+    const maxN = Math.min(vals.length, 2000);
+    for (let i = 0; i < maxN; i++) {
+        const c = vals[i];
+        const cx = pad + (c.x - minX) * scale;
+        const cy = pad + (c.y - minY) * scale;
+        ctx.fillRect(cx - cellSize/2, cy - cellSize/2, cellSize, cellSize);
+    }
+    if (vals.length > maxN) {
+        ctx.fillStyle = '#7d8590';
+        ctx.font = '11px -apple-system, sans-serif';
+        ctx.fillText(`(showing ${maxN} of ${vals.length} cells)`, pad, h - pad);
+    }
+}
+
+// ===== Restore session =====
+try {
+    const saved = localStorage.getItem('chipmind_session');
+    if (saved) {
+        sessionId = saved;
+        statusText.textContent = 'Resumed session — re-upload your .def to continue';
+    }
+} catch (e) {}
+
+// ===== Server-sent status (online indicator) =====
+async function ping() {
+    try {
+        const r = await fetch('/api/health', { method: 'GET' });
+        if (r.ok) {
+            chatStatus.classList.add('online');
+        }
+    } catch (e) {
+        chatStatus.classList.remove('online');
+    }
+}
+ping();
+setInterval(ping, 30000);
