@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmallChip AI — Chip Placement</title>
     <link rel="manifest" href="/static/manifest.json">
     <meta name="theme-color" content="#0a0a0a">
@@ -24,6 +23,9 @@
             --success: #10b981;
             --warning: #f59e0b;
             --error: #ef4444;
+            --x-axis: #ef4444;
+            --y-axis: #22c55e;
+            --z-axis: #3b82f6;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
@@ -40,7 +42,7 @@
         .app {
             display: grid;
             grid-template-rows: 48px 1fr;
-            grid-template-columns: 280px 1fr 340px;
+            grid-template-columns: 280px 1fr 320px;
             grid-template-areas: "header header header" "left center right";
             height: 100vh;
         }
@@ -209,7 +211,12 @@
             text-decoration: none; transition: all 0.15s;
         }
         .file-attach:hover { border-color: var(--accent); color: var(--text); background: var(--surface-3); }
-        .file-attach .icon { color: var(--accent); font-family: 'SF Mono', monospace; font-size: 11px; }
+        .file-attach .kind {
+            font-family: 'SF Mono', monospace; font-size: 10px;
+            color: var(--accent); padding: 2px 6px;
+            background: var(--accent-soft); border-radius: 3px;
+            min-width: 32px; text-align: center;
+        }
         .file-attach .name { font-family: 'SF Mono', monospace; font-size: 11px; }
         .file-attach .size { color: var(--text-3); font-size: 10px; margin-left: auto; }
 
@@ -268,80 +275,33 @@
         .send-btn:hover:not(:disabled) { background: var(--accent-2); }
         .send-btn:disabled { background: var(--surface-2); color: var(--text-3); cursor: not-allowed; }
 
-        /* ===== RIGHT PANEL ===== */
-        .canvas-wrap {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px;
-        }
-        canvas { display: block; max-width: 100%; height: auto; }
-        .viz3d-wrap {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
+        /* ===== AXIS WIDGET (X / Y / Z) ===== */
+        .axis-wrap {
             background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 6px;
             position: relative;
         }
-        .viz3d-panel {
-            position: relative;
-            background: #050505;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            aspect-ratio: 1 / 1;
-            overflow: hidden;
+        #axisCanvas {
+            width: 100%; aspect-ratio: 1 / 1; display: block;
+            border-radius: 4px; background: #050505;
         }
-        .viz3d-panel canvas { width: 100%; height: 100%; display: block; }
-        .viz3d-label {
-            position: absolute;
-            top: 6px; left: 8px;
-            font-size: 9px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-2);
-            background: rgba(0,0,0,0.5);
-            padding: 2px 6px;
-            border-radius: 3px;
-            pointer-events: none;
-            z-index: 2;
+        .axis-controls { display: flex; gap: 4px; margin-top: 6px; }
+        .axis-btn {
+            flex: 1; padding: 5px 8px; font-size: 10px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: 4px; color: var(--text-2);
+            cursor: pointer; font-family: inherit;
         }
-        .viz3d-stats {
-            position: absolute;
-            bottom: 4px; left: 6px; right: 6px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 9px;
-            font-family: 'SF Mono', monospace;
-            color: var(--text-3);
-            background: rgba(0,0,0,0.6);
-            padding: 3px 6px;
-            border-radius: 3px;
-            pointer-events: none;
-            z-index: 2;
+        .axis-btn:hover { background: var(--surface-3); color: var(--text); }
+        .axis-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-2); }
+        .axis-legend {
+            margin-top: 8px; display: flex; gap: 10px;
+            font-size: 10px; font-family: 'SF Mono', monospace; color: var(--text-3);
         }
-        .viz3d-stats b { color: var(--text); font-weight: 600; }
-        .viz3d-controls {
-            display: flex;
-            gap: 4px;
-            margin-top: 6px;
-        }
-        .viz3d-btn {
-            flex: 1;
-            padding: 5px 8px;
-            font-size: 10px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: var(--text-2);
-            cursor: pointer;
-            font-family: inherit;
-        }
-        .viz3d-btn:hover { background: var(--surface-3); color: var(--text); }
-        .viz3d-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-2); }
+        .axis-legend span { display: flex; align-items: center; gap: 4px; }
+        .axis-legend .swatch { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
         .empty {
             color: var(--text-3); font-size: 12px;
             text-align: center; padding: 60px 16px;
@@ -380,9 +340,18 @@
         .download-btn.primary .desc { color: rgba(255,255,255,0.7); }
         .download-btn .icon { font-family: 'SF Mono', monospace; font-size: 12px; }
 
+        .gds-hint {
+            margin-top: 10px; font-size: 10px; color: var(--text-3);
+            line-height: 1.5;
+        }
+        .gds-hint code {
+            font-family: 'SF Mono', monospace; font-size: 10px;
+            background: var(--surface-2); padding: 1px 4px; border-radius: 3px;
+        }
+
         @media (max-width: 1100px) {
             .app { grid-template-columns: 260px 1fr; grid-template-areas: "header header" "left center" "left right"; }
-            .right { border-left: none; border-top: 1px solid var(--border); max-height: 240px; }
+            .right { border-left: none; border-top: 1px solid var(--border); max-height: 280px; }
         }
         @media (max-width: 700px) {
             .app { grid-template-columns: 1fr; grid-template-areas: "header" "left" "center" "right"; }
@@ -390,8 +359,6 @@
         }
     </style>
     <link href="https://rsms.me/inter/inter.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 <div class="app">
@@ -400,7 +367,7 @@
             <div class="brand-mark"></div>
             <span>SmallChip AI</span>
         </div>
-        <span class="version">v0.2.1</span>
+        <span class="version">v0.3.0</span>
         <div class="header-spacer"></div>
         <div class="status-pill" id="chatStatus">
             <span class="status-dot"></span>
@@ -447,13 +414,13 @@
         <div class="chat-header">
             <div>
                 <div class="title">Placer assistant</div>
-                <div class="sub">Describe what you want in plain English</div>
+                <div class="sub">Describe what you want — the AI always picks the best-possible placement</div>
             </div>
         </div>
         <div class="chat-body" id="chatBody">
             <div class="welcome" id="welcome">
                 <h1>Placer assistant</h1>
-                <p>Upload a .def file to begin. The placer will produce the best-possible placement; your message shapes the report and the downloadable artifacts.</p>
+                <p>Upload a <code>.def</code> file to begin. The placer will produce the best-possible placement; your message shapes the report and the downloadable artifacts (a placed <code>.def</code> and an OpenROAD-ready <code>.gds</code>).</p>
                 <div class="quick-actions">
                     <button class="quick-action" data-msg="make it use less power">
                         <div class="title">Less power</div>
@@ -476,7 +443,7 @@
         </div>
         <div class="chat-input-wrap">
             <div class="chat-input-box">
-                <textarea class="chat-input" id="userInput" placeholder="Describe the placement you want..." rows="1" disabled></textarea>
+                <textarea class="chat-input" id="userInput" placeholder="Upload a .def file to begin..." rows="1" disabled></textarea>
                 <button class="send-btn" id="sendBtn" disabled title="Send">↑</button>
             </div>
         </div>
@@ -484,23 +451,21 @@
 
     <aside class="right">
         <div class="panel">
-            <div class="panel-title">Placement · 3D</div>
-            <div class="viz3d-wrap" id="viz3dWrap">
-                <div class="viz3d-panel" id="viz3dBefore">
-                    <div class="viz3d-label">Before</div>
-                    <div class="viz3d-stats"><span>HPWL</span><b id="vizBeforeHpwl">—</b></div>
-                </div>
-                <div class="viz3d-panel" id="viz3dAfter">
-                    <div class="viz3d-label">After</div>
-                    <div class="viz3d-stats"><span>HPWL</span><b id="vizAfterHpwl">—</b></div>
-                </div>
+            <div class="panel-title">Placement · X / Y / Z</div>
+            <div class="axis-wrap">
+                <canvas id="axisCanvas"></canvas>
             </div>
-            <div class="viz3d-controls" id="viz3dControls">
-                <button class="viz3d-btn active" data-mode="layout">Layout</button>
-                <button class="viz3d-btn" data-mode="height">Height</button>
-                <button class="viz3d-btn" data-mode="reset">Reset view</button>
+            <div class="axis-controls" id="axisControls">
+                <button class="axis-btn active" data-mode="2d">Top (X/Y)</button>
+                <button class="axis-btn" data-mode="3d">3D (X/Y/Z)</button>
+                <button class="axis-btn" data-mode="reset">Reset</button>
             </div>
-            <div class="empty" id="vizEmpty">
+            <div class="axis-legend">
+                <span><span class="swatch" style="background:var(--x-axis)"></span>X</span>
+                <span><span class="swatch" style="background:var(--y-axis)"></span>Y</span>
+                <span><span class="swatch" style="background:var(--z-axis)"></span>Z</span>
+            </div>
+            <div class="empty" id="axisEmpty">
                 <div class="empty-title">No placement yet</div>
                 <div class="empty-sub">Upload a design and send a request</div>
             </div>
@@ -522,13 +487,18 @@
                         <span class="desc">Placed design</span>
                     </span>
                 </a>
-                <a class="download-btn" id="downloadReport">
-                    <span class="icon">MD</span>
+                <a class="download-btn" id="downloadGds">
+                    <span class="icon">GDS</span>
                     <span class="label">
-                        <span class="file" id="downloadReportName">—</span>
-                        <span class="desc">Placement report</span>
+                        <span class="file" id="downloadGdsName">—</span>
+                        <span class="desc">OpenROAD-ready layout</span>
                     </span>
                 </a>
+            </div>
+            <div class="gds-hint">
+                Open the <code>.gds</code> in <code>KLayout</code>, upload to
+                <code>gds-viewer.com</code>, or pipe into
+                <code>openroad -gui</code> to view the 3D metal-stack render.
             </div>
         </div>
     </aside>

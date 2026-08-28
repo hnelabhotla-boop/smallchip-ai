@@ -55,6 +55,11 @@ Open the web app, upload a `.def` file, and type what you want:
 
 The co-pilot remembers your conversation within a session. Powered by a local LLM (Ollama) for offline use, with optional OpenAI fallback.
 
+**Every turn delivers two files you can download:**
+
+1. **`.def`** — the placed design (drop into any EDA tool)
+2. **`.gds`** — the industry-standard layout file, **ready to feed into OpenROAD** (or KLayout, gds-viewer.com) for 3D rendering of the metal-layer stack. This is the file you use to view the X / Y / Z placement externally.
+
 ---
 
 ## Quick start

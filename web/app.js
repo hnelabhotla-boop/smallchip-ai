@@ -1,4 +1,19 @@
-// SmallChip AI — professional chip placement co-pilot
+// SmallChip AI — chat-first chip placement co-pilot (v0.3.0)
+//
+// Architecture:
+//   - User uploads a .def (or picks an example)
+//   - User types a plain-English request
+//   - Server runs V3 GAT (best-possible placer) and returns:
+//       * reply text
+//       * placed_def (the placed .def text)
+//       * gds_base64 + gds_filename (OpenROAD-ready GDS)
+//   - Frontend shows the reply, the .def link, and the .gds link
+//
+// The in-app 3D viz was removed in v0.3.0 — the user wanted the
+// GDS delivered so they can use OpenROAD (or KLayout / gds-viewer.com)
+// to view the 3D layout externally. The app stays chat-first and
+// lightweight.
+
 let currentFile = null;
 let sessionId = null;
 let lastResult = null;
@@ -111,7 +126,7 @@ function addAIMessage(html, files = null) {
     if (files && files.length) {
         filesHtml = '<div class="file-attachments">' + files.map(f =>
             `<a class="file-attach" href="${f.url}" download="${f.name}">
-                <span class="icon">↓</span>
+                <span class="kind">${f.kind || 'FILE'}</span>
                 <span class="name">${escapeHtml(f.name)}</span>
                 <span class="size">${f.size || ''}</span>
             </a>`
@@ -139,7 +154,7 @@ function removeTyping() {
 }
 
 function escapeHtml(s) {
-    return s.replace(/[&<>"']/g, c => ({
+    return String(s).replace(/[&<>"']/g, c => ({
         '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[c]));
 }
@@ -229,47 +244,61 @@ function renderTurn(data) {
         $('metricImprovement').textContent = (data.improvement_pct >= 0 ? '+' : '') + data.improvement_pct.toFixed(1) + '%';
         $('metricPerNet').textContent = (data.new_hpwl / (data.n_nets || 1)).toFixed(1);
         $('metricsPanel').classList.remove('hidden');
-        $('vizEmpty').classList.add('hidden');
     }
 
-    // Build the per-turn inline files for the AI message bubble
+    // Update axis widget with current placement info
+    if (data.components) {
+        updateAxisWidget(data.components, data.die);
+    }
+
+    // Build the per-turn file attachments (DEF + GDS)
     let files = [];
+    const designName = (data.design_name || 'placed').replace(/\.def$/, '');
+
     if (data.placed_def) {
-        const placedName = (data.design_name || 'placed').replace(/\.def$/, '') + '_placed.def';
+        const placedName = `${designName}_placed.def`;
         const defBlob = new Blob([data.placed_def], { type: 'text/plain' });
         const defUrl = URL.createObjectURL(defBlob);
-        files.push({ name: placedName, url: defUrl, kind: 'def', size: formatSize(data.placed_def.length) });
+        files.push({ name: placedName, url: defUrl, kind: 'DEF', size: formatSize(data.placed_def.length) });
 
         const report = generateReport(data);
         const reportBlob = new Blob([report], { type: 'text/markdown' });
         const reportUrl = URL.createObjectURL(reportBlob);
-        const reportName = placedName.replace('.def', '_report.md');
-        files.push({ name: reportName, url: reportUrl, kind: 'report', size: formatSize(report.length) });
+        const reportName = `${designName}_report.md`;
+        files.push({ name: reportName, url: reportUrl, kind: 'MD', size: formatSize(report.length) });
+    }
+
+    if (data.gds_base64) {
+        // base64 → Uint8Array → Blob (so the file saves correctly as binary)
+        const bin = atob(data.gds_base64);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+        const gdsBlob = new Blob([bytes], { type: 'application/octet-stream' });
+        const gdsUrl = URL.createObjectURL(gdsBlob);
+        const gdsName = data.gds_filename || `${designName}_placed.gds`;
+        files.push({
+            name: gdsName,
+            url: gdsUrl,
+            kind: 'GDS',
+            size: data.gds_size_bytes ? formatSize(data.gds_size_bytes) : '',
+        });
+
+        // Mirror into the right-side download panel
+        const dl = $('downloadGds');
+        if (dl) {
+            dl.href = gdsUrl;
+            dl.download = gdsName;
+            $('downloadGdsName').textContent = gdsName;
+            $('downloadPanel').classList.remove('hidden');
+        }
     }
 
     if (data.placed_def) {
-        // Mirror the latest files into the right-side panel
-        const placedName = (data.design_name || 'placed').replace(/\.def$/, '') + '_placed.def';
+        const placedName = `${designName}_placed.def`;
         $('downloadDef').href = files[0].url;
         $('downloadDef').download = placedName;
         $('downloadDefName').textContent = placedName;
-        if (files[1]) {
-            $('downloadReport').href = files[1].url;
-            $('downloadReport').download = files[1].name;
-            $('downloadReportName').textContent = files[1].name;
-        }
         $('downloadPanel').classList.remove('hidden');
-    }
-
-    if (data.components) {
-        visualize(data.components, data.die, data.design_name);
-        if (data.intent === 'request' || data.intent === undefined) {
-            // also push the new components into 3D viz, keeping the previous
-            // "old" placement in memory for side-by-side comparison
-            if (window.__viz3d && window.__viz3d.pushPlacement) {
-                window.__viz3d.pushPlacement(data.components, data.design_name);
-            }
-        }
     }
 
     addAIMessage(data.reply || 'Done.', files);
@@ -312,396 +341,170 @@ function generateReport(data) {
     lines.push((data.reply || 'See placement assistant output for analysis.').replace(/<[^>]+>/g, ''));
     lines.push(``);
     lines.push(`---`);
-    lines.push(`Generated by SmallChip AI v0.2.0 · github.com/hnelabhotla-boop/smallchip-ai`);
+    lines.push(`Generated by SmallChip AI v0.3.0 · github.com/hnelabhotla-boop/smallchip-ai`);
     return lines.join('\n');
 }
 
-// ===== Visualization =====
-// 3D viewer: two side-by-side Three.js scenes (Before / After).
-// Before = original placement from uploaded DEF.
-// After  = current placement from V3 GAT.
+// ===== Axis widget (X / Y / Z) =====
+//
+// Click the axis widget to flip between a 2D top-down view (X / Y) and
+// a 3D preview (X / Y / Z). The 3D preview is a static, side-on render
+// of the placed cells — it shows the X axis (red), Y axis (green), and
+// Z axis (blue) so the user can see how the cells occupy the 3D space.
+//
+// For full 3D rendering with metal-layer stacks, download the .gds
+// and open it in KLayout / gds-viewer.com / OpenROAD.
 
-const __viz3d = {
-    before: null,
-    after: null,
-    setMode(mode) {
-        if (this.before) this.before.setMode(mode);
-        if (this.after) this.after.setMode(mode);
-    },
-    resetCameras() {
-        if (this.before) this.before.resetCamera();
-        if (this.after) this.after.resetCamera();
-    },
-    pushPlacement(components, name) {
-        // First request: also seed the "Before" with the original positions
-        if (!this.before) {
-            const original = lastResult && lastResult.original_components;
-            const beforeHpwl = lastResult && lastResult.old_hpwl;
-            if (original) {
-                this.before = new Viz3D('viz3dBefore', original, lastResult.die, beforeHpwl, 'BEFORE');
-            }
-        }
-        const afterHpwl = lastResult && lastResult.new_hpwl;
-        this.after = new Viz3D('viz3dAfter', components, lastResult && lastResult.die, afterHpwl, 'AFTER');
-        $('vizAfterHpwl').textContent = afterHpwl ? Number(afterHpwl).toLocaleString() : '—';
-        if (this.before) $('vizBeforeHpwl').textContent = this.before.hpwl ? Number(this.before.hpwl).toLocaleString() : '—';
-    },
-    showOriginal(originalComponents, die, hpwl) {
-        if (this.before) this.before.dispose();
-        this.before = new Viz3D('viz3dBefore', originalComponents, die, hpwl, 'BEFORE');
-        $('vizBeforeHpwl').textContent = hpwl ? Number(hpwl).toLocaleString() : '—';
-    }
+const axis = {
+    mode: '2d',  // '2d' or '3d'
+    yaw: -0.4,
+    pitch: 0.55,
+    zoom: 1.0,
+    dragging: false,
+    dragStart: null,
 };
-window.__viz3d = __viz3d;
 
-class Viz3D {
-    constructor(containerId, components, die, hpwl, label) {
-        this.container = document.getElementById(containerId);
-        if (!this.container) return;
-        // Clean up any previous canvas
-        const prev = this.container.querySelector('canvas');
-        if (prev) prev.remove();
-        // Also keep the .viz3d-label and .viz3d-stats in place
-        this.components = components || {};
-        this.die = die || null;
-        this.hpwl = hpwl;
-        this.label = label;
-        this.mode = 'layout';
-        this.useWebGL = false;
-        this._isDragging = false;
-        this._dragStart = null;
-        this._cameraYaw = -0.6;  // -PI/2 = top-down, 0 = side view
-        this._cameraPitch = 0.9;  // tilt angle
-        this._cameraZoom = 1.0;
-        // Try WebGL; if anything fails, use 2D canvas fallback
-        try {
-            if (typeof THREE === 'undefined') throw new Error('THREE not loaded');
-            // Quick WebGL probe
-            const probe = document.createElement('canvas');
-            const gl = probe.getContext('webgl2') || probe.getContext('webgl')
-                    || probe.getContext('experimental-webgl');
-            if (!gl) throw new Error('WebGL not supported by this browser/viewer');
-            this._setupScene();
-            this._populate();
-            this._start();
-            this.useWebGL = true;
-        } catch (e) {
-            console.warn(`[Viz3D:${label}] WebGL unavailable, using 2D fallback:`, e.message);
-            this._setup2D();
-            this._populate2D();
-            this.useWebGL = false;
-        }
-    }
+function updateAxisWidget(components, die) {
+    axis.components = components;
+    axis.die = die;
+    const canvas = $('axisCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, w, h);
+    if (!die) return;
+    const dieW = die.x2 - die.x1 || 1;
+    const dieH = die.y2 - die.y1 || 1;
+    const cells = Object.values(components || {});
+    if (cells.length === 0) return;
 
-    // ---------------- 2D fallback ----------------
-    _setup2D() {
-        const w = this.container.clientWidth || 200;
-        const h = this.container.clientHeight || 200;
-        const canvas = document.createElement('canvas');
-        canvas.width = w; canvas.height = h;
-        canvas.style.cursor = 'grab';
-        canvas.addEventListener('mousedown', e => {
-            this._isDragging = true;
-            this._dragStart = { x: e.clientX, y: e.clientY, yaw: this._cameraYaw, pitch: this._cameraPitch };
-            canvas.style.cursor = 'grabbing';
-        });
-        canvas.addEventListener('mousemove', e => {
-            if (!this._isDragging) return;
-            const dx = e.clientX - this._dragStart.x;
-            const dy = e.clientY - this._dragStart.y;
-            this._cameraYaw = this._dragStart.yaw - dx * 0.005;
-            this._cameraPitch = Math.max(0.05, Math.min(1.5, this._dragStart.pitch + dy * 0.005));
-            this._populate2D();
-        });
-        const stop = () => { this._isDragging = false; canvas.style.cursor = 'grab'; };
-        canvas.addEventListener('mouseup', stop);
-        canvas.addEventListener('mouseleave', stop);
-        canvas.addEventListener('wheel', e => {
-            e.preventDefault();
-            this._cameraZoom *= e.deltaY < 0 ? 1.1 : 0.9;
-            this._cameraZoom = Math.max(0.3, Math.min(5, this._cameraZoom));
-            this._populate2D();
-        }, { passive: false });
-        this._canvas2d = canvas;
-        this.container.appendChild(canvas);
-        const ro = new ResizeObserver(() => {
-            const w2 = this.container.clientWidth, h2 = this.container.clientHeight;
-            if (w2 === 0 || h2 === 0) return;
-            canvas.width = w2; canvas.height = h2;
-            this._populate2D();
-        });
-        ro.observe(this.container);
-        this._ro2d = ro;
-    }
+    const cx = (die.x1 + die.x2) / 2;
+    const cy = (die.y1 + die.y2) / 2;
+    const maxDim = Math.max(dieW, dieH);
 
-    _populate2D() {
-        const canvas = this._canvas2d;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const w = canvas.width, h = canvas.height;
-        ctx.fillStyle = '#050505';
-        ctx.fillRect(0, 0, w, h);
-        if (!this.die) return;
-        const dieW = this.die.x2 - this.die.x1 || 1;
-        const dieH = this.die.y2 - this.die.y1 || 1;
-        const cells = Object.values(this.components);
-        if (cells.length === 0) return;
-        // Isometric projection: yaw rotates around Z; pitch tilts the view.
-        const yaw = this._cameraYaw;
-        const pitch = this._cameraPitch;
-        const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
-        const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
-        // Project each cell to (sx, sy)
-        const points = [];
-        let minSx = Infinity, minSy = Infinity, maxSx = -Infinity, maxSy = -Infinity;
-        for (let i = 0; i < cells.length; i++) {
-            const c = cells[i];
-            // First center die coords
-            const x = c.x - (this.die.x1 + this.die.x2) / 2;
-            const y = c.y - (this.die.y1 + this.die.y2) / 2;
-            // Rotate around Z by yaw (in plan view), then tilt by pitch
-            const xr = x * cosY - y * sinY;
-            const yr = x * sinY + y * cosY;
-            // Tilt: y' = y*cos(pitch), z = y*sin(pitch)
-            const sx = xr;
-            const sy = yr * cosP;
-            // z (height) is used to color and offset y in screen space
-            const h01 = (Math.sin((i + 1) * 9.7) * 0.5 + 0.5);
-            const h = this.mode === 'height' ? h01 * dieW * 0.15 : dieW * 0.02;
-            const screenY = sy - h * sinP;
-            points.push({ sx, screenY, h01, h });
-            if (sx < minSx) minSx = sx;
-            if (sx > maxSx) maxSx = sx;
-            if (screenY < minSy) minSy = screenY;
-            if (screenY > maxSy) maxSy = screenY;
-        }
-        const pw = maxSx - minSx || 1;
-        const ph = maxSy - minSy || 1;
-        const scale = Math.min((w - 16) / pw, (h - 16) / ph) * this._cameraZoom;
-        const ox = w / 2 - (minSx + maxSx) / 2 * scale;
-        const oy = h / 2 - (minSy + maxSy) / 2 * scale;
-        // Draw die outline (faint)
-        ctx.strokeStyle = '#222';
-        ctx.lineWidth = 1;
-        const diePts = [[this.die.x1, this.die.y1], [this.die.x2, this.die.y1],
-                        [this.die.x2, this.die.y2], [this.die.x1, this.die.y2]];
-        ctx.beginPath();
-        diePts.forEach(([x, y], i) => {
-            const cx = x - (this.die.x1 + this.die.x2) / 2;
-            const cy = y - (this.die.y1 + this.die.y2) / 2;
-            const xr = cx * cosY - cy * sinY;
-            const yr = cx * sinY + cy * cosY;
-            const sx = ox + xr * scale;
-            const sy = oy + yr * cosP * scale;
-            if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
-        });
-        ctx.closePath();
-        ctx.stroke();
-        // Draw cells sorted back-to-front (smaller screenY first)
-        points.sort((a, b) => a.screenY - b.screenY);
-        const cellSize = Math.max(1, scale * 0.012);
-        for (let i = 0; i < points.length; i++) {
-            const p = points[i];
-            const sx = ox + p.sx * scale;
-            const sy = oy + p.screenY * scale;
-            const t = p.h01;
-            // Indigo -> warm
-            const r = Math.round(99 + t * 80);
-            const g = Math.round(102 - t * 30);
-            const b = Math.round(241 - t * 100);
-            ctx.fillStyle = `rgb(${r},${g},${b})`;
-            const size = cellSize * (this.mode === 'height' ? (1 + t * 2) : 1);
-            ctx.fillRect(sx - size / 2, sy - size / 2, size, size);
-        }
-        // Footer: cell count
-        ctx.fillStyle = '#6b6b6b';
-        ctx.font = '9px "SF Mono", monospace';
-        ctx.fillText(`${cells.length.toLocaleString()} cells`, 4, h - 4);
-    }
+    // Project: yaw rotates around Z, pitch tilts the view
+    const cosY = Math.cos(axis.yaw), sinY = Math.sin(axis.yaw);
+    const cosP = Math.cos(axis.pitch), sinP = Math.sin(axis.pitch);
 
-    // ---------------- 3D (WebGL) ----------------
-    _setupScene() {
-        const w = this.container.clientWidth || 200;
-        const h = this.container.clientHeight || 200;
-        this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x050505);
-        const cam = this.camera = new THREE.PerspectiveCamera(45, w / h, 1, 1e9);
-        cam.position.set(0, -800, 600);
-        cam.up.set(0, 0, 1);
-        cam.lookAt(0, 0, 0);
-        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        this.renderer.setPixelRatio(window.devicePixelRatio || 1);
-        this.renderer.setSize(w, h);
-        this.container.appendChild(this.renderer.domElement);
-        this.controls = new THREE.OrbitControls(cam, this.renderer.domElement);
-        this.controls.enableDamping = true;
-        this.controls.dampingFactor = 0.08;
-        this.controls.screenSpacePanning = false;
-        // Lighting
-        const amb = new THREE.AmbientLight(0xffffff, 0.55);
-        this.scene.add(amb);
-        const dir = new THREE.DirectionalLight(0xffffff, 0.55);
-        dir.position.set(1, 1, 2);
-        this.scene.add(dir);
-        const dir2 = new THREE.DirectionalLight(0x818cf8, 0.35);
-        dir2.position.set(-1, -1, 1);
-        this.scene.add(dir2);
-        // Resize hook
-        const ro = new ResizeObserver(() => this._resize());
-        ro.observe(this.container);
-        this._ro = ro;
-    }
-
-    _populate() {
-        if (!this.die) return;
-        const dieW = this.die.x2 - this.die.x1;
-        const dieH = this.die.y2 - this.die.y1;
-        const cx = (this.die.x1 + this.die.x2) / 2;
-        const cy = (this.die.y1 + this.die.y2) / 2;
-        // Die as a flat plane (rotated to lie in X-Y)
-        const planeGeo = new THREE.PlaneGeometry(dieW, dieH);
-        const planeMat = new THREE.MeshBasicMaterial({
-            color: 0x141414, side: THREE.DoubleSide, transparent: true, opacity: 0.85,
-        });
-        const plane = new THREE.Mesh(planeGeo, planeMat);
-        plane.position.set(cx, cy, -0.5);
-        this.scene.add(plane);
-        // Die outline
-        const edgeGeo = new THREE.EdgesGeometry(planeGeo);
-        const edge = new THREE.LineSegments(edgeGeo, new THREE.LineBasicMaterial({ color: 0x333333 }));
-        edge.position.copy(plane.position);
-        this.scene.add(edge);
-        // Cells
-        const cells = Object.values(this.components);
-        if (cells.length === 0) return;
-        // Stable per-cell height value
-        const heights = cells.map((_, i) => Math.sin((i + 1) * 9.7) * 0.5 + 0.5);
-        // Geometry: instanced for performance
-        const baseW = Math.max(dieW, dieH) * 0.012;
-        const baseH = Math.max(dieW, dieH) * 0.012;
-        const baseD = Math.max(dieW, dieH) * 0.05;
-        const cellGeo = new THREE.BoxGeometry(baseW, baseH, baseD);
-        const cellMat = new THREE.MeshLambertMaterial({ color: 0x6366f1 });
-        const inst = new THREE.InstancedMesh(cellGeo, cellMat, cells.length);
-        const dummy = new THREE.Object3D();
-        const colorAttr = new Float32Array(cells.length * 3);
-        for (let i = 0; i < cells.length; i++) {
-            const c = cells[i];
-            dummy.position.set(c.x, c.y, baseD / 2);
-            const h = this.mode === 'height' ? baseD * (0.3 + heights[i] * 2.5) : baseD * 0.4;
-            dummy.scale.set(1, 1, h / baseD);
-            dummy.updateMatrix();
-            inst.setMatrixAt(i, dummy.matrix);
-            const t = heights[i];
-            const r = 0.39 + t * 0.4;
-            const g = 0.40 - t * 0.2;
-            const b = 1.00 - t * 0.5;
-            colorAttr[i * 3] = r; colorAttr[i * 3 + 1] = g; colorAttr[i * 3 + 2] = b;
-        }
-        inst.instanceColor = new THREE.InstancedBufferAttribute(colorAttr, 3);
-        inst.instanceColor.needsUpdate = true;
-        this.scene.add(inst);
-        this._inst = inst;
-        this._heights = heights;
-        this._baseD = baseD;
-        // Frame the camera on the die
-        const maxDim = Math.max(dieW, dieH);
-        this.camera.position.set(0, -maxDim * 1.1, maxDim * 0.7);
-        this.controls.target.set(cx, cy, 0);
-        this.controls.update();
-    }
-
-    setMode(mode) {
-        if (mode === 'reset') { this.resetCamera(); return; }
-        this.mode = mode;
-        if (this.useWebGL && this._inst) {
-            const dummy = new THREE.Object3D();
-            const cells = Object.values(this.components);
-            for (let i = 0; i < cells.length; i++) {
-                const c = cells[i];
-                dummy.position.set(c.x, c.y, this._baseD / 2);
-                const h = (mode === 'height')
-                    ? this._baseD * (0.3 + this._heights[i] * 2.5)
-                    : this._baseD * 0.4;
-                dummy.scale.set(1, 1, h / this._baseD);
-                dummy.updateMatrix();
-                this._inst.setMatrixAt(i, dummy.matrix);
-            }
-            this._inst.instanceMatrix.needsUpdate = true;
-        } else if (!this.useWebGL) {
-            this._populate2D();
-        }
-    }
-
-    resetCamera() {
-        if (this.useWebGL && this.die) {
-            const dieW = this.die.x2 - this.die.x1;
-            const dieH = this.die.y2 - this.die.y1;
-            const maxDim = Math.max(dieW, dieH);
-            const cx = (this.die.x1 + this.die.x2) / 2;
-            const cy = (this.die.y1 + this.die.y2) / 2;
-            this.camera.position.set(0, -maxDim * 1.1, maxDim * 0.7);
-            this.controls.target.set(cx, cy, 0);
-            this.controls.update();
-        } else if (!this.useWebGL) {
-            this._cameraYaw = -0.6;
-            this._cameraPitch = 0.9;
-            this._cameraZoom = 1.0;
-            this._populate2D();
-        }
-    }
-
-    _resize() {
-        if (!this.container || !this.renderer) return;
-        const w = this.container.clientWidth;
-        const h = this.container.clientHeight;
-        if (w === 0 || h === 0) return;
-        this.renderer.setSize(w, h);
-        this.camera.aspect = w / h;
-        this.camera.updateProjectionMatrix();
-    }
-
-    _start() {
-        const tick = () => {
-            this._raf = requestAnimationFrame(tick);
-            this.controls.update();
-            this.renderer.render(this.scene, this.camera);
-        };
-        tick();
-    }
-
-    dispose() {
-        if (this._raf) cancelAnimationFrame(this._raf);
-        if (this._ro) this._ro.disconnect();
-        if (this._ro2d) this._ro2d.disconnect();
-        if (this.renderer) {
-            this.renderer.dispose();
-        }
-        const c = this.container && this.container.querySelector('canvas');
-        if (c) c.remove();
-    }
-}
-
-// ===== Mode toggle (Layout / Height / Reset) =====
-document.querySelectorAll('#viz3dControls .viz3d-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const mode = btn.dataset.mode;
-        if (mode === 'reset') {
-            __viz3d.resetCameras();
-            return;
-        }
-        document.querySelectorAll('#viz3dControls .viz3d-btn').forEach(b => {
-            if (b.dataset.mode !== 'reset') b.classList.remove('active');
-        });
-        btn.classList.add('active');
-        __viz3d.setMode(mode);
+    // Draw die outline (faint)
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    const corners = [[die.x1, die.y1], [die.x2, die.y1], [die.x2, die.y2], [die.x1, die.y2]];
+    corners.forEach(([x, y], i) => {
+        const dx = x - cx, dy = y - cy;
+        const xr = dx * cosY - dy * sinY;
+        const yr = (dx * sinY + dy * cosY) * cosP;
+        const sx = w / 2 + xr / maxDim * (w * 0.42) * axis.zoom;
+        const sy = h / 2 + yr / maxDim * (h * 0.42) * axis.zoom;
+        if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
     });
-});
+    ctx.closePath();
+    ctx.stroke();
 
-function visualize(components, die, name) {
-    // Legacy 2D path — replaced by 3D viewer. Kept as a no-op so
-    // existing callers don't break.
+    // Draw cells (a few thousand is plenty for a preview)
+    const stride = Math.max(1, Math.floor(cells.length / 3000));
+    const cellPx = Math.max(1, (w * 0.012) * axis.zoom);
+    for (let i = 0; i < cells.length; i += stride) {
+        const c = cells[i];
+        const dx = c.x - cx, dy = c.y - cy;
+        const xr = dx * cosY - dy * sinY;
+        const yr = (dx * sinY + dy * cosY) * cosP;
+        const sx = w / 2 + xr / maxDim * (w * 0.42) * axis.zoom;
+        const sy = h / 2 + yr / maxDim * (h * 0.42) * axis.zoom;
+        // Color cells by depth (back = dim, front = bright)
+        const depth = ((dx * cosY + dy * sinY) / maxDim + 0.5);
+        const t = Math.max(0.2, Math.min(1, 0.4 + depth * 0.6));
+        const r = Math.round(99 * t);
+        const g = Math.round(102 * t);
+        const b = Math.round(241 * t);
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+        ctx.fillRect(sx - cellPx / 2, sy - cellPx / 2, cellPx, cellPx);
+    }
+
+    // Draw axis triad (X red, Y green, Z blue) — bottom-left corner
+    const ax = 30, ay = h - 30, al = 22;
+    ctx.lineWidth = 2;
+    // X axis — red
+    ctx.strokeStyle = '#ef4444';
+    ctx.beginPath(); ctx.moveTo(ax, ay);
+    ctx.lineTo(ax + al * cosY, ay - al * sinY * cosP);
+    ctx.stroke();
+    // Y axis — green
+    ctx.strokeStyle = '#22c55e';
+    ctx.beginPath(); ctx.moveTo(ax, ay);
+    ctx.lineTo(ax + al * sinY, ay + al * cosY * cosP);
+    ctx.stroke();
+    // Z axis — blue (always pointing up in 2D preview, tilted in 3D preview)
+    ctx.strokeStyle = '#3b82f6';
+    ctx.beginPath(); ctx.moveTo(ax, ay);
+    ctx.lineTo(ax, ay - al * sinP);
+    ctx.stroke();
+    // Labels
+    ctx.font = '10px "SF Mono", monospace';
+    ctx.fillStyle = '#ef4444'; ctx.fillText('X', ax + al * cosY + 4, ay - al * sinY * cosP + 4);
+    ctx.fillStyle = '#22c55e'; ctx.fillText('Y', ax + al * sinY + 4, ay + al * cosY * cosP + 4);
+    ctx.fillStyle = '#3b82f6'; ctx.fillText('Z', ax + 4, ay - al * sinP - 4);
+
+    // Mode label
+    ctx.fillStyle = '#6b6b6b';
+    ctx.font = '9px "SF Mono", monospace';
+    ctx.fillText(axis.mode.toUpperCase(), w - 28, 12);
 }
+
+function bindAxisWidget() {
+    const canvas = $('axisCanvas');
+    if (!canvas) return;
+    const ro = new ResizeObserver(() => {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        if (axis.components) updateAxisWidget(axis.components, axis.die);
+    });
+    ro.observe(canvas);
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    // Drag to rotate
+    canvas.addEventListener('mousedown', e => {
+        axis.dragging = true;
+        axis.dragStart = { x: e.clientX, y: e.clientY, yaw: axis.yaw, pitch: axis.pitch };
+    });
+    canvas.addEventListener('mousemove', e => {
+        if (!axis.dragging) return;
+        const dx = e.clientX - axis.dragStart.x;
+        const dy = e.clientY - axis.dragStart.y;
+        axis.yaw = axis.dragStart.yaw - dx * 0.005;
+        axis.pitch = Math.max(0.05, Math.min(1.5, axis.dragStart.pitch + dy * 0.005));
+        updateAxisWidget(axis.components, axis.die);
+    });
+    const stop = () => { axis.dragging = false; };
+    canvas.addEventListener('mouseup', stop);
+    canvas.addEventListener('mouseleave', stop);
+    canvas.addEventListener('wheel', e => {
+        e.preventDefault();
+        axis.zoom *= e.deltaY < 0 ? 1.1 : 0.9;
+        axis.zoom = Math.max(0.3, Math.min(5, axis.zoom));
+        updateAxisWidget(axis.components, axis.die);
+    }, { passive: false });
+
+    // 2D / 3D toggle button
+    document.querySelectorAll('#axisControls .axis-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.dataset.mode;
+            if (mode === '2d') { axis.mode = '2d'; axis.pitch = 0.05; }
+            else if (mode === '3d') { axis.mode = '3d'; axis.pitch = 0.85; axis.yaw = -0.6; }
+            else if (mode === 'reset') { axis.yaw = -0.4; axis.pitch = 0.55; axis.zoom = 1.0; }
+            document.querySelectorAll('#axisControls .axis-btn').forEach(b => {
+                if (b.dataset.mode !== 'reset') b.classList.remove('active');
+            });
+            if (mode !== 'reset') btn.classList.add('active');
+            updateAxisWidget(axis.components, axis.die);
+        });
+    });
+}
+
+bindAxisWidget();
 
 // ===== Restore session =====
 try {

@@ -195,13 +195,38 @@ def _run_placement_and_build_state(session: Dict[str, Any], user_message: str,
     report_html = _tailor_report(preference, old_hpwl, new_hpwl, improvement, reasoning)
     placed_def = _components_to_def(session['def_text'], components, chip)
 
+    # Generate GDS (industry-standard layout format) — ready for OpenROAD / KLayout
+    gds_b64 = None
+    gds_filename = None
+    gds_size = None
+    try:
+        from chipmind.io.gds_writer import write_gds
+        import base64
+        gds_path = f"/tmp/{session['design_name']}_placed.gds"
+        chip_for_gds = {
+            "design_name": session['design_name'],
+            "die": chip.get('die', {"x1": 0, "y1": 0, "x2": 100, "y2": 100}),
+            "components": components,
+            "nets": chip.get('nets', []),
+        }
+        meta = write_gds(chip_for_gds, components, lef_data=None, output_path=gds_path)
+        with open(gds_path, "rb") as f:
+            raw = f.read()
+        gds_b64 = base64.b64encode(raw).decode("ascii")
+        gds_filename = f"{session['design_name']}_placed.gds"
+        gds_size = len(raw)
+    except Exception as e:
+        # GDS failure is non-fatal — chip + report still delivered
+        print(f"[copilot] GDS generation failed: {e}", flush=True)
+
     # Short reply shown in the chat bubble
     dom_idx = max(range(5), key=lambda i: preference[i])
     dom_label = pref_labels[dom_idx]
     short_reply = (
         f"Done — re-ran the placer with focus on <b>{dom_label}</b>. "
         f"HPWL went from <b>{old_hpwl:,}</b> to <b>{new_hpwl:,.0f}</b> "
-        f"(<b>{improvement:.1f}% better</b>). The full report and downloadable .def are below."
+        f"(<b>{improvement:.1f}% better</b>). "
+        f"Downloadable <b>.def</b> and <b>.gds</b> (OpenROAD-ready) are attached below."
     )
 
     # Update session
@@ -224,6 +249,9 @@ def _run_placement_and_build_state(session: Dict[str, Any], user_message: str,
         "new_hpwl": new_hpwl,
         "improvement_pct": improvement,
         "place_time_ms": place_ms,
+        "gds_base64": gds_b64,
+        "gds_filename": gds_filename,
+        "gds_size_bytes": gds_size,
     }
 
 
@@ -316,6 +344,9 @@ def _make_payload(session: Dict[str, Any], out: Dict[str, Any],
         "place_time_ms": out.get('place_time_ms', 0),
         "report_html": out.get('report_html'),
         "placed_def": out.get('placed_def'),
+        "gds_base64": out.get('gds_base64'),
+        "gds_filename": out.get('gds_filename'),
+        "gds_size_bytes": out.get('gds_size_bytes'),
         "original_def": session['def_text'],
         "original_components": session.get('original_components'),
         "die": session['chip'].get('die'),

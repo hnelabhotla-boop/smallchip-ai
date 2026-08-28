@@ -397,6 +397,19 @@ async def place_full_endpoint(
     }
 
 
+@app.get("/api/place_full/gds")
+async def place_full_gds_info():
+    """Redirect info: GDS is delivered via the /api/copilot/* flow now.
+    Each placement turn includes a gds_base64 + gds_filename in the response
+    so the user always gets a finished GDS ready for OpenROAD.
+    """
+    return {
+        "info": "GDS is delivered with each copilot turn. See /api/copilot/start.",
+        "external_viewer_url": "https://gds-viewer.com/?localfile=1",
+        "tip": "Open the .gds in KLayout, gds-viewer.com, or feed it to OpenROAD for 3D rendering.",
+    }
+
+
 @app.post("/api/compare")
 async def compare_endpoint(
     file: UploadFile = File(...),
