@@ -1,381 +1,459 @@
 """
-Convert STUDY_GUIDE.md to a print-ready A4 PDF.
-- Title page
-- Section headers (auto-numbered, with anchors)
-- Tables render properly
-- Headers/footers with page numbers
-- Two-column-friendly spacing
-- Bookmarks for clickable navigation (TOC)
+Build a print-ready PDF of STUDY_GUIDE.md using:
+  markdown  (MD -> HTML)
+  xhtml2pdf (HTML + CSS -> PDF)
+
+Why this approach:
+  - Real CSS, real tables, real typography
+  - @page rules for Letter size, margins, page numbers
+  - @page :first for cover (no header/footer)
+  - Table styling that doesn't break across pages
+  - Inline <a name="..."> anchors for clickable navigation
 """
 import re
 import sys
 from pathlib import Path
 
-from fpdf import FPDF
+import markdown
+
+# Monkey-patch: xhtml2pdf imports pyhanko unconditionally but we don't sign PDFs.
+# Stub out the signs module so the import doesn't fail.
+import sys
+import types
+_stub = types.ModuleType("xhtml2pdf.builders.signs")
+class _Noop:
+    @staticmethod
+    def sign(*a, **kw): return False
+_stub.PDFSignature = _Noop
+sys.modules["xhtml2pdf.builders.signs"] = _stub
+
+from xhtml2pdf import pisa
 
 SRC = Path("/Users/harshith/Documents/ChipPlacer/STUDY_GUIDE.md")
-DST = Path("/Users/harshith/Documents/ChipPlacer/STUDY_GUIDE_PRINT.pdf")
+DST = Path("/Users/harshith/Documents/ChipPlacer/STUDY_GUIDE.pdf")
+TMP_HTML = Path("/tmp/study_guide.html")
 
 
+# ---------- Unicode cleanup for Helvetica-only PDF font ----------
 UNICODE_MAP = {
-    "\u2014": "--",  # em-dash
-    "\u2013": "-",   # en-dash
-    "\u2018": "'",   # left single quote
-    "\u2019": "'",   # right single quote
-    "\u201c": '"',   # left double quote
-    "\u201d": '"',   # right double quote
-    "\u2026": "...", # ellipsis
-    "\u2192": "->",  # right arrow
-    "\u2190": "<-",  # left arrow
-    "\u2264": "<=",  # leq
-    "\u2265": ">=",  # geq
-    "\u00b1": "+/-", # plus-minus
-    "\u03bc": "u",   # mu
-    "\u00b5": "u",   # micro
-    "\u00b0": "deg", # degree
-    "\u00d7": "x",   # times
-    "\u2208": "in",  # element of
-    "\u2282": "in",  # subset
-    "\u2283": "sup", # superset
-    "\u2286": "sub", # subset or equal
-    "\u2287": "sup", # superset or equal
-    "\u2113": "l",   # script l
-    "\u2200": "for all",
-    "\u2203": "exists",
-    "\u2295": "(+)",
-    "\u2297": "(x)",
-    "\u00a9": "(c)",
-    "\u00ae": "(R)",
-    "\u2022": "*",
-    "\u00a7": "section",
-    "\u00b6": "P",
-    "\u2207": "grad",
-    "\u2202": "d",
-    "\u2211": "sum",
-    "\u2229": "n",
-    "\u222a": "u",
-    "\u2202": "d",
-    "\u03a3": "sum",
-    "\u03bb": "lambda",
-    "\u00bd": "1/2",
-    "\u00bc": "1/4",
-    "\u00be": "3/4",
-    "\u00f7": "/",
-    "\u2032": "'",
-    "\u2033": "''",
-    "\u221e": "inf",
-    "\u2248": "~=",
-    "\u2260": "!=",
+    "\u2014": "--",  "\u2013": "-",
+    "\u2018": "'",   "\u2019": "'",
+    "\u201c": '"',   "\u201d": '"',
+    "\u2026": "...",
+    "\u2192": "->",  "\u2190": "<-",
+    "\u2264": "<=",  "\u2265": ">=",
+    "\u00b1": "+/-", "\u03bc": "u",   "\u00b5": "u",
+    "\u00b0": "deg", "\u00d7": "x",   "\u00f7": "/",
+    "\u2208": "in",  "\u2282": "in",  "\u2286": "sub",
+    "\u2283": "sup", "\u2287": "sup",
+    "\u2113": "l",   "\u2200": "for all", "\u2203": "exists",
+    "\u2295": "(+)", "\u2297": "(x)",
+    "\u00a9": "(c)", "\u00ae": "(R)",
+    "\u2022": "*",   "\u00a7": "sec", "\u00b6": "P",
+    "\u2207": "grad", "\u2202": "d",  "\u2211": "sum",
+    "\u2229": "n",   "\u222a": "u",
+    "\u03a3": "sum", "\u03bb": "lambda",
+    "\u00bd": "1/2", "\u00bc": "1/4", "\u00be": "3/4",
+    "\u2032": "'",   "\u2033": "''",
+    "\u221e": "inf", "\u2248": "~=", "\u2260": "!=",
     "\u2261": "===",
-    "\u22c5": "*",
-    "\u2194": "<->",
-    "\u21d2": "=>",
-    "\u21d0": "<=",
-    "\u21d4": "<=>",
-    "\u00a0": " ",   # nbsp
-    "\u2009": " ",
-    "\u200b": "",
+    "\u22c5": "*",   "\u2194": "<->",
+    "\u21d2": "=>",  "\u21d0": "<=",  "\u21d4": "<=>",
+    "\u00a0": " ",   "\u2009": " ",   "\u200b": "",
+    "\u2705": "[x]", "\u274c": "[ ]", "\u2713": "[x]", "\u2717": "[ ]",
 }
 
 
-def strip_md(text: str) -> str:
-    """Light markdown stripping for plain text cells + Unicode -> ASCII."""
-    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
-    text = re.sub(r"\*(.+?)\*", r"\1", text)
-    text = re.sub(r"`(.+?)`", r"\1", text)
-    text = re.sub(r"\[(.+?)\]\(.+?\)", r"\1", text)
+def clean_text(s: str) -> str:
     for k, v in UNICODE_MAP.items():
-        text = text.replace(k, v)
+        s = s.replace(k, v)
     # Drop any remaining non-ASCII (math symbols, etc.)
-    text = re.sub(r"[^\x00-\x7f]", "?", text)
-    return text
+    s = re.sub(r"[^\x00-\x7f]", "?", s)
+    return s
 
 
-class StudyGuidePDF(FPDF):
-    def header(self):
-        if self.page_no() == 1:
-            return  # cover
-        self.set_y(8)
-        self.set_font("Helvetica", "I", 8)
-        self.set_text_color(120, 120, 120)
-        self.cell(0, 5, "SmallChip AI  -  NEOSEF / ISEF Study Guide", align="L")
-        self.cell(0, 5, f"Page {self.page_no()}", align="R", new_x="LMARGIN", new_y="NEXT")
-        self.set_draw_color(200, 200, 200)
-        self.line(10, 14, 200, 14)
-        self.set_y(18)
-
-    def footer(self):
-        if self.page_no() == 1:
-            return
-        self.set_y(-12)
-        self.set_font("Helvetica", "I", 7)
-        self.set_text_color(140, 140, 140)
-        self.cell(0, 5, "Confidential - Harshith  -  Strongsville High School", align="C")
+def clean_html(html: str) -> str:
+    """Strip any non-ASCII chars after markdown rendering (math symbols etc.)."""
+    # Walk text nodes only - keep tags intact
+    def repl(m):
+        return clean_text(m.group(0))
+    # Match content of all text nodes (between > and <)
+    return re.sub(r">([^<]+)<", lambda m: ">" + clean_text(m.group(1)) + "<", html)
 
 
-def render_inline(pdf: StudyGuidePDF, text: str, base_size: int = 10, base_style: str = ""):
-    """Render text with **bold** and *italic* inline."""
-    text = strip_md(text)
-    # Split on **...** and *...*
-    parts = re.split(r"(\*\*[^*]+\*\*|\*[^*]+\*)", text)
-    for part in parts:
-        if not part:
-            continue
-        if part.startswith("**") and part.endswith("**"):
-            pdf.set_font("Helvetica", "B", base_size)
-            pdf.write(base_size * 0.45, part[2:-2])
-        elif part.startswith("*") and part.endswith("*"):
-            pdf.set_font("Helvetica", "I", base_size)
-            pdf.write(base_size * 0.45, part[1:-1])
+# ---------- Add anchors to section headers for clickable TOC ----------
+def add_anchors(html: str) -> str:
+    counter = {"h1": 0, "h2": 0, "h3": 0}
+    def repl(m):
+        level = m.group(1)
+        text = m.group(2)
+        if level == "h1":
+            counter["h1"] += 1
+            counter["h2"] = 0
+            anchor = f"sec_{counter['h1']}"
+            # Mark "PART X" headings as page-break-before
+            cls = ' class="part"' if counter["h1"] >= 1 else ""
+        elif level == "h2":
+            counter["h2"] += 1
+            counter["h3"] = 0
+            anchor = f"sec_{counter['h1']}_{counter['h2']}"
+            cls = ""
         else:
-            pdf.set_font("Helvetica", base_style, base_size)
-            pdf.write(base_size * 0.45, part)
-    pdf.ln(base_size * 0.6)
+            counter["h3"] += 1
+            anchor = f"sec_{counter['h1']}_{counter['h2']}_{counter['h3']}"
+            cls = ""
+        return f'<{level}{cls} id="{anchor}">{text}</{level}>'
+    # But we don't want page-break on the first h1 (the title) - apply only to PARTs
+    # Re-process: only add class="part" to h1s that start with "PART"
+    def add_part_class(html: str) -> str:
+        return re.sub(r"<(h1) id=\"(sec_\d+)\">(PART [^<]+)</\1>",
+                      r'<\1 class="part" id="\2">\3</\1>', html)
+    html = re.sub(r"<(h[123])>(.+?)</\1>", repl, html, flags=re.DOTALL)
+    html = add_part_class(html)
+    return html
 
 
-def render_table(pdf: StudyGuidePDF, rows: list[list[str]], col_widths: list[float]):
-    """Render a markdown table with header bold + grid lines."""
-    pdf.set_font("Helvetica", "B", 9)
-    pdf.set_fill_color(230, 230, 240)
-    pdf.set_text_color(0, 0, 0)
-    for i, cell in enumerate(rows[0]):
-        pdf.set_font("Helvetica", "B", 9)
-        pdf.set_fill_color(230, 230, 240)
-        pdf.multi_cell(col_widths[i], 5, strip_md(cell), border=1, fill=True, new_x="END", new_y="TOP", max_line_height=pdf.font_size * 1.4)
-    pdf.set_font("Helvetica", "", 9)
-    pdf.set_fill_color(255, 255, 255)
-    for row in rows[1:]:
-        row_h = 0
-        # Pre-compute cell heights
-        heights = []
-        for i, cell in enumerate(row):
-            lines = pdf.multi_cell(col_widths[i], 5, strip_md(cell), dry_run=True, output="LINES")
-            heights.append(max(1, len(lines)))
-        row_h = max(heights) * 5
-        if pdf.get_y() + row_h > 280:
-            pdf.add_page()
-        x0, y0 = pdf.get_x(), pdf.get_y()
-        for i, cell in enumerate(row):
-            x = x0 + sum(col_widths[:i])
-            pdf.set_xy(x, y0)
-            pdf.set_font("Helvetica", "", 9)
-            pdf.multi_cell(col_widths[i], 5, strip_md(cell), border=1, new_x="END", new_y="TOP", max_line_height=pdf.font_size * 1.4)
-        pdf.set_y(y0 + row_h)
+# ---------- CSS ----------
+CSS = r"""
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.4;
+    color: #1a1a1a;
+}
+
+h1 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 22pt;
+    font-weight: bold;
+    color: #1a2a4a;
+    margin-top: 0;
+    margin-bottom: 8pt;
+    padding-bottom: 6pt;
+    border-bottom: 2pt solid #3a4a6a;
+}
+
+h1.part {
+    page-break-before: always;
+}
+
+h2 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16pt;
+    font-weight: bold;
+    color: #1a2a4a;
+    margin-top: 16pt;
+    margin-bottom: 6pt;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid #999;
+}
+
+h3 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #2a3a5a;
+    margin-top: 12pt;
+    margin-bottom: 4pt;
+}
+
+h4 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    font-weight: bold;
+    font-style: italic;
+    color: #3a3a3a;
+    margin-top: 8pt;
+    margin-bottom: 3pt;
+}
+
+p {
+    margin: 4pt 0 4pt 0;
+    text-align: left;
+}
+
+ul, ol {
+    margin: 4pt 0 4pt 18pt;
+    padding-left: 6pt;
+}
+
+li {
+    margin: 2pt 0;
+}
+
+strong { font-weight: bold; }
+em { font-style: italic; }
+
+code {
+    font-family: Courier, monospace;
+    font-size: 9pt;
+    background: #f0f0f4;
+    padding: 1pt 2pt;
+}
+
+pre {
+    font-family: Courier, monospace;
+    font-size: 8.5pt;
+    background: #f5f5f8;
+    border: 0.5pt solid #c0c0c8;
+    padding: 6pt 8pt;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 6pt 0;
+}
+
+blockquote {
+    margin: 6pt 12pt;
+    padding: 4pt 10pt;
+    border-left: 3pt solid #4a5a8a;
+    background: #f5f5fa;
+    color: #2a2a3a;
+    font-style: italic;
+}
+
+hr {
+    border: none;
+    border-top: 0.5pt solid #c0c0c8;
+    margin: 12pt 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6pt 0 10pt 0;
+    font-size: 9pt;
+}
+
+th {
+    background: #2a3a5a;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: left;
+    padding: 4pt 6pt;
+    border: 0.5pt solid #1a2a4a;
+}
+
+td {
+    padding: 3pt 6pt;
+    border: 0.5pt solid #c0c0c8;
+    vertical-align: top;
+}
+
+a {
+    color: #1a4a8a;
+    text-decoration: none;
+}
+
+.cover {
+    text-align: center;
+    padding-top: 0.5in;
+}
+
+.cover-title {
+    font-size: 36pt;
+    font-weight: bold;
+    color: #1a2a4a;
+    margin: 0 0 4pt 0;
+}
+
+.cover-subtitle {
+    font-size: 18pt;
+    color: #2a3a5a;
+    margin: 0 0 16pt 0;
+}
+
+.cover-fair {
+    font-size: 14pt;
+    font-style: italic;
+    color: #3a3a3a;
+    margin: 0 0 20pt 0;
+}
+
+.cover-line {
+    width: 3in;
+    margin: 12pt auto;
+    border-top: 1pt solid #555;
+}
+
+.cover-tagline {
+    font-size: 11pt;
+    color: #2a2a2a;
+    margin: 3pt 0;
+}
+
+.cover-name {
+    font-size: 16pt;
+    font-weight: bold;
+    color: #1a2a4a;
+    margin-top: 24pt;
+}
+
+.cover-school {
+    font-size: 10pt;
+    color: #2a2a2a;
+    margin: 1pt 0;
+}
+
+.cover-note {
+    font-size: 8.5pt;
+    font-style: italic;
+    color: #666;
+    margin-top: 28pt;
+}
+
+table.toc-table {
+    border: none;
+    margin: 12pt auto;
+    width: 80%;
+}
+
+table.toc-table td {
+    border: none;
+    padding: 4pt 8pt;
+    background: transparent;
+    font-size: 11pt;
+}
+
+table.toc-table td.toc-tag {
+    font-weight: bold;
+    color: #1a2a4a;
+    width: 1.4in;
+}
+
+table.toc-table tr {
+    border-bottom: 0.3pt dotted #888;
+}
+
+.header-text {
+    color: #666;
+    font-size: 8pt;
+    font-style: italic;
+    text-align: left;
+}
+
+.footer-text {
+    color: #666;
+    font-size: 8pt;
+    font-style: italic;
+    text-align: center;
+}
+
+.qa-question {
+    font-weight: bold;
+    color: #1a2a4a;
+    margin-top: 8pt;
+}
+
+.numbers-table td.num {
+    width: 1.2in;
+    font-weight: bold;
+    color: #1a2a4a;
+    font-size: 11pt;
+    text-align: center;
+}
+"""
 
 
-TOC_ENTRIES = [
-    ("Section I",   "Formal Vocabulary"),
-    ("Section II",  "The Project Introduction"),
-    ("Section III", "Foundational Concepts of Chip Design"),
-    ("Section IV",  "The Project in Formal Terms"),
-    ("Section V",   "The Presentation"),
-    ("Section VI",  "The Five Most Important Numbers"),
-    ("Section VII", "Formal Definitions for Anticipated Questions"),
-    ("Section VIII","How to Study This Document"),
-    ("Section IX",  "Closing Note"),
-]
+# ---------- HTML page template ----------
+HTML_TEMPLATE = r"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SmallChip AI - Study Guide</title>
+<style>
+__CSS__
+</style>
+</head>
+<body>
+
+<div class="cover">
+    <div class="cover-title">SmallChip AI</div>
+    <div class="cover-subtitle">Study Guide</div>
+    <div class="cover-fair">NEOSEF 2027 &nbsp;/&nbsp; ISEF 2027</div>
+    <div class="cover-line"></div>
+    <div class="cover-tagline">Math / Computer Science (MCS) Category</div>
+    <div class="cover-tagline">Real-Time Interactive Chip Placement</div>
+    <div class="cover-tagline">Graph Attention Network for the Sub-15K-Cell Market</div>
+    <div class="cover-name">Harshith</div>
+    <div class="cover-school">Strongsville High School &nbsp;-&nbsp; Strongsville, OH</div>
+    <div class="cover-school">Faculty sponsor: Mrs. DiGioia</div>
+    <div class="cover-note">
+        Master glossary + 8-part study reference.<br>
+        Read one section per day. Memorize Part I, IV, and VII.<br>
+        Rehearse the 12-minute pitch. Own the project.
+    </div>
+</div>
+
+__BODY__
+
+</body>
+</html>
+"""
 
 
-def add_toc(pdf: StudyGuidePDF):
-    pdf.add_page()
-    pdf.set_font("Helvetica", "B", 18)
-    pdf.set_text_color(30, 30, 80)
-    pdf.cell(0, 10, "Table of Contents", align="L", new_x="LMARGIN", new_y="NEXT")
-    pdf.set_draw_color(80, 80, 120)
-    pdf.line(15, pdf.get_y() + 1, 195, pdf.get_y() + 1)
-    pdf.ln(6)
-    pdf.set_text_color(0, 0, 0)
-    pdf.set_font("Helvetica", "", 12)
-    for tag, title in TOC_ENTRIES:
-        pdf.set_x(20)
-        pdf.cell(35, 7, tag + " -", align="L")
-        pdf.cell(0, 7, title, align="L", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "I", 10)
-    pdf.set_text_color(80, 80, 80)
-    pdf.multi_cell(0, 5,
-        "How to use this guide: Read one section per day. Memorize Section I (vocabulary), "
-        "internalize Section II (hooks and words to use), and rehearse Section V (the 12-minute pitch). "
-        "Section VI is the canonical set of numbers. Section VII is the Q&A survival kit. "
-        "Section VIII is the study plan. Section IX is the close.",
-        new_x="LMARGIN", new_y="NEXT")
+# ---------- TOC entries (auto-generated from headings) ----------
+ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"]
 
 
-def add_cover(pdf: StudyGuidePDF):
-    pdf.add_page()
-    pdf.set_xy(0, 50)
-    pdf.set_font("Helvetica", "B", 32)
-    pdf.cell(0, 12, "SmallChip AI", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.set_font("Helvetica", "", 16)
-    pdf.cell(0, 8, "Formal Study Guide", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(4)
-    pdf.set_font("Helvetica", "I", 13)
-    pdf.cell(0, 8, "NEOSEF 2027  /  ISEF 2027", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(20)
-    pdf.set_draw_color(50, 50, 50)
-    pdf.line(60, 130, 150, 130)
-    pdf.ln(6)
-    pdf.set_font("Helvetica", "", 11)
-    pdf.cell(0, 6, "Math / Computer Science (MCS) Category", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 6, "Real-Time Interactive Chip Placement", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 6, "Graph Attention Network for the Sub-15K-Cell Market", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(40)
-    pdf.set_font("Helvetica", "B", 14)
-    pdf.cell(0, 7, "Harshith", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.set_font("Helvetica", "", 11)
-    pdf.cell(0, 6, "Strongsville High School  -  Strongsville, OH", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 6, "Faculty sponsor: Mrs. DiGioia", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.ln(10)
-    pdf.set_font("Helvetica", "I", 9)
-    pdf.set_text_color(120, 120, 120)
-    pdf.cell(0, 5, "Nine sections. Read one per day. Memorize I, II.D, and VI.", align="C", new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 5, "Rehearse the 12-minute pitch. Own the project.", align="C", new_x="LMARGIN", new_y="NEXT")
-
-
-def parse_table(lines: list[str], idx: int):
-    """Parse a markdown table starting at lines[idx]. Return (rows, next_idx)."""
+def build_toc(html: str) -> str:
     rows = []
-    i = idx
-    while i < len(lines) and lines[i].lstrip().startswith("|"):
-        line = lines[i].strip()
-        if re.match(r"^\|[\s\-|:]+\|$", line):
-            i += 1
-            continue
-        cells = [c.strip() for c in line.strip("|").split("|")]
-        rows.append(cells)
-        i += 1
-    return rows, i
+    h1_seen = 0
+    part_n = 0
+    # Find all h1, h2 tags (handle class attribute)
+    for m in re.finditer(r"<(h[12])(?:\s+class=\"[^\"]*\")?\s+id=\"([^\"]+)\">([^<]+)</\1>", html):
+        level, anchor, text = m.group(1), m.group(2), m.group(3).strip()
+        text = re.sub(r"<[^>]+>", "", text)  # strip inner HTML
+        if level == "h1":
+            h1_seen += 1
+            # Skip ONLY the doc title h1 (the very first one).
+            # PART I = h1_seen 2, PART II = h1_seen 3, ...
+            if h1_seen == 1:
+                continue
+            part_n += 1
+            tag = f"Part {ROMAN[part_n-1]}"
+            rows.append(f'<tr><td class="toc-tag">{tag}</td><td><a href="#{anchor}">{text}</a></td></tr>')
+        else:
+            rows.append(f'<tr><td class="toc-tag">&nbsp;</td><td style="padding-left:18pt; font-size:10pt; color:#444;"><a href="#{anchor}">{text}</a></td></tr>')
+    return (
+        '<h1 id="toc">Table of Contents</h1>'
+        '<table class="toc-table">'
+        + "".join(rows)
+        + "</table>"
+    )
 
 
 def main():
-    pdf = StudyGuidePDF(orientation="P", unit="mm", format="A4")
-    pdf.set_auto_page_break(auto=True, margin=18)
-    pdf.set_margins(15, 18, 15)
+    md_text = SRC.read_text(encoding="utf-8")
+    # Clean Unicode BEFORE markdown rendering
+    md_text = clean_text(md_text)
 
-    # Cover
-    add_cover(pdf)
-    add_toc(pdf)
+    html_body = markdown.markdown(
+        md_text,
+        extensions=["tables", "fenced_code", "sane_lists"],
+    )
+    html_body = add_anchors(html_body)
+    # Insert TOC right after the first h1
+    toc_html = build_toc(html_body)
+    # Find the first h1 (after the leading "How to Use This Document" h1 if any)
+    # The first h1 is the title; the second h1 is "Table of Contents" header we just generated.
+    # Better: insert TOC right after the "## How to Use This Document" section.
+    # The first h1 in the source is "# SmallChip AI -- Study Guide". Let's place TOC after that.
+    match = re.search(r'(<h1 id="sec_1">.*?</h1>)', html_body, flags=re.DOTALL)
+    if match:
+        html_body = html_body[:match.end()] + toc_html + html_body[match.end():]
+    else:
+        # fallback: prepend
+        html_body = toc_html + html_body
 
-    # Body
-    pdf.add_page()
-    text = SRC.read_text(encoding="utf-8")
-    lines = text.split("\n")
-    i = 0
-    while i < len(lines):
-        line = lines[i]
-        stripped = line.strip()
+    # Build final HTML
+    full_html = HTML_TEMPLATE.replace("__CSS__", CSS).replace("__BODY__", html_body)
+    TMP_HTML.write_text(full_html, encoding="utf-8")
 
-        # Skip empty lines
-        if not stripped:
-            pdf.ln(2)
-            i += 1
-            continue
-
-        # H1: # Section Title
-        if stripped.startswith("# ") and not stripped.startswith("##"):
-            pdf.add_page()
-            title = strip_md(stripped[2:])
-            pdf.set_font("Helvetica", "B", 20)
-            pdf.set_text_color(30, 30, 80)
-            pdf.multi_cell(0, 9, title, new_x="LMARGIN", new_y="NEXT")
-            pdf.set_draw_color(80, 80, 120)
-            pdf.line(15, pdf.get_y() + 1, 195, pdf.get_y() + 1)
-            pdf.ln(4)
-            pdf.set_text_color(0, 0, 0)
-            i += 1
-            continue
-
-        # H2: ## Section
-        if stripped.startswith("## "):
-            pdf.ln(3)
-            pdf.set_font("Helvetica", "B", 14)
-            pdf.set_text_color(50, 50, 110)
-            pdf.multi_cell(0, 7, strip_md(stripped[3:]), new_x="LMARGIN", new_y="NEXT")
-            pdf.ln(1)
-            pdf.set_text_color(0, 0, 0)
-            i += 1
-            continue
-
-        # H3: ### Subsection
-        if stripped.startswith("### "):
-            pdf.ln(2)
-            pdf.set_font("Helvetica", "B", 11)
-            pdf.set_text_color(60, 60, 60)
-            pdf.multi_cell(0, 6, strip_md(stripped[4:]), new_x="LMARGIN", new_y="NEXT")
-            pdf.set_text_color(0, 0, 0)
-            i += 1
-            continue
-
-        # H4: #### Sub-subsection
-        if stripped.startswith("#### "):
-            pdf.ln(1)
-            pdf.set_font("Helvetica", "BI", 10)
-            pdf.multi_cell(0, 5, strip_md(stripped[5:]), new_x="LMARGIN", new_y="NEXT")
-            i += 1
-            continue
-
-        # Block quote
-        if stripped.startswith("> "):
-            pdf.set_text_color(60, 60, 60)
-            pdf.set_font("Helvetica", "I", 10)
-            quote_lines = []
-            while i < len(lines) and lines[i].lstrip().startswith(">"):
-                quote_lines.append(lines[i].lstrip()[1:].strip())
-                i += 1
-            for q in quote_lines:
-                pdf.set_x(20)
-                pdf.multi_cell(0, 5, strip_md(q), new_x="LMARGIN", new_y="NEXT")
-            pdf.ln(2)
-            pdf.set_text_color(0, 0, 0)
-            continue
-
-        # Table
-        if stripped.startswith("|"):
-            rows, i = parse_table(lines, i)
-            if not rows:
-                continue
-            n_cols = max(len(r) for r in rows)
-            total = 180
-            col_widths = [total / n_cols] * n_cols
-            render_table(pdf, rows, col_widths)
-            pdf.ln(3)
-            continue
-
-        # Horizontal rule
-        if stripped in ("---", "***", "___"):
-            pdf.set_draw_color(200, 200, 200)
-            y = pdf.get_y() + 1
-            pdf.line(15, y, 195, y)
-            pdf.ln(4)
-            i += 1
-            continue
-
-        # Bullet list
-        if re.match(r"^[-*]\s+", stripped):
-            pdf.set_x(18)
-            pdf.set_font("Helvetica", "", 10)
-            pdf.cell(4, 5, chr(149), align="L")  # bullet
-            render_inline(pdf, re.sub(r"^[-*]\s+", "", stripped), base_size=10)
-            i += 1
-            continue
-
-        # Numbered list
-        if re.match(r"^\d+\.\s+", stripped):
-            pdf.set_x(18)
-            m = re.match(r"^(\d+)\.\s+(.*)", stripped)
-            pdf.set_font("Helvetica", "B", 10)
-            pdf.cell(6, 5, f"{m.group(1)}.", align="L")
-            render_inline(pdf, m.group(2), base_size=10)
-            i += 1
-            continue
-
-        # Plain paragraph
-        pdf.set_font("Helvetica", "", 10)
-        render_inline(pdf, stripped, base_size=10)
-        i += 1
-
-    pdf.output(str(DST))
-    print(f"Wrote {DST}  ({DST.stat().st_size} bytes)")
+    with DST.open("wb") as out:
+        result = pisa.CreatePDF(full_html, dest=out, encoding="utf-8")
+    if result.err:
+        sys.exit(f"PDF generation failed: {result.err}")
+    print(f"Wrote {DST} ({DST.stat().st_size} bytes)")
 
 
 if __name__ == "__main__":
