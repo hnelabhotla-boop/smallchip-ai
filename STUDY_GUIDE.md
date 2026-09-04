@@ -5,15 +5,19 @@
 
 ## How to Use This Document
 
-This is a formal study guide for the NEOSEF (Northeastern Ohio Science and Engineering Fair) and ISEF (International Science and Engineering Fair) presentation. It is organized into five sections:
+This is a formal study guide for the NEOSEF (Northeastern Ohio Science and Engineering Fair) and ISEF (International Science and Engineering Fair) presentation. It is organized into nine sections:
 
 1. **Formal Vocabulary** — precise technical terminology
 2. **The Project Introduction** — three formal opening hooks
 3. **Foundational Concepts of Chip Design** — the technical background
 4. **The Project in Formal Terms** — architecture, methodology, and results
 5. **The Presentation** — pitch script, vocabulary in context, anticipated questions
+6. **The Five Most Important Numbers** — the canonical quantitative answer
+7. **Formal Definitions for Anticipated Questions** — the Q&A survival kit
+8. **How to Study This Document** — the daily plan
+9. **Closing Note** — the close
 
-Read one section per day for two weeks. The vocabulary in Section I is to be memorized before NEOSEF.
+Read one section per day for nine days. The vocabulary in Section I is to be memorized before NEOSEF.
 
 ---
 
