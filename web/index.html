@@ -287,6 +287,28 @@
             width: 100%; aspect-ratio: 1 / 1; display: block;
             border-radius: 4px; background: #050505;
         }
+        .interactive-instructions {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        .interactive-status {
+            margin-top: 6px;
+            padding: 6px 8px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--text);
+            font-family: 'SF Mono', monospace;
+            min-height: 22px;
+            line-height: 18px;
+        }
+        .interactive-status.active {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
         .axis-controls { display: flex; gap: 4px; margin-top: 6px; }
         .axis-btn {
             flex: 1; padding: 5px 8px; font-size: 10px;
@@ -475,6 +497,17 @@
                 <div class="metric"><div class="label">New HPWL</div><div class="value" id="metricNewHpwl">—</div></div>
                 <div class="metric"><div class="label">µm / net</div><div class="value" id="metricPerNet">—</div></div>
             </div>
+        </div>
+
+        <div class="panel" id="interactivePanel" style="display:none">
+            <div class="panel-title">Interactive Placement · drag a cell</div>
+            <div class="interactive-instructions" id="interactiveInstructions">
+                Click and drag any cell. The neighborhood re-places in real time.
+            </div>
+            <div class="axis-wrap">
+                <canvas id="interactiveCanvas"></canvas>
+            </div>
+            <div class="interactive-status" id="interactiveStatus">Click a cell to begin</div>
         </div>
 
         <div class="panel hidden" id="downloadPanel">

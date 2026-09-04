@@ -249,6 +249,10 @@ function renderTurn(data) {
     // Update axis widget with current placement info
     if (data.components) {
         updateAxisWidget(data.components, data.die);
+        // Also enable the interactive placement view (drag-to-re-place)
+        if (data.die && data.components && currentFile) {
+            setupInteractive(data.components, data.die, currentFile);
+        }
     }
 
     // Build the per-turn file attachments (DEF + GDS)
@@ -451,6 +455,245 @@ function updateAxisWidget(components, die) {
     ctx.fillStyle = '#6b6b6b';
     ctx.font = '9px "SF Mono", monospace';
     ctx.fillText(axis.mode.toUpperCase(), w - 28, 12);
+}
+
+// ===== Interactive placement (drag a cell, neighborhood re-places) =====
+const interactive = {
+    components: null,    // current cell positions
+    die: null,
+    selectedCell: null,  // cell being dragged
+    dragging: false,
+    dragOffset: { x: 0, y: 0 },
+    lastNeighborhood: null,  // last partial re-placement result
+    lastFile: null,           // File object for re-submission
+    highlightedCells: new Set(),  // cells in the last neighborhood
+    movedCellNewPos: null,    // the actual position of the moved cell after partial re-place
+};
+
+function showInteractivePanel() {
+    const panel = $('interactivePanel');
+    if (panel) panel.style.display = '';
+}
+
+function setupInteractiveCanvas() {
+    const canvas = $('interactiveCanvas');
+    if (!canvas) return;
+    const ro = new ResizeObserver(() => {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+        if (interactive.components) drawInteractive();
+    });
+    ro.observe(canvas);
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+
+    canvas.addEventListener('mousedown', onInteractiveMouseDown);
+    canvas.addEventListener('mousemove', onInteractiveMouseMove);
+    canvas.addEventListener('mouseup', onInteractiveMouseUp);
+    canvas.addEventListener('mouseleave', () => {
+        if (interactive.dragging) {
+            interactive.dragging = false;
+            interactive.selectedCell = null;
+        }
+    });
+}
+
+function dieToCanvas(die, w, h) {
+    if (!die) return null;
+    const dieW = (die.x2 - die.x1) || 1;
+    const dieH = (die.y2 - die.y1) || 1;
+    const maxDim = Math.max(dieW, dieH);
+    return (x, y) => ({
+        cx: w / 2 + ((x - die.x1) / maxDim - 0.5) * (w * 0.9),
+        cy: h / 2 + ((y - die.y1) / maxDim - 0.5) * (h * 0.9),
+    });
+}
+
+function canvasToDie(cx, cy, die, w, h) {
+    if (!die) return null;
+    const dieW = (die.x2 - die.x1) || 1;
+    const dieH = (die.y2 - die.y1) || 1;
+    const maxDim = Math.max(dieW, dieH);
+    return {
+        x: die.x1 + ((cx / w - 0.5) / 0.9 + 0.5) * maxDim,
+        y: die.y1 + ((cy / h - 0.5) / 0.9 + 0.5) * maxDim,
+    };
+}
+
+function findCellAt(cx, cy) {
+    if (!interactive.components) return null;
+    const project = dieToCanvas(interactive.die, 9999, 9999);
+    if (!project) return null;
+    const w = $('interactiveCanvas').width;
+    const h = $('interactiveCanvas').height;
+    const projection = dieToCanvas(interactive.die, w, h);
+    // Search by closest cell within click radius
+    let best = null;
+    let bestDist = 8;  // 8px click radius
+    for (const [name, c] of Object.entries(interactive.components)) {
+        const p = projection(c.x, c.y);
+        const d = Math.hypot(p.cx - cx, p.cy - cy);
+        if (d < bestDist) {
+            bestDist = d;
+            best = name;
+        }
+    }
+    return best;
+}
+
+function drawInteractive() {
+    const canvas = $('interactiveCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, w, h);
+    if (!interactive.components || !interactive.die) return;
+
+    const projection = dieToCanvas(interactive.die, w, h);
+    const cells = Object.entries(interactive.components);
+    if (cells.length === 0) return;
+
+    // Stride for large designs
+    const stride = Math.max(1, Math.floor(cells.length / 1500));
+
+    // Draw cells
+    for (let i = 0; i < cells.length; i += stride) {
+        const [name, c] = cells[i];
+        const p = projection(c.x, c.y);
+        const cellPx = Math.max(1, (w * 0.01));
+
+        // Color: highlighted (in last neighborhood) = cyan, moved = bright cyan, default = blue
+        if (name === interactive.selectedCell) {
+            ctx.fillStyle = '#5fd97f';  // green for selected
+        } else if (interactive.highlightedCells.has(name)) {
+            ctx.fillStyle = '#4a9eff';  // blue for neighborhood
+        } else {
+            ctx.fillStyle = '#666';
+        }
+        ctx.fillRect(p.cx - cellPx/2, p.cy - cellPx/2, cellPx, cellPx);
+    }
+
+    // Draw die outline
+    const corners = [
+        [interactive.die.x1, interactive.die.y1],
+        [interactive.die.x2, interactive.die.y1],
+        [interactive.die.x2, interactive.die.y2],
+        [interactive.die.x1, interactive.die.y2],
+    ];
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    corners.forEach(([x, y], i) => {
+        const p = projection(x, y);
+        if (i === 0) ctx.moveTo(p.cx, p.cy);
+        else ctx.lineTo(p.cx, p.cy);
+    });
+    ctx.closePath();
+    ctx.stroke();
+}
+
+function onInteractiveMouseDown(e) {
+    if (!interactive.components) return;
+    const rect = e.target.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const cell = findCellAt(cx, cy);
+    if (cell) {
+        interactive.selectedCell = cell;
+        interactive.dragging = true;
+        // Compute offset between click and cell center
+        const c = interactive.components[cell];
+        const projection = dieToCanvas(interactive.die, rect.width, rect.height);
+        const cellPos = projection(c.x, c.y);
+        interactive.dragOffset = { x: cx - cellPos.cx, y: cy - cellPos.cy };
+        drawInteractive();
+        const status = $('interactiveStatus');
+        if (status) {
+            status.textContent = `Dragging "${cell}". Release to re-place neighborhood.`;
+            status.classList.add('active');
+        }
+    }
+}
+
+function onInteractiveMouseMove(e) {
+    if (!interactive.dragging) return;
+    drawInteractive();
+    // Draw the cell at the cursor position
+    const rect = e.target.getBoundingClientRect();
+    const cx = e.clientX - rect.left - interactive.dragOffset.x;
+    const cy = e.clientY - rect.top - interactive.dragOffset.y;
+    const canvas = $('interactiveCanvas');
+    const ctx = canvas.getContext('2d');
+    const cellPx = Math.max(2, (canvas.width * 0.014));
+    ctx.fillStyle = '#5fd97f';
+    ctx.fillRect(cx - cellPx/2, cy - cellPx/2, cellPx, cellPx);
+    // Draw crosshair
+    ctx.strokeStyle = '#5fd97f';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 8, cy);
+    ctx.lineTo(cx + 8, cy);
+    ctx.moveTo(cx, cy - 8);
+    ctx.lineTo(cx, cy + 8);
+    ctx.stroke();
+}
+
+async function onInteractiveMouseUp(e) {
+    if (!interactive.dragging) return;
+    interactive.dragging = false;
+    const rect = e.target.getBoundingClientRect();
+    const cx = e.clientX - rect.left - interactive.dragOffset.x;
+    const cy = e.clientY - rect.top - interactive.dragOffset.y;
+    const targetDie = canvasToDie(cx, cy, interactive.die, rect.width, rect.height);
+    if (!targetDie || !interactive.lastFile) {
+        interactive.selectedCell = null;
+        drawInteractive();
+        return;
+    }
+
+    const status = $('interactiveStatus');
+    if (status) status.textContent = `Re-placing neighborhood around "${interactive.selectedCell}"...`;
+
+    const form = new FormData();
+    form.append('file', interactive.lastFile);
+    form.append('moved_cell', interactive.selectedCell);
+    form.append('target_x', targetDie.x);
+    form.append('target_y', targetDie.y);
+
+    try {
+        const t0 = performance.now();
+        const r = await fetch('/api/place_partial', { method: 'POST', body: form });
+        const elapsedTotal = performance.now() - t0;
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const data = await r.json();
+        interactive.highlightedCells = new Set(data.neighborhood_cells);
+        // Update positions
+        for (const [name, pos] of Object.entries(data.new_positions)) {
+            if (interactive.components[name]) {
+                interactive.components[name].x = pos.x;
+                interactive.components[name].y = pos.y;
+            }
+        }
+        drawInteractive();
+        if (status) {
+            status.textContent = `Re-placed ${data.neighborhood_size} cells in ${data.elapsed_ms.toFixed(0)}ms (round-trip ${elapsedTotal.toFixed(0)}ms). HPWL: ${interactive.selectedCell} moved to (${targetDie.x.toFixed(0)}, ${targetDie.y.toFixed(0)}).`;
+            status.classList.add('active');
+        }
+    } catch (err) {
+        if (status) status.textContent = `Error: ${err.message}`;
+    }
+    interactive.selectedCell = null;
+}
+
+function setupInteractive(components, die, file) {
+    interactive.components = components;
+    interactive.die = die;
+    interactive.lastFile = file;
+    interactive.highlightedCells = new Set();
+    showInteractivePanel();
+    setupInteractiveCanvas();
+    drawInteractive();
 }
 
 function bindAxisWidget() {
