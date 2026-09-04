@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "label": "1x (15K, flat V3 only)",
+      "n_replicas": 1,
+      "n_blocks": 0,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "die_w": 10000.0,
+      "die_h": 10680.0,
+      "flat_hpwl": 6020661.303039551,
+      "flat_time_ms": 23425.68278312683,
+      "flat_error": null,
+      "hier_hpwl": null,
+      "hier_time_ms": null,
+      "hier_stitched_cells": 0,
+      "hier_failures": 0
+    },
+    {
+      "label": "2x (30K, hier only)",
+      "n_replicas": 2,
+      "n_blocks": 2,
+      "n_cells": 30000,
+      "n_nets": 28310,
+      "die_w": 18570.907032624084,
+      "die_h": 15293.924871273906,
+      "flat_hpwl": null,
+      "flat_time_ms": null,
+      "flat_error": null,
+      "hier_hpwl": 205062895.29046166,
+      "hier_time_ms": 24214.372873306274,
+      "hier_stitched_cells": 30000,
+      "hier_failures": 0
+    }
+  ],
+  "flat_5k_per_net_dbu": 501.66930645548354
+}

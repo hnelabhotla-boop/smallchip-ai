@@ -1,0 +1,68 @@
+{
+  "design": "bigblue1_15k_subset",
+  "n_cells": 5000,
+  "n_nets": 4167,
+  "flat_v3_hpwl_dbu": 2090455.7682189941,
+  "flat_v3_time_ms": 17227.31590270996,
+  "hierarchical": {
+    "2": {
+      "n_blocks": 2,
+      "block_cells": [
+        2500,
+        2500
+      ],
+      "partition_time_ms": 8.254051208496094,
+      "block_v3_times_ms": [
+        4220.691919326782,
+        3762.136697769165
+      ],
+      "total_block_v3_time_ms": 7982.828617095947,
+      "stitched_hpwl_dbu": 13950333.70292231,
+      "total_hier_time_ms": 8020.548105239868,
+      "block_failures": 0,
+      "stitched_cells": 5000
+    },
+    "3": {
+      "n_blocks": 3,
+      "block_cells": [
+        1667,
+        1667,
+        1666
+      ],
+      "partition_time_ms": 5.687952041625977,
+      "block_v3_times_ms": [
+        2271.2841033935547,
+        2280.674934387207,
+        1891.1707401275635
+      ],
+      "total_block_v3_time_ms": 6443.129777908325,
+      "stitched_hpwl_dbu": 25469402.30561849,
+      "total_hier_time_ms": 6478.007078170776,
+      "block_failures": 0,
+      "stitched_cells": 5000
+    },
+    "5": {
+      "n_blocks": 5,
+      "block_cells": [
+        1000,
+        1000,
+        1000,
+        1000,
+        1000
+      ],
+      "partition_time_ms": 6.793022155761719,
+      "block_v3_times_ms": [
+        617.067813873291,
+        700.6289958953857,
+        819.8037147521973,
+        1005.2738189697266,
+        1041.1741733551025
+      ],
+      "total_block_v3_time_ms": 4183.948516845703,
+      "stitched_hpwl_dbu": 28838774.919038538,
+      "total_hier_time_ms": 4223.6950397491455,
+      "block_failures": 0,
+      "stitched_cells": 5000
+    }
+  }
+}
