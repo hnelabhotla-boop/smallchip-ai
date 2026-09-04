@@ -136,7 +136,8 @@ The chip netlist has a graph structure that matches the GAT's inductive bias. Ea
 1. **Sub-15K cell cap.** V3 is trained on synthetic data up to 1,858 cells. We extrapolate to 15K and it works (per-net HPWL actually improves). Beyond 15K, we'd need to retrain on larger designs.
 2. **HPWL only.** V3 optimizes only HPWL. Real chip design optimizes for power, timing, area, congestion, and thermal. Future work (V4) will add these to the loss function.
 3. **Synthetic training data.** Our 510 training chips are synthetic. Real industry designs have proprietary patterns (e.g., custom analog blocks, hand-tuned clock trees) that synthetic data may not capture. We've validated on real ISPD 2005 benchmarks; broader real-world validation is ongoing.
-4. **No fabrication yet.** While we have a working GDS export, no chip has been fabricated using our tool. We've applied for the efabless Skywater 130nm shuttle.
+4. **Model collapse on small dense designs.** V3's tanh output can collapse to a small region for some designs (notably GCD, where cells cluster near origin in [-1,1] space). The `place_full` endpoint works around this by auto-sizing the die to 1.5× the model's actual placement bounding box before legalization. V4 will address this with a stronger spread penalty in the loss.
+5. **No fabrication yet.** While we have a working GDS export, no chip has been fabricated using our tool. We've applied for the efabless Skywater 130nm shuttle.
 
 ### 6.3 Open-Source EDA Ecosystem Story
 
