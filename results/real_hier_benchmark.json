@@ -8,15 +8,15 @@
       "n_cells": 15000,
       "n_nets": 13155,
       "block_v3_times_ms": [
-        3672.8,
-        7546.7
+        2098.9,
+        31152.0
       ],
-      "total_time_ms": 11335.2,
-      "client_time_s": 11.68,
+      "total_time_ms": 34354.9,
+      "client_time_s": 40.71,
       "stitched_cells": 15000,
       "block_failures": 0,
-      "total_hpwl_dbu": 53638150.0,
-      "per_net_hpwl_dbu": 4077.4
+      "total_hpwl_dbu": 36209957.0,
+      "per_net_hpwl_dbu": 2752.6
     },
     {
       "label": "3 blocks, 5000 cells/block",
@@ -25,16 +25,16 @@
       "n_cells": 15000,
       "n_nets": 13155,
       "block_v3_times_ms": [
-        2043.6,
-        4564.3,
-        4191.9
+        1134.8,
+        31186.5,
+        824.2
       ],
-      "total_time_ms": 10980.3,
-      "client_time_s": 11.45,
+      "total_time_ms": 33312.9,
+      "client_time_s": 39.63,
       "stitched_cells": 15000,
       "block_failures": 0,
-      "total_hpwl_dbu": 92191431.0,
-      "per_net_hpwl_dbu": 7008.1
+      "total_hpwl_dbu": 46014343.0,
+      "per_net_hpwl_dbu": 3497.9
     },
     {
       "label": "4 blocks, 3750 cells/block",
@@ -43,17 +43,17 @@
       "n_cells": 15000,
       "n_nets": 13155,
       "block_v3_times_ms": [
-        3448.2,
-        3417.2,
-        2012.7,
-        2471.0
+        542.4,
+        566.0,
+        24204.2,
+        674.3
       ],
-      "total_time_ms": 11591.4,
-      "client_time_s": 12.13,
+      "total_time_ms": 26178.1,
+      "client_time_s": 31.72,
       "stitched_cells": 15000,
       "block_failures": 0,
-      "total_hpwl_dbu": 104753464.0,
-      "per_net_hpwl_dbu": 7963.0
+      "total_hpwl_dbu": 49841491.0,
+      "per_net_hpwl_dbu": 3788.8
     },
     {
       "label": "5 blocks, 3000 cells/block",
@@ -62,18 +62,18 @@
       "n_cells": 15000,
       "n_nets": 13155,
       "block_v3_times_ms": [
-        2207.8,
-        2356.2,
-        2547.9,
-        1266.2,
-        1498.0
+        539.8,
+        688.2,
+        683.7,
+        34499.6,
+        1233.5
       ],
-      "total_time_ms": 10108.4,
-      "client_time_s": 10.55,
+      "total_time_ms": 37985.9,
+      "client_time_s": 43.79,
       "stitched_cells": 15000,
       "block_failures": 0,
-      "total_hpwl_dbu": 106869459.0,
-      "per_net_hpwl_dbu": 8123.9
+      "total_hpwl_dbu": 51607168.0,
+      "per_net_hpwl_dbu": 3923.0
     }
   ]
 }
