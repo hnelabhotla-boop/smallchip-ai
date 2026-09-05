@@ -585,24 +585,77 @@ async def hierarchical_place_real(
         for i, c in enumerate(shuffled):
             blocks[i % n_blocks].append(c)
 
-    # 3. Grid layout
+    # 3. Top-level block placement: force-directed with grid projection
     n = n_blocks
     cols = int(math.ceil(math.sqrt(n)))
     rows = int(math.ceil(n / cols))
     block_w = canvas_w / cols
     block_h = canvas_h / rows
-    block_positions_out = []
-    for i, b in enumerate(blocks):
-        col = i % cols
-        row = i // cols
-        block_positions_out.append({
-            "block_id": i,
-            "n_cells": len(b),
-            "x1": round(col * block_w, 1),
-            "y1": round(row * block_h, 1),
-            "x2": round((col + 1) * block_w, 1),
-            "y2": round((row + 1) * block_h, 1),
-        })
+    # Build block graph for force-directed placement
+    try:
+        from chipmind.ml.top_level_placer import (
+            build_block_graph, force_directed_block_placement, blocks_to_grid_layout
+        )
+        block_sets = [set(b) for b in blocks]
+        weights = build_block_graph(block_sets, nets)
+        # Force-directed positions
+        fd_positions = force_directed_block_placement(
+            block_sets, weights, canvas_w, canvas_h, n_iterations=100,
+            k_repel=0.3, k_spring=0.05, seed=42, verbose=False,
+        )
+        # Project to non-overlapping grid (preserves FD ordering)
+        grid_layout = blocks_to_grid_layout(fd_positions, canvas_w, canvas_h)
+        # Compute order from FD positions: sort by force-directed (x, y) and map to grid
+        fd_order = sorted(range(n), key=lambda i: (fd_positions[i][0], fd_positions[i][1]))
+        # Map: position in fd_order determines grid cell
+        # Reorder blocks according to FD ordering
+        reordered_blocks = [blocks[fd_order[i]] for i in range(n)]
+        # Rebuild block_sets in the new order
+        reordered_sets = [set(b) for b in reordered_blocks]
+        # Update cell_to_block mapping for the new order
+        new_cell_to_block = {}
+        for new_bid, bset in enumerate(reordered_sets):
+            for c in bset:
+                new_cell_to_block[c] = new_bid
+        # Rebuild weights for the reordered blocks
+        weights_reordered = build_block_graph(reordered_sets, nets)
+        # Rerun FD on the reordered blocks to get final positions
+        fd_positions = force_directed_block_placement(
+            reordered_sets, weights_reordered, canvas_w, canvas_h, n_iterations=50,
+            k_repel=0.2, k_spring=0.05, seed=42, verbose=False,
+        )
+        # Project to grid
+        grid_layout = blocks_to_grid_layout(fd_positions, canvas_w, canvas_h)
+        # Build output
+        block_positions_out = []
+        for i, b in enumerate(reordered_blocks):
+            slot = grid_layout[i]
+            block_positions_out.append({
+                "block_id": i,
+                "n_cells": len(b),
+                "x1": round(slot["x1"], 1),
+                "y1": round(slot["y1"], 1),
+                "x2": round(slot["x2"], 1),
+                "y2": round(slot["y2"], 1),
+            })
+        # Use the reordered blocks for the rest
+        blocks = reordered_blocks
+        # Re-compute cell_to_block (already done as new_cell_to_block)
+        cell_to_block = new_cell_to_block
+    except Exception as e:
+        # Fallback to simple grid
+        block_positions_out = []
+        for i, b in enumerate(blocks):
+            col = i % cols
+            row = i // cols
+            block_positions_out.append({
+                "block_id": i,
+                "n_cells": len(b),
+                "x1": round(col * block_w, 1),
+                "y1": round(row * block_h, 1),
+                "x2": round((col + 1) * block_w, 1),
+                "y2": round((row + 1) * block_h, 1),
+            })
 
     # 4. Load V3
     t_total_start = time_mod.time()
