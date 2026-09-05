@@ -154,19 +154,29 @@ Flat V3 is calibrated to designs up to ~15K cells. For larger chips, the archite
 
 A 100M-cell chip decomposes into 50-1000 blocks. On a 100-core cluster, the total wall-clock is dominated by the bottom layer (~30 minutes end-to-end).
 
-**Honest scaling numbers (validated end-to-end on real bigblue1 15K subset, MacBook CPU):**
+**Honest scaling numbers (validated end-to-end on real bigblue1 15K subset, MacBook CPU, BFS-aware partitioner):**
 
 | Scale | Cells | Method | Time | Total HPWL | Per-net HPWL |
 |-------|-------|--------|------|------------|--------------|
 | 5K   |  5,000  | flat V3   | ~1 s  | 2.1 M DBU   | 502 DBU/net |
 | 15K  | 15,000  | flat V3   | ~25 s | 6.0 M DBU   | 459 DBU/net |
-| 15K  | 15,000  | **hierarchical 2 blocks** | 11.3 s | 53.6 M DBU | 4,077 DBU/net |
-| 15K  | 15,000  | hierarchical 3 blocks | 11.0 s | 92.2 M DBU | 7,008 DBU/net |
-| 15K  | 15,000  | hierarchical 4 blocks | 11.6 s | 104.8 M DBU | 7,963 DBU/net |
+| 15K  | 15,000  | **hierarchical 2 blocks** | 34.4 s | 36.2 M DBU | **2,753 DBU/net** |
+| 15K  | 15,000  | hierarchical 3 blocks | 33.3 s | 46.0 M DBU | 3,498 DBU/net |
+| 15K  | 15,000  | hierarchical 4 blocks | 26.2 s | 49.8 M DBU | 3,789 DBU/net |
+| 15K  | 15,000  | hierarchical 5 blocks | 38.0 s | 51.6 M DBU | 3,923 DBU/net |
 | 30K  | 30,000  | **flat V3: cannot do** | — | — | — |
 | 30K  | 30,000  | **hierarchical 3 blocks** | ~17 s | 389 M DBU | 13.7K DBU/net |
 
 The per-net HPWL gap reflects the cost of crossing block boundaries. Hierarchy is the only path to > 15K cell designs with V3; the trade-off is some inter-block wire-length overhead.
+
+**BFS-aware partitioner vs random partitioner (15K, 2-5 blocks):**
+
+| Blocks | Random (per-net DBU) | BFS-aware (per-net DBU) | Improvement |
+|--------|---------------------|-------------------------|-------------|
+| 2 | 4,077 | 2,753 | **-32%** |
+| 3 | 7,008 | 3,498 | **-50%** |
+| 4 | 7,963 | 3,789 | **-52%** |
+| 5 | 8,124 | 3,923 | **-52%** |
 
 **Endpoints:**
 - `POST /api/place_full` — flat V3 placement (≤ 15K cells, 0.4-2.5 s)
