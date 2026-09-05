@@ -309,7 +309,7 @@ async def place_endpoint(
 async def place_full_endpoint(
     file: UploadFile = File(...),
     algorithm: str = Form("gat"),
-    cell_w: float = Form(1.0),  # 1.0 um is the empirically best cell width (smaller HPWL)
+    cell_w: float = Form(2.0),  # 2.0 um: best speed/quality balance (lower HPWL than 1.0, faster than 4.0)
     best_effort: bool = Form(True),
     n_seeds: int = Form(3),
 ):
