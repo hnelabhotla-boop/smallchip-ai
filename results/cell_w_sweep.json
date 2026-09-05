@@ -1,0 +1,233 @@
+{
+  "v3_model": "/Users/harshith/Documents/RLChip_ISEF/results/gat_v3_combined_60ep/gat_v3_model_best.pt",
+  "runs": [
+    {
+      "label": "5k",
+      "n_cells": 5000,
+      "n_nets": 4167,
+      "v3_raw_hpwl_dbu": 2090455.7682189941,
+      "seed_results": [
+        {
+          "seed": 0,
+          "v3_hpwl": 2090455.7682189941
+        },
+        {
+          "seed": 1,
+          "v3_hpwl": 4887738.796966553
+        },
+        {
+          "seed": 2,
+          "v3_hpwl": 4945778.766357422
+        }
+      ],
+      "cell_width_results": [
+        {
+          "cell_w_um": 0.3,
+          "legal_hpwl_dbu": 603347.9999999998,
+          "per_net_dbu": 144.79193664506835,
+          "per_cell_dbu": 120.66959999999996,
+          "elapsed_sec": 25.168845176696777
+        },
+        {
+          "cell_w_um": 0.5,
+          "legal_hpwl_dbu": 538545.142857143,
+          "per_net_dbu": 129.24049504611062,
+          "per_cell_dbu": 107.70902857142859,
+          "elapsed_sec": 24.936712980270386
+        },
+        {
+          "cell_w_um": 0.76,
+          "legal_hpwl_dbu": 479905.142857143,
+          "per_net_dbu": 115.1680208440468,
+          "per_cell_dbu": 95.98102857142861,
+          "elapsed_sec": 24.243449926376343
+        },
+        {
+          "cell_w_um": 1.0,
+          "legal_hpwl_dbu": 427545.14285714296,
+          "per_net_dbu": 102.60262607562827,
+          "per_cell_dbu": 85.50902857142859,
+          "elapsed_sec": 24.714107036590576
+        }
+      ],
+      "best": {
+        "cell_w_um": 1.0,
+        "legal_hpwl_dbu": 427545.14285714296,
+        "per_net_dbu": 102.60262607562827,
+        "per_cell_dbu": 85.50902857142859,
+        "elapsed_sec": 24.714107036590576
+      }
+    },
+    {
+      "label": "8k",
+      "n_cells": 8000,
+      "n_nets": 6635,
+      "v3_raw_hpwl_dbu": 5366517.2744140625,
+      "seed_results": [
+        {
+          "seed": 0,
+          "v3_hpwl": 5366517.2744140625
+        },
+        {
+          "seed": 1,
+          "v3_hpwl": 6791145.503204346
+        },
+        {
+          "seed": 2,
+          "v3_hpwl": 6621434.264099121
+        }
+      ],
+      "cell_width_results": [
+        {
+          "cell_w_um": 0.3,
+          "legal_hpwl_dbu": 814031.1428571432,
+          "per_net_dbu": 122.68743675314893,
+          "per_cell_dbu": 101.7538928571429,
+          "elapsed_sec": 48.19330811500549
+        },
+        {
+          "cell_w_um": 0.5,
+          "legal_hpwl_dbu": 583331.1428571428,
+          "per_net_dbu": 87.91727850145332,
+          "per_cell_dbu": 72.91639285714285,
+          "elapsed_sec": 48.650859117507935
+        },
+        {
+          "cell_w_um": 0.76,
+          "legal_hpwl_dbu": 472106.28571428556,
+          "per_net_dbu": 71.15392399612442,
+          "per_cell_dbu": 59.01328571428569,
+          "elapsed_sec": 47.494771242141724
+        },
+        {
+          "cell_w_um": 1.0,
+          "legal_hpwl_dbu": 420146.28571428556,
+          "per_net_dbu": 63.32272580471523,
+          "per_cell_dbu": 52.518285714285696,
+          "elapsed_sec": 51.584969997406006
+        }
+      ],
+      "best": {
+        "cell_w_um": 1.0,
+        "legal_hpwl_dbu": 420146.28571428556,
+        "per_net_dbu": 63.32272580471523,
+        "per_cell_dbu": 52.518285714285696,
+        "elapsed_sec": 51.584969997406006
+      }
+    },
+    {
+      "label": "10k",
+      "n_cells": 10000,
+      "n_nets": 8439,
+      "v3_raw_hpwl_dbu": 5506630.111450195,
+      "seed_results": [
+        {
+          "seed": 0,
+          "v3_hpwl": 5506630.111450195
+        },
+        {
+          "seed": 1,
+          "v3_hpwl": 7681400.196838379
+        },
+        {
+          "seed": 2,
+          "v3_hpwl": 7848721.500244141
+        }
+      ],
+      "cell_width_results": [
+        {
+          "cell_w_um": 0.3,
+          "legal_hpwl_dbu": 797047.7142857141,
+          "per_net_dbu": 94.44812350820169,
+          "per_cell_dbu": 79.7047714285714,
+          "elapsed_sec": 67.83498024940491
+        },
+        {
+          "cell_w_um": 0.5,
+          "legal_hpwl_dbu": 717699.1428571426,
+          "per_net_dbu": 85.04551994989248,
+          "per_cell_dbu": 71.76991428571426,
+          "elapsed_sec": 67.68178009986877
+        },
+        {
+          "cell_w_um": 0.76,
+          "legal_hpwl_dbu": 525542.8571428573,
+          "per_net_dbu": 62.27548964840115,
+          "per_cell_dbu": 52.554285714285726,
+          "elapsed_sec": 74.12203598022461
+        },
+        {
+          "cell_w_um": 1.0,
+          "legal_hpwl_dbu": 461938.8571428571,
+          "per_net_dbu": 54.738577692008185,
+          "per_cell_dbu": 46.19388571428571,
+          "elapsed_sec": 77.76286292076111
+        }
+      ],
+      "best": {
+        "cell_w_um": 1.0,
+        "legal_hpwl_dbu": 461938.8571428571,
+        "per_net_dbu": 54.738577692008185,
+        "per_cell_dbu": 46.19388571428571,
+        "elapsed_sec": 77.76286292076111
+      }
+    },
+    {
+      "label": "15k",
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "v3_raw_hpwl_dbu": 6020661.303039551,
+      "seed_results": [
+        {
+          "seed": 0,
+          "v3_hpwl": 6020661.303039551
+        },
+        {
+          "seed": 1,
+          "v3_hpwl": 10104283.903778076
+        },
+        {
+          "seed": 2,
+          "v3_hpwl": 10359559.992248535
+        }
+      ],
+      "cell_width_results": [
+        {
+          "cell_w_um": 0.3,
+          "legal_hpwl_dbu": 887709.4285714284,
+          "per_net_dbu": 67.48076233914317,
+          "per_cell_dbu": 59.180628571428564,
+          "elapsed_sec": 146.07829785346985
+        },
+        {
+          "cell_w_um": 0.5,
+          "legal_hpwl_dbu": 752775.9999999998,
+          "per_net_dbu": 57.223565184340536,
+          "per_cell_dbu": 50.18506666666665,
+          "elapsed_sec": 133.5342628955841
+        },
+        {
+          "cell_w_um": 0.76,
+          "legal_hpwl_dbu": 618128.857142857,
+          "per_net_dbu": 46.98813053157408,
+          "per_cell_dbu": 41.20859047619047,
+          "elapsed_sec": 129.62338185310364
+        },
+        {
+          "cell_w_um": 1.0,
+          "legal_hpwl_dbu": 604772.5714285711,
+          "per_net_dbu": 45.972829451050636,
+          "per_cell_dbu": 40.31817142857141,
+          "elapsed_sec": 144.68821620941162
+        }
+      ],
+      "best": {
+        "cell_w_um": 1.0,
+        "legal_hpwl_dbu": 604772.5714285711,
+        "per_net_dbu": 45.972829451050636,
+        "per_cell_dbu": 40.31817142857141,
+        "elapsed_sec": 144.68821620941162
+      }
+    }
+  ]
+}

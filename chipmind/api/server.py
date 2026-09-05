@@ -309,7 +309,7 @@ async def place_endpoint(
 async def place_full_endpoint(
     file: UploadFile = File(...),
     algorithm: str = Form("gat"),
-    cell_w: float = Form(1.52),
+    cell_w: float = Form(1.0),  # 1.0 um is the empirically best cell width (smaller HPWL)
     best_effort: bool = Form(True),
     n_seeds: int = Form(3),
 ):
@@ -356,6 +356,8 @@ async def place_full_endpoint(
         # Try multiple seeds, pick the one with lowest V3 raw HPWL.
         # The V3 output is in the ORIGINAL die coordinates, so detailed_placement
         # works on it directly. NO 1.5x auto-die-scaling (that breaks things).
+        # Empirically, deterministic (seed=0) is usually the best — random init
+        # tends to make V3 worse. We still try seeds 1..N-1 in case one beats 0.
         t0 = time_mod.time()
         from train_gat_placer_v3 import predict
         best_v3 = None
