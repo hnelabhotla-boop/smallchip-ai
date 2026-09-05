@@ -127,6 +127,100 @@ def simple_partition(cell_names, n_blocks, seed=42):
     return blocks
 
 
+def cut_aware_partition(cell_names, nets, n_blocks, seed=42, max_iter=5):
+    """Cut-aware partitioner using greedy Fiduccia-Mattheyses moves.
+
+    Starts with random balanced assignment, then iteratively moves cells
+    across block boundaries to reduce the cut (sum of nets with cells in
+    multiple blocks). Faster than networkx on big graphs.
+    """
+    rng = random.Random(seed)
+    n = len(cell_names)
+    target = n / n_blocks
+    # Random balanced initial assignment
+    shuffled = list(cell_names)
+    rng.shuffle(shuffled)
+    assign = {c: i % n_blocks for i, c in enumerate(shuffled)}
+    # Build per-cell net list
+    cell_nets = defaultdict(list)
+    for ni, net in enumerate(nets):
+        comps = [c for c in net["components"] if c in assign]
+        for c in comps:
+            cell_nets[c].append(ni)
+    # Compute initial cut
+    def cut_size():
+        cut = 0
+        for net in nets:
+            blocks_in_net = set()
+            for c in net["components"]:
+                if c in assign:
+                    blocks_in_net.add(assign[c])
+            if len(blocks_in_net) > 1:
+                cut += 1
+        return cut
+    initial_cut = cut_size()
+    # Greedy single-pass FM refinement (sample cells for speed)
+    improved = True
+    iteration = 0
+    while improved and iteration < max_iter:
+        improved = False
+        iteration += 1
+        # Sample a fraction of cells for speed
+        sample_size = min(2000, n)
+        sampled = rng.sample(list(cell_names), sample_size)
+        for c in sampled:
+            current_block = assign[c]
+            # For each target block, compute gain (cut reduction)
+            block_size = [0] * n_blocks
+            for cc, bb in assign.items():
+                block_size[bb] += 1
+            best_block = current_block
+            best_gain = 0
+            for target in range(n_blocks):
+                if target == current_block:
+                    continue
+                # Skip if load balance too far off
+                if block_size[target] > target * 1.5:
+                    continue
+                # Compute gain
+                gain = 0
+                for ni in cell_nets.get(c, []):
+                    net = nets[ni]
+                    blocks_in_net = set()
+                    for other in net["components"]:
+                        if other in assign and other != c:
+                            blocks_in_net.add(assign[other])
+                    was_cut = len(blocks_in_net) > 1
+                    would_be_cut = False
+                    if target in blocks_in_net:
+                        # After move, target is removed from blocks_in_net (c was in current_block)
+                        new_blocks = blocks_in_net - {current_block}
+                        if target in new_blocks:
+                            new_blocks = new_blocks - {target}
+                        would_be_cut = len(new_blocks) > 0
+                    else:
+                        new_blocks = blocks_in_net | {target}
+                        would_be_cut = len(new_blocks) > 1
+                    if was_cut and not would_be_cut:
+                        gain += 1
+                    elif not was_cut and would_be_cut:
+                        gain -= 1
+                if gain > best_gain:
+                    best_gain = gain
+                    best_block = target
+            if best_block != current_block:
+                assign[c] = best_block
+                if best_gain > 0:
+                    improved = True
+    final_cut = cut_size()
+    print(f"  Partition: initial cut = {initial_cut}, final cut = {final_cut} "
+          f"({100*(1 - final_cut/max(initial_cut,1)):.0f}% reduction)")
+    blocks = [set() for _ in range(n_blocks)]
+    for c, b in assign.items():
+        blocks[b].add(c)
+    return blocks
+
+
 def place_blocks_on_grid(blocks, die):
     """Lay out blocks in a grid pattern within the die."""
     n = len(blocks)
@@ -228,7 +322,8 @@ def main():
     # 3. Test at multiple scales
     scales = [
         ("1x (15K, flat V3 only)",  1, 0),
-        ("2x (30K, hier only)",     2, 2),
+        ("2x (30K, hier 2 blocks)", 2, 2),
+        ("4x (60K, hier 4 blocks)", 4, 4),
     ]
 
     results = []
@@ -260,7 +355,7 @@ def main():
         if n_blocks > 0:
             t0 = time.time()
             cell_names = list(syn["components"].keys())
-            blocks = simple_partition(cell_names, n_blocks)
+            blocks = cut_aware_partition(cell_names, syn["nets"], n_blocks)
             grid, block_w, block_h = place_blocks_on_grid(blocks, syn["die"])
             per_block = []
             for bid, block_cells in enumerate(blocks):

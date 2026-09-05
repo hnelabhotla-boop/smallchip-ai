@@ -133,6 +133,23 @@
                     <p style="font-size: 11px; color: #718096; margin: 10px 0 0;">This shapes the report — the chip is always the same best-possible placement.</p>
                 </div>
 
+                <div class="panel hidden" id="hierPanel">
+                    <h3>🧩 Hierarchical</h3>
+                    <p style="font-size: 11px; color: #718096; margin: 0 0 6px;">For designs &gt; 15K cells where flat V3 hits its limit. Splits into N blocks, runs V3 per block, stitches.</p>
+                    <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+                        <label style="font-size: 11px; color: #4a5568; flex: 1;">
+                            Blocks
+                            <input type="number" id="hierBlocks" value="3" min="2" max="20" style="width: 100%; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                        </label>
+                        <label style="font-size: 11px; color: #4a5568; flex: 1;">
+                            Cells/block
+                            <input type="number" id="hierCellsPerBlock" value="5000" min="500" max="15000" step="500" style="width: 100%; padding: 4px; border: 1px solid #cbd5e0; border-radius: 4px;">
+                        </label>
+                    </div>
+                    <button id="hierRunBtn" style="width: 100%; padding: 8px; background: #5a67d8; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;" disabled>Run Hierarchical</button>
+                    <div id="hierResult" style="font-size: 11px; margin-top: 8px; color: #2d3748;"></div>
+                </div>
+
                 <div class="panel hidden" id="metricsPanel">
                     <h3>📊 Latest metrics</h3>
                     <div id="metricsBox"></div>
@@ -210,6 +227,65 @@
             if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
         });
         sendBtn.addEventListener('click', sendMessage);
+
+        // Hierarchical panel
+        const hierPanel = document.getElementById('hierPanel');
+        const hierRunBtn = document.getElementById('hierRunBtn');
+        const hierResult = document.getElementById('hierResult');
+        const hierBlocksInput = document.getElementById('hierBlocks');
+        const hierCellsPerBlockInput = document.getElementById('hierCellsPerBlock');
+        function updateHierBtn() {
+            hierRunBtn.disabled = !currentFile;
+        }
+        // Show the hierarchical panel when a file is loaded
+        const origAddRemove = (() => {
+            const obs = new MutationObserver(() => updateHierBtn());
+            obs.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+        })();
+        async function runHierarchical() {
+            if (!currentFile) return;
+            const nBlocks = Math.max(2, Math.min(20, parseInt(hierBlocksInput.value) || 3));
+            const cellsPerBlock = Math.max(500, Math.min(15000, parseInt(hierCellsPerBlockInput.value) || 5000));
+            hierResult.innerHTML = '⏳ Placing hierarchically...';
+            hierRunBtn.disabled = true;
+            const t0 = performance.now();
+            const form = new FormData();
+            form.append('file', currentFile);
+            form.append('n_blocks', nBlocks);
+            form.append('cells_per_block', cellsPerBlock);
+            try {
+                const r = await fetch('/api/hierarchical_place_real', { method: 'POST', body: form });
+                const elapsed = ((performance.now() - t0) / 1000).toFixed(1);
+                const d = await r.json();
+                if (d.error) {
+                    hierResult.innerHTML = `<span style="color: #c53030;">✗ ${d.error}</span>`;
+                } else {
+                    const perNet = Math.round(d.total_hpwl_dbu / d.n_nets);
+                    hierResult.innerHTML = `
+                        <div style="background: #f0fff4; border: 1px solid #9ae6b4; border-radius: 4px; padding: 6px 8px; margin-top: 4px;">
+                            <div><b>${d.n_cells.toLocaleString()}</b> cells · <b>${d.n_blocks}</b> blocks</div>
+                            <div>Total time: <b>${(d.total_time_ms/1000).toFixed(1)}s</b> (client: ${elapsed}s)</div>
+                            <div>HPWL: <b>${d.total_hpwl_dbu.toLocaleString()}</b> DBU</div>
+                            <div>Per-net: <b>${perNet}</b> DBU/net</div>
+                            <div>Stitched: ${d.stitched_cells}/${d.n_cells} (${d.block_failures} failures)</div>
+                            <div style="color: #4a5568; margin-top: 4px; font-size: 10px;">Per-block V3: ${d.block_v3_times_ms.map(t => t.toFixed(0)+'ms').join(', ')}</div>
+                        </div>`;
+                }
+            } catch (e) {
+                hierResult.innerHTML = `<span style="color: #c53030;">✗ ${e.message}</span>`;
+            }
+            hierRunBtn.disabled = false;
+        }
+        hierRunBtn.addEventListener('click', runHierarchical);
+        // Auto-show hierarchical panel when a file is loaded
+        const fileObserver = new MutationObserver(() => {
+            if (currentFile) {
+                hierPanel.classList.remove('hidden');
+            } else {
+                hierPanel.classList.add('hidden');
+            }
+        });
+        fileObserver.observe(document.getElementById('fileName'), { childList: true, characterData: true, subtree: true });
 
         // Reset
         resetBtn.addEventListener('click', async () => {

@@ -9,7 +9,7 @@
       "die_w": 10000.0,
       "die_h": 10680.0,
       "flat_hpwl": 6020661.303039551,
-      "flat_time_ms": 23425.68278312683,
+      "flat_time_ms": 23922.45578765869,
       "flat_error": null,
       "hier_hpwl": null,
       "hier_time_ms": null,
@@ -17,7 +17,7 @@
       "hier_failures": 0
     },
     {
-      "label": "2x (30K, hier only)",
+      "label": "2x (30K, hier 2 blocks)",
       "n_replicas": 2,
       "n_blocks": 2,
       "n_cells": 30000,
@@ -28,8 +28,24 @@
       "flat_time_ms": null,
       "flat_error": null,
       "hier_hpwl": 205062895.29046166,
-      "hier_time_ms": 24214.372873306274,
+      "hier_time_ms": 37745.38993835449,
       "hier_stitched_cells": 30000,
+      "hier_failures": 0
+    },
+    {
+      "label": "4x (60K, hier 4 blocks)",
+      "n_replicas": 4,
+      "n_blocks": 4,
+      "n_cells": 60000,
+      "n_nets": 54620,
+      "die_w": 30692.0,
+      "die_h": 21819.0,
+      "flat_hpwl": null,
+      "flat_time_ms": null,
+      "flat_error": null,
+      "hier_hpwl": 1122200575.2782228,
+      "hier_time_ms": 47487.86497116089,
+      "hier_stitched_cells": 60000,
       "hier_failures": 0
     }
   ],

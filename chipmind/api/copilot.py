@@ -25,6 +25,8 @@ import sys
 import time
 import json
 import uuid
+import math
+import random
 from pathlib import Path
 from typing import Dict, Any, List
 
@@ -478,10 +480,11 @@ async def hierarchical_place(
         try:
             from train_gat_placer_v3 import GATPlacerV3
             import torch
-            model = GATPlacerV3()
+            model = GATPlacerV3(in_dim=9, hidden=64, num_layers=3, heads=4)
             model.load_state_dict(torch.load(
                 "/Users/harshith/Documents/RLChip_ISEF/results/gat_v3_combined_60ep/gat_v3_model_best.pt",
                 map_location="cpu",
+                weights_only=True,
             ))
             model.eval()
         except Exception as e:
@@ -512,6 +515,178 @@ async def hierarchical_place(
             for bid, pos in result["block_positions"].items()
         },
         "note": "100M+ cell scale works through hierarchy: blocks (top) + V3 per block (middle) + OpenROAD detailed (bottom).",
+    }
+
+
+@router.post("/api/hierarchical_place_real")
+async def hierarchical_place_real(
+    file: UploadFile = File(...),
+    n_blocks: int = Form(3),
+    cells_per_block: int = Form(5000),
+    canvas_w: float = Form(10000.0),
+    canvas_h: float = Form(10000.0),
+):
+    """
+    Hierarchical placement on a REAL uploaded DEF/LEF.
+
+    Pipeline:
+      1. Parse the DEF
+      2. Partition cells into N blocks (balanced random)
+      3. Lay out blocks on a grid (top-level placement)
+      4. Run V3 on each block (middle-level placement)
+      5. Stitch per-block coords into global coords
+      6. Return global positions + timing breakdown
+
+    For designs with more cells than V3 can handle (15K), this is the
+    only way to place them with V3 GAT. The cost is some HPWL quality
+    loss for inter-block nets (cells at block boundaries).
+
+    Returns:
+        {
+            "n_blocks", "n_cells", "n_nets",
+            "block_positions": [{block_id, x, y, w, h, n_cells}],
+            "block_v3_times_ms": [..],
+            "total_time_ms", "stitched_positions_count"
+        }
+    """
+    import io
+    import time as time_mod
+    from collections import defaultdict
+
+    # 1. Parse
+    raw = await file.read()
+    try:
+        chip = parse_def_or_lef(io.BytesIO(raw))
+    except Exception as e:
+        return {"error": f"Failed to parse DEF: {e}"}
+
+    cell_names = list(chip.get("components", {}).keys())
+    nets = chip.get("nets", [])
+    n_cells = len(cell_names)
+    n_nets = len(nets)
+    if n_cells == 0:
+        return {"error": "No cells in design"}
+
+    n_blocks = max(2, min(20, n_blocks))
+    cells_per_block = max(500, min(15000, cells_per_block))
+
+    # 2. Partition (random balanced)
+    import random
+    random.seed(42)
+    shuffled = list(cell_names)
+    random.shuffle(shuffled)
+    blocks = [[] for _ in range(n_blocks)]
+    for i, c in enumerate(shuffled):
+        blocks[i % n_blocks].append(c)
+
+    # 3. Grid layout
+    n = n_blocks
+    cols = int(math.ceil(math.sqrt(n)))
+    rows = int(math.ceil(n / cols))
+    block_w = canvas_w / cols
+    block_h = canvas_h / rows
+    block_positions_out = []
+    for i, b in enumerate(blocks):
+        col = i % cols
+        row = i // cols
+        block_positions_out.append({
+            "block_id": i,
+            "n_cells": len(b),
+            "x1": round(col * block_w, 1),
+            "y1": round(row * block_h, 1),
+            "x2": round((col + 1) * block_w, 1),
+            "y2": round((row + 1) * block_h, 1),
+        })
+
+    # 4. Load V3
+    t_total_start = time_mod.time()
+    try:
+        from train_gat_placer_v3 import GATPlacerV3, predict
+        import torch
+        model = GATPlacerV3(in_dim=9, hidden=64, num_layers=3, heads=4)
+        model.load_state_dict(torch.load(
+            "/Users/harshith/Documents/RLChip_ISEF/results/gat_v3_combined_60ep/gat_v3_model_best.pt",
+            map_location="cpu",
+            weights_only=True,
+        ))
+        model.eval()
+    except Exception as e:
+        return {"error": f"Failed to load V3: {e}"}
+
+    # 5. Per-block V3 placement
+    block_v3_times = []
+    block_results = []
+    block_failures = 0
+    for bid, block_cells in enumerate(blocks):
+        # Cap at cells_per_block (V3 limit); sample if larger
+        if len(block_cells) > cells_per_block:
+            random.seed(bid * 1000)
+            block_cells = random.sample(block_cells, cells_per_block)
+        # Build sub-design
+        sub_components = {c: {"x": 0, "y": 0} for c in block_cells}
+        sub_nets = []
+        for net in nets:
+            comps = [c for c in net["components"] if c in sub_components]
+            if len(comps) >= 2:
+                sub_nets.append({"name": net.get("name", f"b{bid}_n{len(sub_nets)}"), "components": comps})
+        sub_chip = {
+            "components": sub_components,
+            "nets": sub_nets,
+            "die": {"x1": 0, "y1": 0, "x2": block_w, "y2": block_h},
+            "n_cells": len(sub_components),
+            "n_nets": len(sub_nets),
+        }
+        t0 = time_mod.time()
+        try:
+            local_pos = predict(model, sub_chip)
+            block_results.append(local_pos)
+        except Exception as e:
+            block_results.append(None)
+            block_failures += 1
+        block_v3_times.append(round((time_mod.time() - t0) * 1000, 1))
+
+    # 6. Stitch
+    global_positions = {}
+    for bid, local_pos in enumerate(block_results):
+        if local_pos is None:
+            continue
+        slot = block_positions_out[bid]
+        bw = slot["x2"] - slot["x1"]
+        bh = slot["y2"] - slot["y1"]
+        for cell, pos in local_pos.items():
+            if isinstance(pos, dict):
+                lx, ly = pos["x"], pos["y"]
+            else:
+                lx, ly = pos[0], pos[1]
+            gx = (lx / block_w) * bw + slot["x1"]
+            gy = (ly / block_h) * bh + slot["y1"]
+            global_positions[cell] = (round(gx, 1), round(gy, 1))
+
+    total_time_ms = round((time_mod.time() - t_total_start) * 1000, 1)
+
+    # 7. Compute HPWL for validation
+    total_hpwl = 0
+    for net in nets:
+        xs, ys = [], []
+        for c in net["components"]:
+            if c in global_positions:
+                x, y = global_positions[c]
+                xs.append(x); ys.append(y)
+        if len(xs) >= 2:
+            total_hpwl += (max(xs) - min(xs)) + (max(ys) - min(ys))
+
+    return {
+        "n_cells": n_cells,
+        "n_nets": n_nets,
+        "n_blocks": n_blocks,
+        "cells_per_block": cells_per_block,
+        "block_positions": block_positions_out,
+        "block_v3_times_ms": block_v3_times,
+        "block_failures": block_failures,
+        "total_time_ms": total_time_ms,
+        "stitched_cells": len(global_positions),
+        "total_hpwl_dbu": round(total_hpwl, 0),
+        "note": "Real-design hierarchy: upload DEF > 15K cells, get V3-per-block placement that flat V3 cannot do.",
     }
 
 
