@@ -270,9 +270,16 @@
                             <div>Per-net: <b>${perNet}</b> DBU/net</div>
                             <div>Stitched: ${d.stitched_cells}/${d.n_cells} (${d.block_failures} failures)</div>
                             <div style="color: #4a5568; margin-top: 4px; font-size: 10px;">Per-block V3: ${d.block_v3_times_ms.map(t => t.toFixed(0)+'ms').join(', ')}</div>
-                        </div>`;
+                            ${d.refine_improvement_pct ? `<div style="color: #4a5568; font-size: 10px;">Refine: -${d.refine_improvement_pct.toFixed(1)}% HPWL</div>` : ''}
+                        </div>
+                        <button id="hierDownloadBtn" style="margin-top: 8px; width: 100%; padding: 6px; background: #38a169; color: white; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: 600;">⬇ Download placed .def</button>`;
                     // Draw block visualization
                     drawHierBlocks(d.block_positions, d.global_positions);
+                    // Wire download
+                    const downloadBtn = document.getElementById('hierDownloadBtn');
+                    if (downloadBtn) {
+                        downloadBtn.onclick = () => downloadHierDef(d);
+                    }
                 }
             } catch (e) {
                 hierResult.innerHTML = `<span style="color: #c53030;">✗ ${e.message}</span>`;
@@ -340,6 +347,37 @@
             }
         }
         // Draw an empty placeholder on first show
+        function downloadHierDef(d) {
+            // Build a minimal DEF with the placed cells
+            // Get die bounds from block positions
+            const blocks = d.block_positions;
+            if (!blocks || !blocks.length) return;
+            const minX = 0, minY = 0;
+            const maxX = Math.max(...blocks.map(b => b.x2));
+            const maxY = Math.max(...blocks.map(b => b.y2));
+            const cellW = 380, cellH = 2000;  // default cell dims in DBU
+            let def = `VERSION 5.8 ;\n`;
+            def += `DESIGN smallchip_hier ;\n`;
+            def += `UNITS DISTANCE MICRONS 1000 ;\n`;
+            def += `DIEAREA ( ${minX} ${minY} ) ( ${maxX} ${maxY} ) ;\n`;
+            def += `COMPONENTS ${d.stitched_cells} ;\n`;
+            let i = 0;
+            for (const name in d.global_positions) {
+                const [x, y] = d.global_positions[name];
+                def += `  - ${name} BUF_X1 + PLACED ( ${Math.round(x)} ${Math.round(y)} ) N ;\n`;
+                i++;
+            }
+            def += `END COMPONENTS\n`;
+            def += `END DESIGN\n`;
+            const blob = new Blob([def], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `smallchip_hier_${d.n_cells}cells_${d.n_blocks}blocks.def`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
         function drawHierEmpty() {
             const canvas = document.getElementById('hierCanvas');
             if (!canvas) return;
