@@ -765,7 +765,7 @@ async def hierarchical_place_real(
         from chipmind.ml.hier_refine import refine_inter_block_positions
         refined_positions = refine_inter_block_positions(
             block_cells_list, block_pos_for_refine, block_bounds_for_refine,
-            nets, global_positions, cell_to_block, alpha=0.7, verbose=False,
+            nets, global_positions, cell_to_block, alpha=0.7, n_iterations=3, verbose=False,
         )
         # Recompute HPWL
         hpwl_after_refine = compute_hpwl(refined_positions, nets)
