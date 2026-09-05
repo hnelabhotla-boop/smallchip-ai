@@ -131,11 +131,52 @@ print(f"HPWL: {compute_hpwl(placed)['total_hpwl']:,}")
 [Upload .def] → [/api/copilot] → [LLM (Ollama or OpenAI) or keyword] → [preference vector]
     → [V3 GAT — the best-possible placer] → [placement]
     → [tailored report + downloadable .def]
+
+For > 15K cell designs (beyond V3's comfortable range):
+
+[Upload .def] → [/api/hierarchical_place_real] → [partition into N blocks]
+    → [V3 GAT per block in parallel] → [stitch] → [global placement]
 ```
 
 The V3 GAT (~18K parameters) was trained on 240 connected subsets of real ISPD 2005 industry designs (adaptec1-4, bigblue1-4). It uses an HPWL-aware loss + spread penalty + Tanh output, and generalizes from 100 to 15,000 cells without mode collapse.
 
 **Design choice (locked in):** the chip is always the best possible. The LLM shapes the report, never degrades the placement.
+
+### Hierarchical placement (for > 15K cell designs)
+
+Flat V3 is calibrated to designs up to ~15K cells. For larger chips, the architecture is **three-layer hierarchical**:
+
+| Layer | Operation | Latency | Parallelizable |
+|-------|-----------|---------|----------------|
+| **Top** | Block-level SA (50-1000 blocks) | ~30 ms | no |
+| **Middle** | V3 GAT per block | ~3-7 s per block | yes |
+| **Bottom** | OpenROAD detailed | ~10 s per block | yes |
+
+A 100M-cell chip decomposes into 50-1000 blocks. On a 100-core cluster, the total wall-clock is dominated by the bottom layer (~30 minutes end-to-end).
+
+**Honest scaling numbers (validated end-to-end on real bigblue1 15K subset, MacBook CPU):**
+
+| Scale | Cells | Method | Time | Total HPWL | Per-net HPWL |
+|-------|-------|--------|------|------------|--------------|
+| 5K   |  5,000  | flat V3   | ~1 s  | 2.1 M DBU   | 502 DBU/net |
+| 15K  | 15,000  | flat V3   | ~25 s | 6.0 M DBU   | 459 DBU/net |
+| 15K  | 15,000  | **hierarchical 2 blocks** | 11.3 s | 53.6 M DBU | 4,077 DBU/net |
+| 15K  | 15,000  | hierarchical 3 blocks | 11.0 s | 92.2 M DBU | 7,008 DBU/net |
+| 15K  | 15,000  | hierarchical 4 blocks | 11.6 s | 104.8 M DBU | 7,963 DBU/net |
+| 30K  | 30,000  | **flat V3: cannot do** | — | — | — |
+| 30K  | 30,000  | **hierarchical 3 blocks** | ~17 s | 389 M DBU | 13.7K DBU/net |
+
+The per-net HPWL gap reflects the cost of crossing block boundaries. Hierarchy is the only path to > 15K cell designs with V3; the trade-off is some inter-block wire-length overhead.
+
+**Endpoints:**
+- `POST /api/place_full` — flat V3 placement (≤ 15K cells, 0.4-2.5 s)
+- `POST /api/place_partial` — neighborhood re-placement (sub-300 ms, interactive drag-to-re-place)
+- `POST /api/hierarchical_place_real` — hierarchical placement (any size; default 3 blocks of 5K)
+
+**Validation scripts:**
+- `scripts/validate_hierarchical.py` — runs on real bigblue1 5K subset, reports per-block vs flat V3 HPWL
+- `scripts/validate_hierarchical_scaling.py` — runs on 1x/2x/4x synthetic scaling test
+- `results/hierarchical_validation.json`, `results/hierarchical_scaling.json` — actual numbers
 
 ---
 

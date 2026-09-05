@@ -1,0 +1,79 @@
+{
+  "benchmark": "real_hier_bigblue1_15k",
+  "configs": [
+    {
+      "label": "2 blocks, 7500 cells/block",
+      "n_blocks": 2,
+      "cells_per_block": 7500,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "block_v3_times_ms": [
+        3672.8,
+        7546.7
+      ],
+      "total_time_ms": 11335.2,
+      "client_time_s": 11.68,
+      "stitched_cells": 15000,
+      "block_failures": 0,
+      "total_hpwl_dbu": 53638150.0,
+      "per_net_hpwl_dbu": 4077.4
+    },
+    {
+      "label": "3 blocks, 5000 cells/block",
+      "n_blocks": 3,
+      "cells_per_block": 5000,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "block_v3_times_ms": [
+        2043.6,
+        4564.3,
+        4191.9
+      ],
+      "total_time_ms": 10980.3,
+      "client_time_s": 11.45,
+      "stitched_cells": 15000,
+      "block_failures": 0,
+      "total_hpwl_dbu": 92191431.0,
+      "per_net_hpwl_dbu": 7008.1
+    },
+    {
+      "label": "4 blocks, 3750 cells/block",
+      "n_blocks": 4,
+      "cells_per_block": 3750,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "block_v3_times_ms": [
+        3448.2,
+        3417.2,
+        2012.7,
+        2471.0
+      ],
+      "total_time_ms": 11591.4,
+      "client_time_s": 12.13,
+      "stitched_cells": 15000,
+      "block_failures": 0,
+      "total_hpwl_dbu": 104753464.0,
+      "per_net_hpwl_dbu": 7963.0
+    },
+    {
+      "label": "5 blocks, 3000 cells/block",
+      "n_blocks": 5,
+      "cells_per_block": 3000,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "block_v3_times_ms": [
+        2207.8,
+        2356.2,
+        2547.9,
+        1266.2,
+        1498.0
+      ],
+      "total_time_ms": 10108.4,
+      "client_time_s": 10.55,
+      "stitched_cells": 15000,
+      "block_failures": 0,
+      "total_hpwl_dbu": 106869459.0,
+      "per_net_hpwl_dbu": 8123.9
+    }
+  ]
+}
