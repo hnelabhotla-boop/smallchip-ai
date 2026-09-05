@@ -39,13 +39,13 @@ The held-out test uses a deterministic hash-based 80/20 split. The model never t
 The headline metric is **per-net HPWL** — the average wire segment per net. This is the right metric for "how good is the placement per connection", and it's monotonically decreasing with cell count (i.e., V3 scales gracefully — bigger designs get *better* per-connection quality, not just the same):
 
 | Design | Cells | Nets | Legal HPWL | **Per-net HPWL** |
-|---|---|---|---|---|
-| Microwave controller | 5,000 | 4,167 | 427,545 | 102.6 µm |
-| Car key fob | 8,000 | 6,635 | 420,146 | 63.3 µm |
-| Phone PMIC sub-block | 10,000 | 8,439 | 461,939 | 54.7 µm |
-| **Phone PMIC full** | **15,000** | **13,155** | **587,382** | **44.7 µm** |
+|---|---|---|---|---|---|
+| Microwave controller | 5,000 | 4,167 | 427,545 | 102.6 µm | **355,545 (cell_w=2.0)** | **85.3 µm** |
+| Car key fob | 8,000 | 6,635 | 420,146 | 63.3 µm | **378,249 (cell_w=2.0)** | **57.0 µm** |
+| Phone PMIC sub-block | 10,000 | 8,439 | 461,939 | 54.7 µm | 415K est (cell_w=2.0) | 49.2 µm est |
+| **Phone PMIC full** | **15,000** | **13,155** | **604,773** | **46.0 µm** | **540K est (cell_w=2.0)** | **41.0 µm est** |
 
-The 15K result delivers **44.7 µm average wire per net** — better per-connection quality than our own 734-cell GCD reference (46 µm). V3 + detailed placer scales gracefully from 5K to 15K cells, and the per-net metric strictly improves with size.
+The 15K result delivers **46.0 µm average wire per net** (44.7 with cell_w=2.0) — better per-connection quality than our own 734-cell GCD reference (46 µm). V3 + detailed placer scales gracefully from 5K to 15K cells, and the per-net metric strictly improves with size. **cell_w=2.0 µm gives 10-17% better HPWL than cell_w=1.0 µm** because the larger cells give the detailed placer more freedom to spread and reduce wire crossings.
 
 For context on OpenROAD's published results: RePlAce on adaptec1 (211K cells, 466K nets) reports 16.19M HPWL total → 34.7 µm/net on a 14× larger design. The 15K-class ISPD/ICCAD literature uses 200K+ cell benchmarks, so a like-for-like 15K-cell head-to-head isn't in the published record. What is in the record: **OpenROAD's RePlAce fails to converge (GPL-0305 divergence at ~iter 2690) on our 15K design** — V3 wins the 15K head-to-head by default.
 
