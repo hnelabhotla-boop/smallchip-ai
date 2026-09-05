@@ -147,6 +147,7 @@
                         </label>
                     </div>
                     <button id="hierRunBtn" style="width: 100%; padding: 8px; background: #5a67d8; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px;" disabled>Run Hierarchical</button>
+                    <canvas id="hierCanvas" width="320" height="240" style="display: block; margin-top: 8px; background: #f7fafc; border: 1px solid #cbd5e0; border-radius: 4px; width: 100%;"></canvas>
                     <div id="hierResult" style="font-size: 11px; margin-top: 8px; color: #2d3748;"></div>
                 </div>
 
@@ -270,6 +271,8 @@
                             <div>Stitched: ${d.stitched_cells}/${d.n_cells} (${d.block_failures} failures)</div>
                             <div style="color: #4a5568; margin-top: 4px; font-size: 10px;">Per-block V3: ${d.block_v3_times_ms.map(t => t.toFixed(0)+'ms').join(', ')}</div>
                         </div>`;
+                    // Draw block visualization
+                    drawHierBlocks(d.block_positions, d.global_positions);
                 }
             } catch (e) {
                 hierResult.innerHTML = `<span style="color: #c53030;">✗ ${e.message}</span>`;
@@ -277,10 +280,89 @@
             hierRunBtn.disabled = false;
         }
         hierRunBtn.addEventListener('click', runHierarchical);
+
+        // Block visualization
+        function drawHierBlocks(blocks, cellPositions) {
+            const canvas = document.getElementById('hierCanvas');
+            if (!canvas || !blocks || !blocks.length) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const cssW = canvas.clientWidth || 320;
+            const cssH = 240;
+            canvas.width = cssW * dpr;
+            canvas.height = cssH * dpr;
+            canvas.style.height = cssH + 'px';
+            ctx.scale(dpr, dpr);
+            ctx.clearRect(0, 0, cssW, cssH);
+            // Find bounds
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            for (const b of blocks) {
+                if (b.x1 < minX) minX = b.x1;
+                if (b.y1 < minY) minY = b.y1;
+                if (b.x2 > maxX) maxX = b.x2;
+                if (b.y2 > maxY) maxY = b.y2;
+            }
+            const w = maxX - minX || 1;
+            const h = maxY - minY || 1;
+            const pad = 16;
+            const scale = Math.min((cssW - 2 * pad) / w, (cssH - 2 * pad) / h);
+            const offsetX = pad + (cssW - 2 * pad - w * scale) / 2;
+            const offsetY = pad + (cssH - 2 * pad - h * scale) / 2;
+            const colors = ['#5a67d8', '#38a169', '#d69e2e', '#e53e3e', '#805ad5', '#319795', '#dd6b20', '#d53f8c', '#718096', '#4a5568'];
+            // Draw cells first (under blocks)
+            if (cellPositions && Object.keys(cellPositions).length > 0) {
+                for (const name in cellPositions) {
+                    const pos = cellPositions[name];
+                    const x = offsetX + (pos[0] - minX) * scale;
+                    const y = offsetY + (pos[1] - minY) * scale;
+                    ctx.fillStyle = '#2d3748';
+                    ctx.fillRect(x - 0.7, y - 0.7, 1.4, 1.4);
+                }
+            }
+            // Draw block overlays
+            for (let i = 0; i < blocks.length; i++) {
+                const b = blocks[i];
+                const x = offsetX + (b.x1 - minX) * scale;
+                const y = offsetY + (b.y1 - minY) * scale;
+                const bw = (b.x2 - b.x1) * scale;
+                const bh = (b.y2 - b.y1) * scale;
+                const color = colors[i % colors.length];
+                ctx.fillStyle = color + '14';
+                ctx.fillRect(x, y, bw, bh);
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(x, y, bw, bh);
+                ctx.fillStyle = color;
+                ctx.font = 'bold 12px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.fillText(`B${i} (${b.n_cells})`, x + 4, y + 4);
+            }
+        }
+        // Draw an empty placeholder on first show
+        function drawHierEmpty() {
+            const canvas = document.getElementById('hierCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const cssW = canvas.clientWidth || 320;
+            const cssH = 240;
+            canvas.width = cssW * dpr;
+            canvas.height = cssH * dpr;
+            canvas.style.height = cssH + 'px';
+            ctx.scale(dpr, dpr);
+            ctx.fillStyle = '#a0aec0';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Run hierarchical to see block layout', cssW / 2, cssH / 2);
+        }
+        const origShow = hierPanel.classList;
         // Auto-show hierarchical panel when a file is loaded
         const fileObserver = new MutationObserver(() => {
             if (currentFile) {
                 hierPanel.classList.remove('hidden');
+                drawHierEmpty();
             } else {
                 hierPanel.classList.add('hidden');
             }

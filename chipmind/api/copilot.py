@@ -570,14 +570,20 @@ async def hierarchical_place_real(
     n_blocks = max(2, min(20, n_blocks))
     cells_per_block = max(500, min(15000, cells_per_block))
 
-    # 2. Partition (random balanced)
-    import random
-    random.seed(42)
-    shuffled = list(cell_names)
-    random.shuffle(shuffled)
-    blocks = [[] for _ in range(n_blocks)]
-    for i, c in enumerate(shuffled):
-        blocks[i % n_blocks].append(c)
+    # 2. Partition (cut-aware FM refinement)
+    try:
+        from chipmind.ml.partition import greedy_fm_partition
+        blocks_sets = greedy_fm_partition(cell_names, nets, n_blocks, seed=42, verbose=False)
+        blocks = [list(s) for s in blocks_sets]
+    except Exception:
+        # Fallback to random
+        import random
+        random.seed(42)
+        shuffled = list(cell_names)
+        random.shuffle(shuffled)
+        blocks = [[] for _ in range(n_blocks)]
+        for i, c in enumerate(shuffled):
+            blocks[i % n_blocks].append(c)
 
     # 3. Grid layout
     n = n_blocks
@@ -686,6 +692,7 @@ async def hierarchical_place_real(
         "total_time_ms": total_time_ms,
         "stitched_cells": len(global_positions),
         "total_hpwl_dbu": round(total_hpwl, 0),
+        "global_positions": global_positions,
         "note": "Real-design hierarchy: upload DEF > 15K cells, get V3-per-block placement that flat V3 cannot do.",
     }
 
