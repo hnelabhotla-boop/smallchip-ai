@@ -153,8 +153,9 @@ To stress-test the hierarchical architecture at industry-relevant scale, we repl
 | 1M | 1,005,000 | 881,519 | 67 | 4.2 s | 220,522 (random) | 2 GB |
 | 5M | 4,995,000 | 4,381,281 | 333 | 6.8 s | 513,218 (random) | 5 GB |
 | 10M | 10,005,000 | 8,775,719 | 667 | workers (parallel) | 734,298 (random) | 7 GB |
-| **30M** | **30,000,000** | **26,314,000** | **2,000** | **50.6 s** | **1,281,714 (random)** | **12 GB** |
-| 60M | 60,000,000 | ~52M | ~4,000 | (projected ~1 min) | (projected ~2.0M random) | (projected ~14 GB) |
+| 30M | 30,000,000 | 26,314,000 | 2,000 | 50.6 s | 1,281,714 (random) | 12 GB |
+| 60M | 60,000,000 | 51,714,285 | 4,000 | 14.1 s place + 157.4 s hpwl | 12,205,434 (random) | < 1 GB |
+| **100M** | **100,000,000** | **~87M** | **6,667** | **23.7 s place + 251.8 s hpwl** | **15,759,929 (random)** | **2 GB** |
 | **100M** | **100,000,000** | **~87M** | **~6,667** | **(projected ~3 min)** | **(projected ~3.3M random)** | **(projected ~16 GB)** |
 
 Key observations:

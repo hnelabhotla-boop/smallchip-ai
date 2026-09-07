@@ -1,0 +1,81 @@
+{
+  "v3_results": [
+    {
+      "name": "gcd",
+      "n_cells": 734,
+      "n_nets": 463,
+      "v3_inference_s": 0.04127621650695801,
+      "raw_hpwl_dbu": 12076.38671875,
+      "raw_per_net_dbu": 29.52661789425428,
+      "legal_hpwl_dbu": 12076.38671875,
+      "legal_per_net_dbu": 29.52661789425428,
+      "legalize_status": "err: unsupported operand type(s) for /: 'int' and 'dict'",
+      "elapsed_s": 0.07546353340148926
+    },
+    {
+      "name": "5k",
+      "n_cells": 5000,
+      "n_nets": 4167,
+      "v3_inference_s": 17.501399517059326,
+      "raw_hpwl_dbu": 2090455.639099121,
+      "raw_per_net_dbu": 501.6692198462014,
+      "legal_hpwl_dbu": 2090455.639099121,
+      "legal_per_net_dbu": 501.6692198462014,
+      "legalize_status": "err: unsupported operand type(s) for /: 'int' and 'dict'",
+      "elapsed_s": 17.578377962112427
+    },
+    {
+      "name": "8k",
+      "n_cells": 8000,
+      "n_nets": 6635,
+      "v3_inference_s": 21.773300647735596,
+      "raw_hpwl_dbu": 5366517.774627686,
+      "raw_per_net_dbu": 808.8195590998772,
+      "legal_hpwl_dbu": 5366517.774627686,
+      "legal_per_net_dbu": 808.8195590998772,
+      "legalize_status": "err: unsupported operand type(s) for /: 'int' and 'dict'",
+      "elapsed_s": 21.901870250701904
+    },
+    {
+      "name": "10k",
+      "n_cells": 10000,
+      "n_nets": 8439,
+      "v3_inference_s": 21.446541786193848,
+      "raw_hpwl_dbu": 5506629.701812744,
+      "raw_per_net_dbu": 652.5215904506155,
+      "legal_hpwl_dbu": 5506629.701812744,
+      "legal_per_net_dbu": 652.5215904506155,
+      "legalize_status": "err: unsupported operand type(s) for /: 'int' and 'dict'",
+      "elapsed_s": 21.627541065216064
+    },
+    {
+      "name": "15k",
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "v3_inference_s": 22.615979433059692,
+      "raw_hpwl_dbu": 6020663.391845703,
+      "raw_per_net_dbu": 457.6711054234666,
+      "legal_hpwl_dbu": 6020663.391845703,
+      "legal_per_net_dbu": 457.6711054234666,
+      "legalize_status": "err: unsupported operand type(s) for /: 'int' and 'dict'",
+      "elapsed_s": 22.766384601593018
+    }
+  ],
+  "hier_results": [
+    {
+      "name": "hier_5k_3b",
+      "error": "hier: hierarchical_placement() got multiple values for argument 'n_blocks'",
+      "elapsed_s": 0.04996013641357422
+    },
+    {
+      "name": "hier_10k_3b",
+      "error": "hier: hierarchical_placement() got multiple values for argument 'n_blocks'",
+      "elapsed_s": 0.08779311180114746
+    },
+    {
+      "name": "hier_15k_3b",
+      "error": "hier: hierarchical_placement() got multiple values for argument 'n_blocks'",
+      "elapsed_s": 0.11286449432373047
+    }
+  ]
+}

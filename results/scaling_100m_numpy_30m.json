@@ -39,6 +39,16 @@
       "total_hpwl_dbu": 21282431782509.418,
       "per_net_hpwl_dbu": 4965901.08031227,
       "memory_gb": 0.166264996
+    },
+    {
+      "label": "30M",
+      "n_cells": 30000000,
+      "n_nets": 12857142,
+      "n_blocks": 2000,
+      "build_time_s": 0.8569161891937256,
+      "total_hpwl_dbu": 110759499336928.75,
+      "per_net_hpwl_dbu": 8614628.300514122,
+      "memory_gb": 0.498763588
     }
   ]
 }
