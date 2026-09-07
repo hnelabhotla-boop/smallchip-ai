@@ -373,7 +373,7 @@ This work demonstrates:
 - **Engineering:** building complete ML pipelines from data collection to inference, plus a natural-language AI co-pilot front end
 - **Honest reporting:** the 1.31M plateau (where classical methods get stuck) is documented alongside the GAT breakthrough
 - **Validation:** the primary result is confirmed by OpenROAD's own static timing and power analysis, and by OpenROAD's legalizer (99.7% / 370× post-legalization HPWL improvement)
-- **Real-world impact:** the savings calculator projects $1M/year and 9.3 GWh/year impact at scale, and the LLM co-pilot translates this to a one-sentence user experience
+- **Real-world impact:** the savings calculator projects $25–67.5K/yr value per small chip company and $200K+/yr for university ECE labs; the LLM co-pilot translates this to a one-sentence user experience
 - **Reproducibility:** all code open-source, training data from public benchmarks
 
 ### 5.7 The LLM Co-Pilot as a Design Tool
