@@ -25,7 +25,7 @@ OUT = Path("/root/smallchip-ai/results/scaling_100m_v4.json")
 
 
 def build_synthetic(n_total_cells, avg_nets_per_cell=1.5, avg_net_size=3.5, seed=42):
-    """Build synthetic netlist as CSR + reverse index."""
+    """Build synthetic netlist as CSR + reverse index (compact numpy format)."""
     rng = np.random.default_rng(seed)
     print(f"  building {n_total_cells:,} cells + nets...", flush=True)
     n_nets = int(n_total_cells * avg_nets_per_cell / avg_net_size)
@@ -33,23 +33,92 @@ def build_synthetic(n_total_cells, avg_nets_per_cell=1.5, avg_net_size=3.5, seed
     total_slots = int(net_sizes.sum())
     print(f"  generating {total_slots:,} slot indices...", flush=True)
 
-    # Build cell->net reverse index
     all_cell_indices = rng.integers(0, n_total_cells, size=total_slots, dtype=np.int32)
     indptr = np.zeros(n_nets + 1, dtype=np.int64)
     indptr[1:] = np.cumsum(net_sizes)
 
-    # Build cell->nets index
-    cell_to_nets = defaultdict(list)
-    for net_id in range(n_nets):
-        s, e = indptr[net_id], indptr[net_id + 1]
-        for slot in range(s, e):
-            cell_to_nets[int(all_cell_indices[slot])].append(net_id)
-
-    print(f"  reverse index: avg {sum(len(v) for v in cell_to_nets.values())/max(1,len(cell_to_nets)):.1f} nets/cell",
-          flush=True)
+    # Build cell->nets reverse index in COMPACT numpy format (CSR-style)
+    # Step 1: get (cell, net) pairs sorted by cell
+    print(f"  building compact cell->nets index ({n_nets:,} nets, {total_slots:,} slots)...", flush=True)
+    t0 = time.time()
+    net_ids = np.repeat(np.arange(n_nets, dtype=np.int32), indptr[1:] - indptr[:-1])
+    # Sort pairs by cell
+    sort_idx = np.argsort(all_cell_indices, kind="stable")
+    cell_to_net_pairs = np.column_stack([all_cell_indices[sort_idx], net_ids[sort_idx]])
+    # Compute per-cell offsets
+    cell_to_net_offsets = np.zeros(n_total_cells + 1, dtype=np.int64)
+    np.add.at(cell_to_net_offsets[1:], all_cell_indices, 1)
+    np.cumsum(cell_to_net_offsets, out=cell_to_net_offsets)
+    cell_to_net_list = cell_to_net_pairs[:, 1].astype(np.int32)  # net_ids in cell-sorted order
+    del cell_to_net_pairs, net_ids, sort_idx
+    print(f"    done in {time.time()-t0:.1f}s", flush=True)
 
     positions = np.zeros((n_total_cells, 2), dtype=np.float32)
-    return positions, all_cell_indices, indptr, n_nets, cell_to_nets
+    return positions, all_cell_indices, indptr, n_nets, (cell_to_net_offsets, cell_to_net_list)
+
+
+def get_cell_nets(cell_id, cell_to_net_data):
+    """Get net ids for a cell using compact CSR."""
+    offsets, net_list = cell_to_net_data
+    s = offsets[cell_id]
+    e = offsets[cell_id + 1]
+    return net_list[s:e]
+
+
+def partition_by_net_aware_compact(n_total_cells, n_nets, all_cell_indices, indptr,
+                                     n_blocks, block_size, cell_to_net_data, seed=42):
+    """BFS-aware partition using compact cell->net CSR index."""
+    rng = np.random.default_rng(seed)
+    offsets, net_list = cell_to_net_data
+
+    print(f"  BFS partition ({n_blocks} blocks)...", flush=True)
+    t0 = time.time()
+    assignment = -np.ones(n_total_cells, dtype=np.int32)
+    perm = rng.permutation(n_total_cells)
+
+    block_id = 0
+    for seed in perm:
+        if assignment[seed] != -1:
+            continue
+        # Start new block from this seed
+        assignment[seed] = block_id
+        frontier_cells = [int(seed)]
+        block_count = 1
+        visited_nets = set()
+
+        while frontier_cells and block_count < block_size:
+            cur = frontier_cells.pop()
+            # Get nets for cur
+            s = offsets[cur]
+            e = offsets[cur + 1]
+            for slot in range(s, e):
+                net_id = int(net_list[slot])
+                if net_id in visited_nets:
+                    continue
+                visited_nets.add(net_id)
+                # Add all cells in this net that are still unassigned
+                ns, ne = indptr[net_id], indptr[net_id + 1]
+                cells_in_net = all_cell_indices[ns:ne]
+                for c in cells_in_net:
+                    if assignment[c] == -1:
+                        assignment[c] = block_id
+                        frontier_cells.append(int(c))
+                        block_count += 1
+                        if block_count >= block_size:
+                            break
+                if block_count >= block_size:
+                    break
+
+        block_id += 1
+        if block_id >= n_blocks:
+            break
+
+    # Fallback
+    unassigned = np.where(assignment == -1)[0]
+    for i, c in enumerate(unassigned):
+        assignment[c] = i % n_blocks
+    print(f"  partition done in {time.time()-t0:.1f}s", flush=True)
+    return assignment
 
 
 def bfs_partition(positions, cell_to_nets, n_blocks, block_size, rng):
@@ -367,7 +436,7 @@ def compute_hpwl_csr(positions, indices, indptr, n_nets, chunk=5_000_000):
 def run_scale(n_total_cells, label, n_blocks, seed=42, use_fd=True):
     print(f"\n=== {label}: {n_total_cells:,} cells, {n_blocks} blocks ===", flush=True)
     t0 = time.time()
-    positions, all_cell_indices, indptr, n_nets, cell_to_nets = build_synthetic(
+    positions, all_cell_indices, indptr, n_nets, cell_to_net_data = build_synthetic(
         n_total_cells, avg_nets_per_cell=1.5, avg_net_size=3.5, seed=seed,
     )
     build_t = time.time() - t0
@@ -376,17 +445,18 @@ def run_scale(n_total_cells, label, n_blocks, seed=42, use_fd=True):
     die = {"x1": 0, "y1": 0, "x2": side_dbu, "y2": side_dbu}
 
     # Memory
+    offsets, net_list = cell_to_net_data
     mem = (positions.nbytes + all_cell_indices.nbytes + indptr.nbytes +
-           sum(len(v) * 4 for v in cell_to_nets.values())) / 1e9
+           offsets.nbytes + net_list.nbytes) / 1e9
     print(f"  built in {build_t:.1f}s, mem {mem:.2f}GB", flush=True)
 
     block_size = (n_total_cells + n_blocks - 1) // n_blocks
 
     # === BFS-aware partition ===
     t0 = time.time()
-    assignment = partition_by_net_aware(
+    assignment = partition_by_net_aware_compact(
         n_total_cells, n_nets, all_cell_indices, indptr,
-        n_blocks, block_size, seed=seed,
+        n_blocks, block_size, cell_to_net_data, seed=seed,
     )
     part_t = time.time() - t0
     # Report block balance
