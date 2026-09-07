@@ -734,7 +734,7 @@ async def demo_100m_start(n_cells: int = 10_000_000, n_blocks: int = 2000, mode:
         use_bfs = False
     else:
         use_bfs = True
-    ok, msg = start_demo_async(n_cells=n_cells, n_blocks=n_blocks, use_bfs=use_bfs)
+    ok, msg = start_demo_async(n_total_cells=n_cells, n_blocks=n_blocks, use_bfs=use_bfs)
     return {"started": ok, "message": msg, "mode": mode, "n_cells": n_cells}
 
 
