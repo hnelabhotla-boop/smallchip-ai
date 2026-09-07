@@ -710,6 +710,46 @@ async def place_with_priority_endpoint(
     }
 
 
+# ---------- 100M cell live demo ----------
+import sys as _sys
+_sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+try:
+    from placement_100m_demo import start_demo_async, get_demo_status
+    _100M_DEMO_AVAILABLE = True
+except Exception:
+    _100M_DEMO_AVAILABLE = False
+
+
+@app.post("/api/demo_100m/start")
+async def demo_100m_start(n_cells: int = 10_000_000, n_blocks: int = 2000, mode: str = "10M"):
+    """Start a 100M-cell placement demo in the background. Returns immediately.
+
+    Modes: "10M" (10M cells, BFS+FD, ~30s), "100M" (100M cells, random, ~1-2 min).
+    """
+    if not _100M_DEMO_AVAILABLE:
+        raise HTTPException(503, "100M demo module not available")
+    if mode == "100M":
+        n_cells = 100_000_000
+        n_blocks = 5000
+        use_bfs = False
+    else:
+        use_bfs = True
+    ok, msg = start_demo_async(n_cells=n_cells, n_blocks=n_blocks, use_bfs=use_bfs)
+    return {"started": ok, "message": msg, "mode": mode, "n_cells": n_cells}
+
+
+@app.get("/api/demo_100m/status")
+async def demo_100m_status():
+    """Poll the 100M demo job status. Returns state dict."""
+    if not _100M_DEMO_AVAILABLE:
+        raise HTTPException(503, "100M demo module not available")
+    s = get_demo_status()
+    # Don't return the full heatmap in status, just metadata
+    if s.get("result") and "heatmap" in s["result"]:
+        s["result"] = {k: v for k, v in s["result"].items() if k != "heatmap"}
+    return s
+
+
 # ---------- Re-place local neighborhood (drag-to-re-place) ----------
 class RePlaceRequest(BaseModel):
     design: dict

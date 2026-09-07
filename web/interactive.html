@@ -266,6 +266,10 @@
     <button class="btn primary" id="placeFull">place full chip
       <span class="sub" id="placeFullSub">v3 + detailed placer, ~5-30s</span>
     </button>
+    <button class="btn primary" id="demo100m" style="background:#f85149;border-color:#f85149;">
+      🚀 100M cell live demo
+      <span class="sub" id="demo100mSub">10M cells, ~30s, real hierarchical</span>
+    </button>
     <button class="btn" id="resetDesign">reset to random</button>
     <button class="btn" id="exportGds">export GDS</button>
     <button class="btn" id="exportDef">export placed DEF</button>
@@ -468,6 +472,90 @@ $('placeFull').addEventListener('click', placeFull);
 $('resetDesign').addEventListener('click', () => { if (design) { placement = null; draw(); setStatus('reset to random — place full to re-run', ''); } });
 $('exportGds').addEventListener('click', () => downloadFile('/api/place_full/gds', `${design?.name || 'chip'}.gds`));
 $('exportDef').addEventListener('click', () => downloadFile('/api/place_full/def', `${design?.name || 'chip'}_placed.def`));
+
+// ---------- 100M cell live demo ----------
+$('demo100m').addEventListener('click', run100mDemo);
+
+async function run100mDemo() {
+  $('demo100m').disabled = true;
+  $('demo100mSub').textContent = 'starting...';
+  showLoading('100M cell demo: building netlist...');
+  try {
+    // Default to 10M for live demo (faster, ~30s); user can pass ?mode=100M
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get('demo') || '10M';
+    const startResp = await fetch(`/api/demo_100m/start?mode=${mode}`, { method: 'POST' });
+    const startData = await startResp.json();
+    if (!startData.started) {
+      toast('demo already running', 'error');
+      $('demo100m').disabled = false;
+      hideLoading();
+      return;
+    }
+    // Poll status
+    let result = null;
+    while (true) {
+      await new Promise(r => setTimeout(r, 1000));
+      const s = await fetch('/api/demo_100m/status').then(r => r.json());
+      const pct = Math.round(s.progress * 100);
+      $('loadingLabel').textContent = `${startData.n_cells.toLocaleString()} demo: ${s.status} (${pct}%)`;
+      if (s.status === 'done') { result = s.result; break; }
+      if (s.status === 'error') { toast('demo error: ' + s.error, 'error'); $('demo100m').disabled = false; hideLoading(); return; }
+    }
+    // Result: render heatmap
+    toast(`${(result.n_cells/1e6).toFixed(0)}M demo done: ${Math.round(result.per_net_hpwl_dbu).toLocaleString()} DBU/net in ${result.total_time_s.toFixed(1)}s`, 'ok');
+    render100mHeatmap(result);
+    $('demo100mSub').textContent = `done: ${(result.n_cells/1e6).toFixed(0)}M in ${result.total_time_s.toFixed(1)}s`;
+    $('designPill').textContent = `${result.n_cells.toLocaleString()} cells · synthetic demo`;
+    $('cellCount').textContent = result.n_cells.toLocaleString();
+  } catch (e) {
+    toast('demo failed: ' + e.message, 'error');
+  } finally {
+    $('demo100m').disabled = false;
+    hideLoading();
+  }
+}
+
+function render100mHeatmap(result) {
+  // Clear the canvas, draw a 200x200 heatmap of cell density
+  const ctx2 = canvas.getContext('2d');
+  const cw = canvas.width, ch = canvas.height;
+  const N = result.heatmap_size || 200;
+  const heat = result.heatmap;
+  const maxV = Math.max(1, ...heat);
+  // Clear background
+  ctx2.fillStyle = '#010409';
+  ctx2.fillRect(0, 0, cw, ch);
+  // Map NxN heatmap to canvas size
+  const cellW = cw / N, cellH = ch / N;
+  for (let gy = 0; gy < N; gy++) {
+    for (let gx = 0; gx < N; gx++) {
+      const v = heat[gy * N + gx];
+      if (v === 0) continue;
+      const t = v / maxV;
+      // Color: low density blue, high density red
+      const r = Math.round(88 + (248 - 88) * t);
+      const g = Math.round(166 + (81 - 166) * t);
+      const b = Math.round(255 + (73 - 255) * t);
+      ctx2.fillStyle = `rgb(${r},${g},${b})`;
+      ctx2.fillRect(gx * cellW, gy * cellH, cellW + 0.5, cellH + 0.5);
+    }
+  }
+  // Die outline
+  ctx2.strokeStyle = '#58a6ff';
+  ctx2.lineWidth = 2;
+  ctx2.strokeRect(2, 2, cw - 4, ch - 4);
+  // Stats overlay
+  ctx2.fillStyle = 'rgba(13,17,23,0.85)';
+  ctx2.fillRect(10, 10, 240, 70);
+  ctx2.fillStyle = '#58a6ff';
+  ctx2.font = '14px monospace';
+  ctx2.fillText(`100M demo: ${(result.n_cells/1e6).toFixed(0)}M cells`, 16, 30);
+  ctx2.fillStyle = '#c9d1d9';
+  ctx2.font = '11px monospace';
+  ctx2.fillText(`per-net HPWL: ${Math.round(result.per_net_hpwl_dbu).toLocaleString()} DBU`, 16, 50);
+  ctx2.fillText(`time: ${result.total_time_s.toFixed(1)}s · blocks: ${result.n_blocks}`, 16, 66);
+}
 
 async function placeFull() {
   if (!design) { toast('load a design first', 'error'); return; }
