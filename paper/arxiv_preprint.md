@@ -36,7 +36,7 @@ Our specific contributions are:
 
 **Commercial EDA tools.** Cadence Innovus and Synopsys IC Compiler II are the industry standard for chip placement, costing $500K-$2M per license per year. Both are batch-only, requiring 20-30 minutes per placement. Neither provides real-time interactive UX.
 
-**Open-source EDA.** OpenROAD [3, 8] is the leading open-source EDA tool, providing a full RTL-to-GDS flow including placement via RePlAce [4]. RePlAce is also batch-only (5-30 minutes per placement). We document that RePlAce fails to converge on our 15K-cell bigblue1 subset at iter ~2700, suggesting that batch-mode approaches have scaling limits even on small designs. DREAMPlace [5] provides GPU-accelerated global placement but is also batch-only. **No prior tool — commercial, academic, or open-source — offers real-time interactive placement that scales beyond a few thousand cells.**
+**Open-source EDA.** OpenROAD [3, 8] is the leading open-source EDA tool, providing a full RTL-to-GDS flow including placement via RePlAce [4]. RePlAce is also batch-only (5-30 minutes per placement). We document that RePlAce fails to converge on our 15K-cell bigblue1 subset at iter ~2700, suggesting that batch-mode approaches have scaling limits even on small designs. DREAMPlace [5] provides GPU-accelerated global placement but is also batch-only. **No prior cell-level placement tool — commercial, academic, or open-source — offers real-time interactive editing or an LLM co-pilot.** Related interactive tools exist in adjacent layers (Chipmind for RTL design, Altium/Cadence Allegro for PCB), but cell-level placement on a silicon die has remained batch-only until this work.
 
 **Academic placers.** DREAMPlace [5] is the academic standard, GPU-accelerated and 2-5× faster than RePlAce but still batch-only. MaskPlace [7] uses offline reinforcement learning. Google Graph Placement [6] is published research only.
 
@@ -175,7 +175,7 @@ To our knowledge, this is the **first published end-to-end proof that interactiv
 | Google Graph Placement | Research only | 5-30 min | No | Yes |
 | **SmallChip AI (this work)** | **Free, BSD** | **150ms** | **Yes** | **Yes** |
 
-To our knowledge, SmallChip AI is the **first tool of any kind — commercial, academic, or open-source — to offer real-time interactive cell-level chip placement**.
+To our knowledge, SmallChip AI is the **first free, BSD-3 open-source tool to offer real-time interactive cell-level chip placement with an LLM co-pilot**. Related interactive tools exist in adjacent EDA layers (Chipmind for RTL design, Altium / Cadence Allegro for PCB design, Quadcept for schematic capture), but cell-level placement on a silicon die — the geometric optimization step that converts a synthesized netlist into physical cell positions on a die — has been exclusively batch-only in commercial (Cadence Innovus, Synopsys ICC2), academic (DREAMPlace, RePlAce), and open-source (OpenROAD) tools.
 
 ## 5. Real-World Value
 
