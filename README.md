@@ -28,11 +28,11 @@ SmallChip AI places standard cells on a chip die using a pre-trained Graph Atten
 | Metric | Random baseline | SmallChip AI GAT v3 | Improvement |
 |---|---|---|---|
 | Win rate | — | **66/66 = 100%** | — |
-| Average HPWL improvement | — | **+87.7%** | — |
+| Average HPWL improvement | — | **+87.1%** | — |
 | Median HPWL improvement | — | **+87.5%** | — |
 | Range | — | +72.4% to +98.9% | consistent across all size classes |
 
-The held-out test uses a deterministic hash-based 80/20 split. The model never trained on these 66 designs. The 87.7% average improvement is the new headline.
+The held-out test uses a deterministic hash-based 80/20 split. The model never trained on these 66 designs. The 87.1% average improvement is the new headline.
 
 **Scaling to 15K cells (V3 + real detailed placer, bigblue1 subsets):**
 

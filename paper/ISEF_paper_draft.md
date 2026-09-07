@@ -24,7 +24,7 @@ We present **SmallChip AI**, a Graph Attention Network (GAT) based chip placer a
 
 Validated by OpenROAD's own static timing and power analysis on the GCD benchmark (734 cells, Nangate45 PDK), after legalization, our pre-trained GAT achieves **99.7% lower wirelength than OpenROAD's default placer** (10,775 HPWL vs. 3,987,080 — a **370× improvement**) with **identical timing (0.52 ns WNS, 2097 MHz Fmax) and identical power (1.06 mW)**.
 
-On a **clean held-out test of 66 unseen designs** (hash-based 80/20 split, verified 0% overlap with training data), our model **wins on 100% of designs** with an **87.7% average improvement** and **87.5% median improvement** (range 72.4%–98.9%).
+On a **clean held-out test of 66 unseen designs** (hash-based 80/20 split, verified 0% overlap with training data), our model **wins on 100% of designs** with an **87.1% average improvement** and **87.5% median improvement** (range 72.4%–98.9%).
 
 **Per-company annual value (from our savings calculator):**
 - 1-engineer company: **$37,500/year** (engineering time saved + EDA tool replacement)
@@ -42,7 +42,7 @@ Chip placement is the problem of assigning physical coordinates to logical cells
 - A **multi-objective ML system** that simultaneously predicts HPWL, timing, power, area, and congestion
 - An **end-to-end OpenROAD validation** of the GAT-placed GCD design — confirming 99.7% post-legalization wirelength improvement and no timing/power regression
 - An **LLM-driven co-pilot interface** that converts natural-language design goals ("minimize power", "fastest possible") into a multi-objective preference vector for placement
-- A **clean 66-design held-out test** (verified 0% training overlap) showing 100% win rate and 87.7% average improvement
+- A **clean 66-design held-out test** (verified 0% training overlap) showing 100% win rate and 87.1% average improvement
 - A **hierarchical extension** proven to 30M cells (real, runnable in 50s end-to-end) and projected to 100M cells via block-level partitioning
 - An **open-source release** of the entire pipeline (BSD 3-Clause, training, inference, web app, desktop .app, arxiv preprint)
 
@@ -216,7 +216,7 @@ SmallChip AI ships two pre-trained GAT models, each optimized for a different de
 
 | Model | Architecture | Trained on | Best for | GCD HPWL (post-legalization) | 91-design win rate | Scales to 15K cells |
 |-------|-------------|------------|----------|------------------------------|--------------------|---------------------|
-| **94K (multi-design winner)** | 4 layers × 128 hidden × 4 heads | 240 chips, 100-600 cells | 100-700 cell designs | 10,775 (99.7% better) | 100% wins on 66 held-out (87.7% avg) | ✗ mode collapses |
+| **94K (multi-design winner)** | 4 layers × 128 hidden × 4 heads | 240 chips, 100-600 cells | 100-700 cell designs | 10,775 (99.7% better) | 100% wins on 66 held-out (87.1% avg) | ✗ mode collapses |
 | **V3 (scaling winner)** | 3 layers × 64 hidden × 4 heads, HPWL-aware loss + spread penalty | 30 chips, 1K cells | 1K-15K cell designs | 10,775 (99.7% better) | 39/91 (overfit) | ✓ no collapse |
 
 The two models cover the full range of small-to-medium chip designs (100 to 15,000 cells). Together:
@@ -274,11 +274,11 @@ This brought the 15K legal HPWL from 800K-1M (smart legalizer, grid-snapping) to
 |-----------|-----------|----------|
 | Designs tested | 66 (held-out, 0% training overlap) | 66 (held-out, 0% training overlap) |
 | GAT < reference | **66/66 (100%)** | varies |
-| **Average improvement** | **87.7%** | varies (overfit on earlier models) |
+| **Average improvement** | **87.1%** | varies (overfit on earlier models) |
 | Median improvement | 87.5% | varies |
 | Range | 72.4%–98.9% | varies |
 
-**The V3 model (18K params, multi-objective loss) wins on 100% of 66 held-out designs with 87.7% average improvement.** The 94K model showed similar quality on a separate benchmark; the earlier 75.2% number was identified as contaminated (100% training overlap with evaluation) and removed from all current claims. The clean held-out test uses a hash-based 80/20 split with verified 0% overlap.
+**The V3 model (18K params, multi-objective loss) wins on 100% of 66 held-out designs with 87.1% average improvement.** The 94K model showed similar quality on a separate benchmark; the earlier 75.2% number was identified as contaminated (100% training overlap with evaluation) and removed from all current claims. The clean held-out test uses a hash-based 80/20 split with verified 0% overlap.
 
 ### 4.5 Algorithm Comparison on GCD
 
@@ -383,7 +383,7 @@ The LLM co-pilot interface is more than a demo — it is a design tool. In the r
 
 ## 6. Conclusion
 
-We present **SmallChip AI**, the first free, BSD-3 open-source real-time interactive cell-level chip placement tool with an LLM co-pilot, focused on the small-to-medium chip market (≤15,000 cells) and proven to scale hierarchically to 30M cells. Our GAT-based model achieves a **99.7% post-legalization wirelength improvement on GCD (370× better than OpenROAD, validated by OpenROAD's own analysis)** and **100% win rate with 87.7% average improvement on a 66-design held-out test** (verified 0% training overlap) — with no timing, power, or frequency regression. The system is BSD-3 open-source, free, multi-objective (5 quality metrics in a single inference), and exposed through both an interactive drag-to-re-place canvas and a natural-language LLM co-pilot interface. The hierarchy extends the architecture to 30M cells proven and 100M cells projected.
+We present **SmallChip AI**, the first free, BSD-3 open-source real-time interactive cell-level chip placement tool with an LLM co-pilot, focused on the small-to-medium chip market (≤15,000 cells) and proven to scale hierarchically to 30M cells. Our GAT-based model achieves a **99.7% post-legalization wirelength improvement on GCD (370× better than OpenROAD, validated by OpenROAD's own analysis)** and **100% win rate with 87.1% average improvement on a 66-design held-out test** (verified 0% training overlap) — with no timing, power, or frequency regression. The system is BSD-3 open-source, free, multi-objective (5 quality metrics in a single inference), and exposed through both an interactive drag-to-re-place canvas and a natural-language LLM co-pilot interface. The hierarchy extends the architecture to 30M cells proven and 100M cells projected.
 
 For chip designers building hearing aids, microwave controllers, IoT sensors, car key fobs, and phone PMICs, SmallChip AI replaces the $500K–$1M EDA tool license with a free, downloadable, BSD-3 model that runs on a laptop.
 

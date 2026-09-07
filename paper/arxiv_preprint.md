@@ -13,7 +13,7 @@ September 4, 2026
 
 ## Abstract
 
-We present SmallChip AI, a free, open-source chip placement tool that achieves real-time interactive placement for sub-15,000-cell chip designs. The system uses a Graph Attention Network (GAT) with 18,000 trainable parameters trained on 510 synthetic designs to predict cell positions in 150 milliseconds — approximately **8,000× faster** than commercial placement tools (Cadence Innovus, Synopsys IC Compiler II) and academic placers (RePlAce, DREAMPlace) which require 2-30 minutes per placement. We validate on a clean held-out test of 66 designs the model has never seen, achieving a **100% win rate and 87.7% average improvement in half-perimeter wire length (HPWL)** versus random placement. On the GCD benchmark (734 cells), our placement achieves **99.7% HPWL reduction** (3,987,080 → 10,775 DBU, a 370× improvement) compared to OpenROAD's default, with identical timing (WNS = 0.52 ns, f_max = 2097 MHz) and power (1.06 mW) validated through OpenROAD's own legalization. We further demonstrate a **hierarchical extension** that places 30,000-cell designs (2× V3's 15K limit) end-to-end in 17 seconds with 3,089 DBU/net, the only V3-based path to designs exceeding 15K cells. A **partial re-placement API** enables sub-300ms interactive updates when a designer drags a cell, the only real-time interactive cell-level placement system of any kind. The system is released under the BSD 3-Clause license at github.com/hnelabhotla-boop/smallchip-ai.
+We present SmallChip AI, a free, open-source chip placement tool that achieves real-time interactive placement for sub-15,000-cell chip designs. The system uses a Graph Attention Network (GAT) with 18,000 trainable parameters trained on 510 synthetic designs to predict cell positions in 150 milliseconds — approximately **8,000× faster** than commercial placement tools (Cadence Innovus, Synopsys IC Compiler II) and academic placers (RePlAce, DREAMPlace) which require 2-30 minutes per placement. We validate on a clean held-out test of 66 designs the model has never seen, achieving a **100% win rate and 87.1% average improvement in half-perimeter wire length (HPWL)** versus random placement. On the GCD benchmark (734 cells), our placement achieves **99.7% HPWL reduction** (3,987,080 → 10,775 DBU, a 370× improvement) compared to OpenROAD's default, with identical timing (WNS = 0.52 ns, f_max = 2097 MHz) and power (1.06 mW) validated through OpenROAD's own legalization. We further demonstrate a **hierarchical extension** that places 30,000-cell designs (2× V3's 15K limit) end-to-end in 17 seconds with 3,089 DBU/net, the only V3-based path to designs exceeding 15K cells. A **partial re-placement API** enables sub-300ms interactive updates when a designer drags a cell, the only real-time interactive cell-level placement system of any kind. The system is released under the BSD 3-Clause license at github.com/hnelabhotla-boop/smallchip-ai.
 
 ## 1. Introduction
 
@@ -26,7 +26,7 @@ The system is positioned as the **missing layer in the open-source chip design e
 Our specific contributions are:
 
 1. **A trained GAT model** for sub-15K-cell chip placement that runs in 150ms on commodity hardware (MacBook Pro, no GPU required at inference).
-2. **A clean held-out validation** showing 100% win rate and 87.7% average improvement on 66 designs the model has never seen.
+2. **A clean held-out validation** showing 100% win rate and 87.1% average improvement on 66 designs the model has never seen.
 3. **A 99.7% HPWL reduction** on the standard GCD benchmark, validated through OpenROAD's own legalization with identical timing and power.
 4. **A partial re-placement API** that re-places only the affected neighborhood of cells when a user drags a single cell, enabling sub-300ms interactive updates even for 15K-cell designs.
 5. **A hierarchical extension** to 30K+ cell designs via three-layer block decomposition (top: force-directed block placement; middle: V3 GAT per block; bottom: detailed placement), achieving 3,089 DBU/net on a 30K-cell design in 17 seconds.
@@ -113,7 +113,7 @@ The GCD result is validated through OpenROAD's own legalization — both designs
 We evaluated V3 on 66 designs from the 20% held-out split (deterministic hash-based 80/20 split, model never trained on these). Results:
 
 - **Win rate:** 66/66 = 100% (V3 beats random placement on every held-out design)
-- **Average HPWL improvement:** +87.7% (sigma = 4.2%, median +87.5%)
+- **Average HPWL improvement:** +87.1% (sigma = 4.2%, median +87.5%)
 - **Range:** +72.4% to +98.9% (consistent across all size classes)
 - **By size:** <200 cells: 100% / +93.9% | 200-600 cells: 100% / +86.1% | >=600 cells: 100% / +88.0%
 
