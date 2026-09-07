@@ -1,0 +1,50 @@
+{
+  "results": [
+    {
+      "label": "15K",
+      "n_cells": 15000,
+      "n_nets": 6428,
+      "n_blocks": 100,
+      "build_time_s": 0.010004043579101562,
+      "partition_time_s": 0.0326693058013916,
+      "fd_time_s": 0.07415485382080078,
+      "init_time_s": 7.772445678710938e-05,
+      "legal_time_s": 0.0004487037658691406,
+      "hpwl_time_s": 0.03922891616821289,
+      "total_hpwl_dbu": 681981120.0,
+      "per_net_hpwl_dbu": 106095.3828125,
+      "memory_gb": 0.000446832
+    },
+    {
+      "label": "1M",
+      "n_cells": 1000000,
+      "n_nets": 428571,
+      "n_blocks": 500,
+      "build_time_s": 0.14984989166259766,
+      "partition_time_s": 0.6125714778900146,
+      "fd_time_s": 2.505901336669922,
+      "init_time_s": 0.0046427249908447266,
+      "legal_time_s": 0.017162084579467773,
+      "hpwl_time_s": 2.5584726333618164,
+      "total_hpwl_dbu": 377401704448.0,
+      "per_net_hpwl_dbu": 880604.875,
+      "memory_gb": 0.02982096
+    },
+    {
+      "label": "100M",
+      "n_cells": 100000000,
+      "n_nets": 42857142,
+      "n_blocks": 6667,
+      "build_time_s": 23.221916913986206,
+      "partition_time_s": 67.58219075202942,
+      "fd_time_s": 298.42826652526855,
+      "init_time_s": 0.5425922870635986,
+      "legal_time_s": 1.2069432735443115,
+      "hpwl_time_s": 271.69052815437317,
+      "total_hpwl_dbu": 373322583900160.0,
+      "per_net_hpwl_dbu": 8710860.0,
+      "memory_gb": 2.98218124
+    }
+  ],
+  "elapsed_s": 668.6864511966705
+}
