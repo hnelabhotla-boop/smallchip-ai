@@ -1,0 +1,43 @@
+{
+  "results": [
+    {
+      "label": "15K_baseline",
+      "n_replicas": 1,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "n_blocks": 3,
+      "cells_per_block": 5000,
+      "use_bfs": true,
+      "die": {
+        "w": 10000.0,
+        "h": 10680.0
+      },
+      "v3_total_time_s": 20.095574140548706,
+      "avg_v3_ms_per_block": 7317.046880722046,
+      "block_failures": 0,
+      "total_hpwl_dbu": 52391084.79197991,
+      "per_net_hpwl_dbu": 3982.598615885968,
+      "per_cell_hpwl_dbu": 3492.738986131994
+    },
+    {
+      "label": "150K",
+      "n_replicas": 10,
+      "n_cells": 150000,
+      "n_nets": 131600,
+      "n_blocks": 10,
+      "cells_per_block": 15000,
+      "use_bfs": true,
+      "die": {
+        "w": 54741.84934420411,
+        "h": 34765.61085661558
+      },
+      "v3_total_time_s": 101.5646059513092,
+      "avg_v3_ms_per_block": 39850.45003890991,
+      "block_failures": 0,
+      "total_hpwl_dbu": 2391449759.611795,
+      "per_net_hpwl_dbu": 18172.110635347984,
+      "per_cell_hpwl_dbu": 15942.998397411966
+    }
+  ],
+  "completed_at": 1788633644.572458
+}

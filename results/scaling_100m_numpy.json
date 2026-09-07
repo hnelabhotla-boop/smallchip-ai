@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "label": "15K",
+      "n_cells": 15000,
+      "n_nets": 6428,
+      "n_blocks": 2,
+      "build_time_s": 0.0009291172027587891,
+      "total_hpwl_dbu": 1171026519.6542969,
+      "per_net_hpwl_dbu": 182175.87424615695,
+      "memory_gb": 0.000249128
+    },
+    {
+      "label": "150K",
+      "n_cells": 150000,
+      "n_nets": 64285,
+      "n_blocks": 10,
+      "build_time_s": 0.006163835525512695,
+      "total_hpwl_dbu": 37147604406.72656,
+      "per_net_hpwl_dbu": 577858.0447495771,
+      "memory_gb": 0.002493324
+    },
+    {
+      "label": "1M",
+      "n_cells": 1000000,
+      "n_nets": 428571,
+      "n_blocks": 67,
+      "build_time_s": 0.036993980407714844,
+      "total_hpwl_dbu": 657615591027.8359,
+      "per_net_hpwl_dbu": 1534437.913502864,
+      "memory_gb": 0.016624764
+    }
+  ]
+}

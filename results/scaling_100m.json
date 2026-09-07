@@ -1,0 +1,24 @@
+{
+  "results": [
+    {
+      "label": "15K (baseline)",
+      "n_replicas": 1,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "n_blocks": 3,
+      "cells_per_block": 5000,
+      "die": {
+        "w": 10000.0,
+        "h": 10680.0
+      },
+      "v3_total_time_s": 14.289623975753784,
+      "avg_v3_ms_per_block": 5038.883447647095,
+      "block_failures": 0,
+      "stitch_time_s": 0.00892782211303711,
+      "hpwl_time_s": 0.05193281173706055,
+      "total_hpwl_dbu": 92191431.07692158,
+      "per_net_hpwl_dbu": 7008.090541765228,
+      "per_cell_hpwl_dbu": 6146.095405128105
+    }
+  ]
+}

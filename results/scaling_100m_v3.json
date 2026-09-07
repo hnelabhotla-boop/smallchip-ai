@@ -1,0 +1,107 @@
+{
+  "results": [
+    {
+      "label": "15K_baseline",
+      "n_replicas": 1,
+      "n_cells": 15000,
+      "n_nets": 13155,
+      "n_blocks": 3,
+      "cells_per_block": 5000,
+      "mode": "v3",
+      "die": {
+        "w": 10000.0,
+        "h": 10680.0
+      },
+      "worker_time_s": 9.38752269744873,
+      "block_failures": 0,
+      "total_hpwl_dbu": 92191431.07692158,
+      "per_net_hpwl_dbu": 7008.090541765228
+    },
+    {
+      "label": "150K",
+      "n_replicas": 10,
+      "n_cells": 150000,
+      "n_nets": 131570,
+      "n_blocks": 10,
+      "cells_per_block": 15000,
+      "mode": "random",
+      "die": {
+        "w": 54741.84934420411,
+        "h": 34765.61085661558
+      },
+      "worker_time_s": 0.36777377128601074,
+      "block_failures": 0,
+      "total_hpwl_dbu": 9676753515.512663,
+      "per_net_hpwl_dbu": 73548.32800420052
+    },
+    {
+      "label": "1M",
+      "n_replicas": 67,
+      "n_cells": 1005000,
+      "n_nets": 881519,
+      "n_blocks": 67,
+      "cells_per_block": 15000,
+      "mode": "random",
+      "die": {
+        "w": 158679.31955558475,
+        "h": 90717.64452588723
+      },
+      "worker_time_s": 4.236773729324341,
+      "block_failures": 0,
+      "total_hpwl_dbu": 194394232139.54776,
+      "per_net_hpwl_dbu": 220521.8856763697
+    },
+    {
+      "label": "5M",
+      "n_replicas": 333,
+      "n_cells": 4995000,
+      "n_nets": 4381281,
+      "n_blocks": 333,
+      "cells_per_block": 15000,
+      "mode": "random",
+      "die": {
+        "w": 366901.5668307923,
+        "h": 202808.6754749756
+      },
+      "worker_time_s": 6.815203666687012,
+      "block_failures": 0,
+      "total_hpwl_dbu": 2248551712137.5225,
+      "per_net_hpwl_dbu": 513217.87215600244
+    },
+    {
+      "label": "10M",
+      "n_replicas": 667,
+      "n_cells": 10005000,
+      "n_nets": 8775719,
+      "n_blocks": 667,
+      "cells_per_block": 15000,
+      "mode": "random",
+      "die": {
+        "w": 523706.69225887896,
+        "h": 287220.63623968937
+      },
+      "worker_time_s": 32894.45344996452,
+      "block_failures": 0,
+      "total_hpwl_dbu": 6443991151920.072,
+      "per_net_hpwl_dbu": 734297.7996355708
+    },
+    {
+      "label": "30M",
+      "n_replicas": 2000,
+      "n_cells": 30000000,
+      "n_nets": 26314000,
+      "n_blocks": 2000,
+      "cells_per_block": 15000,
+      "mode": "random",
+      "die": {
+        "w": 914682.3718085131,
+        "h": 497692.22402740316
+      },
+      "worker_time_s": 50.63492298126221,
+      "block_failures": 0,
+      "total_hpwl_dbu": 33727033216742.047,
+      "per_net_hpwl_dbu": 1281714.4188166773
+    }
+  ],
+  "completed_at": 1788794193.4799519
+}
