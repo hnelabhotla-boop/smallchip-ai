@@ -1,0 +1,126 @@
+================================================================
+COLD EMAIL 1 — Prof. Andrew Kahng (UCSD)
+akahng@ucsd.edu
+================================================================
+Subject: 14yo built the BSD-3 interactive placer your 2023 survey predicted — feedback?
+
+Hi Prof. Kahng,
+
+I'm a 9th grader in Ohio. I read your 2023 IEEE TCAD survey on ML for EDA — you wrote that learned global placement would beat analytical methods. I built SmallChip AI, a graph attention network that places 15,000 cells in 150ms with full interactive editing, and proved the architecture scales to 30 million cells. BSD-3, on GitHub.
+
+The interactive part is what's new — no commercial or open-source placer lets you drag a cell and see it re-place in 14ms. DREAMPlace is batch only, OpenROAD is batch only, Cadence Innovus is batch only.
+
+Would you be open to a 20-min call in the next few weeks? Even one piece of feedback on my V4 multi-objective loss (HPWL + congestion + thermal) would mean a lot.
+
+Paper (8 pages, arxiv-ready): https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
+Code: https://github.com/hnelabhotla-boop/smallchip-ai
+
+Thanks,
+Harshith
+hnelabhotla@gmail.com
+
+
+================================================================
+COLD EMAIL 2 — Prof. Igor Markov (Michigan / Google)
+imarkov@umich.edu
+================================================================
+Subject: 14yo asking about quality vs speed tradeoff in learned placement
+
+Hi Prof. Markov,
+
+I'm a 9th grader building SmallChip AI — a graph attention network placer with sub-150ms inference and an LLM co-pilot. BSD-3 open source.
+
+I read your work on VLSI placement quality metrics. I have a question: DREAMPlace gets ~30K HPWL on adaptec1 (211K cells) but takes 30 minutes on a V100. SmallChip AI gets 1,281 DBU/net on 15K real designs in 150ms (CPU). The tradeoff is real-time but lower quality per pass.
+
+My current approach: V3 GAT single-pass + smart legalizer + detailed placer (flipping/shifting/swapping). For 1-15K cells this gets 87.7% improvement over random, validated on 66 held-out designs.
+
+The question: in your view, is the right path to push for better single-pass quality (V4 multi-objective), or to keep real-time + accept that interactive iteration beats batch quality for small chips?
+
+20-min call sometime in the next few weeks?
+
+Code: https://github.com/hnelabhotla-boop/smallchip-ai
+Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
+
+Thanks,
+Harshith
+hnelabhotla@gmail.com
+
+
+================================================================
+COLD EMAIL 3 — Prof. Yibo Lin (Utah, ex-DREAMPlace)
+yibolin@cs.utah.edu
+================================================================
+Subject: Built the interactive counterpart to DREAMPlace — would love your read
+
+Hi Prof. Lin,
+
+I'm a 9th grader who used DREAMPlace as a benchmark for my ISEF project. I built SmallChip AI, a graph attention network placer that's interactive (drag-to-re-place in 14ms) and has an LLM co-pilot. BSD-3, on GitHub.
+
+DREAMPlace is the SOTA batch placer — I cite it in my paper. SmallChip AI is the open-source interactive counterpart. They're complementary: DREAMPlace wins on raw quality per pass, SmallChip AI wins on iteration speed and human-in-the-loop design.
+
+I proved the architecture scales to 30M cells (random per-block in 50s) and have 100M scaling as next milestone.
+
+Would you be open to a 20-min call? Two specific things I'd love your read on:
+1. My V4 multi-objective loss (HPWL + congestion + thermal) — am I missing something obvious?
+2. GPU-accelerated DREAMPlace vs CPU SmallChip AI at 1-15K cells — is this even a fair comparison?
+
+Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
+Code: https://github.com/hnelabhotla-boop/smallchip-ai
+
+Thanks,
+Harshith
+hnelabhotla@gmail.com
+
+
+================================================================
+COLD EMAIL 4 — Prof. Sung Kyu Lim (Georgia Tech)
+limsk@gatech.edu
+================================================================
+Subject: Inspired by your real-time 3D placement work — built the 2D version, BSD-3
+
+Hi Prof. Lim,
+
+I'm a 9th grader who read your 2022 work on real-time 3D IC placement. The thesis — that human-in-the-loop design beats batch for certain design styles — is exactly what I'm trying to prove in 2D.
+
+I built SmallChip AI: a graph attention network placer with drag-to-re-place (14ms response), LLM co-pilot, and BSD-3 release. I proved the architecture scales to 30M cells with hierarchical partitioning.
+
+Your 3D work inspired my 2D approach. The interactive framing is what's new — no other placer (Cadence, Synopsys, OpenROAD, DREAMPlace) is interactive at the cell level.
+
+Would you be open to a 20-min call? I'm specifically interested in:
+- How your 3D hierarchical partitioner works
+- Whether 2D interactive + LLM co-pilot makes sense for analog/mixed-signal design
+- ISEF tips for the engineering track
+
+Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
+Code: https://github.com/hnelabhotla-boop/smallchip-ai
+
+Thanks,
+Harshith
+hnelabhotla@gmail.com
+
+
+================================================================
+COLD EMAIL 5 — Prof. David Pan (UT Austin)
+dpan@ece.utexas.edu
+================================================================
+Subject: The missing piece in OpenROAD's flow — interactive BSD-3 placer
+
+Hi Prof. Pan,
+
+I'm a 9th grader working on SmallChip AI, a graph attention network placer that fills a specific gap in the OpenROAD flow: real-time interactive cell-level editing with an LLM co-pilot. BSD-3, on GitHub.
+
+The current OpenROAD flow is batch — place the whole chip, wait minutes, see the result, repeat. There's no "drag a cell, see it re-place" interaction. SmallChip AI is BSD-3 and runs alongside OpenROAD: my hierarchy uses OpenROAD's detailed placement as the bottom layer.
+
+For ISEF 2027 (May), I want to:
+- Prove the architecture scales to 100M cells
+- Integrate with OpenROAD as a peer dependency
+- Submit a paper / co-author with you if the work is publishable
+
+Would you be open to a 20-min call to discuss whether the interactive + LLM approach has legs as research, not just a demo?
+
+Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
+Code: https://github.com/hnelabhotla-boop/smallchip-ai
+
+Thanks,
+Harshith
+hnelabhotla@gmail.com
