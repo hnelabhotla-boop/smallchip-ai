@@ -1,0 +1,28 @@
+{
+  "model": "V3 baseline (GAT 9-feat, 18K params, 60ep on 510 chips)",
+  "cell_w_1.0um": {
+    "per_net_dbu": 129.58003359731222,
+    "per_net_um": 0.1295800335973122,
+    "wall_s": 28.04
+  },
+  "cell_w_2.0um": {
+    "per_net_dbu": 70.94840412766979,
+    "per_net_um": 0.07094840412766978,
+    "wall_s": 24.04
+  },
+  "cell_w_3.0um": {
+    "per_net_dbu": 48.583633309335255,
+    "per_net_um": 0.04858363330933525,
+    "wall_s": 24.26
+  },
+  "cell_w_4.0um": {
+    "per_net_dbu": 34.7391408687305,
+    "per_net_um": 0.0347391408687305,
+    "wall_s": 24.24
+  },
+  "cell_w_6.0um": {
+    "per_net_dbu": 0.0,
+    "per_net_um": 0.0,
+    "wall_s": 29.99
+  }
+}

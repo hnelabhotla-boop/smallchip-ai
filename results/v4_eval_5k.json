@@ -1,0 +1,42 @@
+{
+  "model": "V4 (GATv2 rebalanced, 12-feat, 96 hidden, 3 layers, 4 heads, 72K params)",
+  "design": "5K subset of bigblue1",
+  "n_cells": 5000,
+  "n_nets": 4167,
+  "results_by_cell_w": {
+    "cell_w_1.0um": {
+      "total_hpwl_dbu": 4141316,
+      "per_net_hpwl_dbu": 993.8363330933526,
+      "per_net_hpwl_um": 0.9938363330933525,
+      "wall_s": 41.66
+    },
+    "cell_w_2.0um": {
+      "total_hpwl_dbu": 2920812,
+      "per_net_hpwl_dbu": 700.9388048956083,
+      "per_net_hpwl_um": 0.7009388048956083,
+      "wall_s": 40.27
+    },
+    "cell_w_3.0um": {
+      "total_hpwl_dbu": 2215724,
+      "per_net_hpwl_dbu": 531.7312215022798,
+      "per_net_hpwl_um": 0.5317312215022798,
+      "wall_s": 40.77
+    },
+    "cell_w_4.0um": {
+      "total_hpwl_dbu": 725154,
+      "per_net_hpwl_dbu": 174.02303815694745,
+      "per_net_hpwl_um": 0.17402303815694745,
+      "wall_s": 39.76
+    },
+    "cell_w_6.0um": {
+      "total_hpwl_dbu": 0,
+      "per_net_hpwl_dbu": 0.0,
+      "per_net_hpwl_um": 0.0,
+      "wall_s": 40.87
+    }
+  },
+  "v3_baseline_for_comparison": {
+    "cell_w_2.0um": "243,545 DBU/net (plateau)",
+    "cell_w_6.0um+": "243,545 DBU/net"
+  }
+}

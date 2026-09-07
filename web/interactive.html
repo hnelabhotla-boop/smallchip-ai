@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SmallChip AI — Interactive Placement</title>
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#0a0e14" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'SF Mono', Menlo, Consolas, 'Courier New', monospace;
+    background: #0a0e14;
+    color: #c9d1d9;
+    overflow: hidden;
+    font-size: 12px;
+  }
+
+  /* Top bar */
+  .topbar {
+    height: 36px;
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 12px;
+  }
+  .logo {
+    font-weight: 700;
+    color: #58a6ff;
+    letter-spacing: 0.5px;
+  }
+  .logo .ai { color: #f0883e; }
+  .topbar .pill {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 3px;
+    padding: 3px 8px;
+    color: #8b949e;
+    font-size: 10px;
+  }
+  .topbar .right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+  /* Layout */
+  .main { display: grid; grid-template-columns: 260px 1fr 280px; height: calc(100vh - 36px); }
+
+  /* Left panel */
+  .panel {
+    background: #0d1117;
+    border-right: 1px solid #21262d;
+    overflow-y: auto;
+  }
+  .panel.right { border-right: 0; border-left: 1px solid #21262d; }
+  .panel h3 {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #8b949e;
+    padding: 10px 12px 4px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #21262d;
+  }
+  .row { padding: 8px 12px; border-bottom: 1px solid #161b22; }
+  .row label { display: block; color: #8b949e; font-size: 10px; margin-bottom: 4px; }
+  .row .val { color: #c9d1d9; font-size: 11px; }
+
+  /* File upload */
+  .file-drop {
+    margin: 12px;
+    border: 1px dashed #30363d;
+    border-radius: 4px;
+    padding: 16px 8px;
+    text-align: center;
+    color: #8b949e;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .file-drop:hover, .file-drop.drag { border-color: #58a6ff; color: #58a6ff; background: #161b22; }
+  .file-drop .small { font-size: 10px; margin-top: 4px; }
+  .file-drop input { display: none; }
+
+  /* Priority sliders */
+  .prio { padding: 6px 12px; }
+  .prio .label-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .prio .name { color: #c9d1d9; font-size: 11px; }
+  .prio .val { color: #58a6ff; font-size: 11px; font-weight: 700; }
+  .prio input[type=range] {
+    width: 100%; -webkit-appearance: none; background: transparent; height: 18px;
+  }
+  .prio input[type=range]::-webkit-slider-runnable-track {
+    height: 4px; background: #21262d; border-radius: 2px;
+  }
+  .prio input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #58a6ff; margin-top: -4px; cursor: pointer;
+  }
+  .prio.hpwl input[type=range]::-webkit-slider-thumb { background: #58a6ff; }
+  .prio.cong input[type=range]::-webkit-slider-thumb { background: #f0883e; }
+  .prio.therm input[type=range]::-webkit-slider-thumb { background: #f85149; }
+  .prio.density input[type=range]::-webkit-slider-thumb { background: #a371f7; }
+  .prio.timing input[type=range]::-webkit-slider-thumb { background: #3fb950; }
+
+  /* Buttons */
+  .btn {
+    display: block; width: calc(100% - 24px); margin: 6px 12px;
+    padding: 8px; border: 1px solid #30363d; background: #161b22;
+    color: #c9d1d9; border-radius: 3px; cursor: pointer; font-family: inherit; font-size: 11px;
+    text-align: center; transition: 0.15s;
+  }
+  .btn:hover { background: #21262d; border-color: #58a6ff; color: #58a6ff; }
+  .btn.primary { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+  .btn.primary:hover { background: #388bfd; border-color: #388bfd; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn .sub { font-size: 9px; color: #8b949e; display: block; margin-top: 2px; }
+
+  /* Canvas */
+  .canvas-wrap {
+    position: relative;
+    background: #010409;
+    overflow: hidden;
+  }
+  canvas#die {
+    display: block; width: 100%; height: 100%; cursor: grab;
+  }
+  canvas#die:active { cursor: grabbing; }
+  .canvas-hud {
+    position: absolute; top: 8px; left: 8px;
+    background: rgba(13,17,23,0.92);
+    border: 1px solid #21262d; border-radius: 3px;
+    padding: 6px 10px; font-size: 10px; color: #8b949e;
+    pointer-events: none;
+  }
+  .canvas-hud .key { color: #58a6ff; }
+  .canvas-hud .row { padding: 1px 0; border: 0; }
+  .status-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: #0d1117; border-top: 1px solid #21262d;
+    padding: 4px 12px; font-size: 10px; color: #8b949e;
+    display: flex; gap: 16px;
+  }
+  .status-bar .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: #3fb950; margin-right: 4px; vertical-align: middle;
+  }
+  .status-bar .dot.busy { background: #f0883e; animation: pulse 1s infinite; }
+  .status-bar .dot.error { background: #f85149; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* Right panel metrics */
+  .metric { padding: 8px 12px; border-bottom: 1px solid #161b22; }
+  .metric .name { color: #8b949e; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .metric .num { color: #58a6ff; font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .metric .num .unit { font-size: 10px; color: #8b949e; margin-left: 4px; font-weight: 400; }
+  .metric .delta { font-size: 10px; margin-top: 2px; }
+  .metric .delta.up { color: #f85149; }
+  .metric .delta.down { color: #3fb950; }
+  .metric.hpwl .num { color: #58a6ff; }
+  .metric.cong .num { color: #f0883e; }
+  .metric.therm .num { color: #f85149; }
+  .metric.density .num { color: #a371f7; }
+  .metric.timing .num { color: #3fb950; }
+
+  /* Toast */
+  .toast {
+    position: fixed; top: 50px; left: 50%; transform: translateX(-50%);
+    background: #161b22; border: 1px solid #30363d; border-radius: 4px;
+    padding: 8px 16px; color: #c9d1d9; font-size: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 100;
+    display: none;
+  }
+  .toast.error { border-color: #f85149; color: #f85149; }
+  .toast.ok { border-color: #3fb950; color: #3fb950; }
+
+  /* Loading overlay */
+  .loading {
+    position: absolute; inset: 0;
+    background: rgba(1,4,9,0.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 50; flex-direction: column; gap: 12px;
+  }
+  .loading.show { display: flex; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid #21262d; border-top-color: #58a6ff;
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading .label { color: #8b949e; font-size: 11px; }
+
+  /* History */
+  .hist-item {
+    padding: 4px 12px; border-bottom: 1px solid #161b22;
+    display: flex; justify-content: space-between; font-size: 10px;
+  }
+  .hist-item .t { color: #8b949e; }
+  .hist-item .v { color: #58a6ff; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">SmallChip<span class="ai"> AI</span></div>
+  <div class="pill">v0.4 · interactive placement</div>
+  <div class="pill" id="designPill">no design loaded</div>
+  <div class="right">
+    <div class="pill" id="modelPill">V3 GAT (18K)</div>
+    <div class="pill" id="runtimePill">idle</div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- LEFT: upload + priorities + actions -->
+  <div class="panel left">
+    <h3>design</h3>
+    <label class="file-drop" id="fileDrop">
+      <div>drop .def here</div>
+      <div class="small">or click to choose</div>
+      <input type="file" id="fileInput" accept=".def" />
+    </label>
+    <div class="row">
+      <label>examples</label>
+      <button class="btn" data-example="gcd">load GCD (734 cells)
+        <span class="sub">smallest, fits in 1 view</span>
+      </button>
+      <button class="btn" data-example="5k">load 5K bigblue1
+        <span class="sub">5,000 cells, may need zoom</span>
+      </button>
+    </div>
+
+    <h3>priority</h3>
+    <div class="prio hpwl">
+      <div class="label-row"><span class="name">wirelength (HPWL)</span><span class="val" id="hpwlVal">1.00</span></div>
+      <input type="range" id="hpwlPrio" min="0" max="1" step="0.05" value="1.0" />
+    </div>
+    <div class="prio cong">
+      <div class="label-row"><span class="name">congestion</span><span class="val" id="congVal">0.00</span></div>
+      <input type="range" id="congPrio" min="0" max="1" step="0.05" value="0" />
+    </div>
+    <div class="prio therm">
+      <div class="label-row"><span class="name">thermal</span><span class="val" id="thermVal">0.00</span></div>
+      <input type="range" id="thermPrio" min="0" max="1" step="0.05" value="0" />
+    </div>
+    <div class="prio timing">
+      <div class="label-row"><span class="name">timing slack</span><span class="val" id="timingVal">0.00</span></div>
+      <input type="range" id="timingPrio" min="0" max="1" step="0.05" value="0" />
+    </div>
+    <div class="row">
+      <label>presets</label>
+    </div>
+    <button class="btn" id="presetBalanced">balanced
+      <span class="sub">all equal, default</span>
+    </button>
+    <button class="btn" id="presetSpeed">speed
+      <span class="sub">min wirelength, fastest path</span>
+    </button>
+    <button class="btn" id="presetCool">cool
+      <span class="sub">max thermal relief</span>
+    </button>
+    <button class="btn" id="presetRoutable">routable
+      <span class="sub">min congestion, easy to route</span>
+    </button>
+
+    <h3>actions</h3>
+    <button class="btn primary" id="placeFull">place full chip
+      <span class="sub" id="placeFullSub">v3 + detailed placer, ~5-30s</span>
+    </button>
+    <button class="btn" id="resetDesign">reset to random</button>
+    <button class="btn" id="exportGds">export GDS</button>
+    <button class="btn" id="exportDef">export placed DEF</button>
+
+    <h3>history</h3>
+    <div id="history"></div>
+  </div>
+
+  <!-- CENTER: canvas -->
+  <div class="canvas-wrap">
+    <canvas id="die"></canvas>
+    <div class="canvas-hud" id="hud">
+      <div class="row"><span class="key">drag</span> a cell to re-place</div>
+      <div class="row"><span class="key">scroll</span> to zoom</div>
+      <div class="row"><span class="key">space+drag</span> to pan</div>
+    </div>
+    <div class="status-bar">
+      <div><span class="dot" id="statusDot"></span><span id="statusText">ready · load a design to start</span></div>
+      <div>cells: <span id="cellCount">0</span></div>
+      <div>visible: <span id="visibleCount">0</span></div>
+    </div>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <div class="label" id="loadingLabel">placing...</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: metrics -->
+  <div class="panel right">
+    <h3>placement quality</h3>
+    <div class="metric hpwl">
+      <div class="name">total HPWL</div>
+      <div class="num"><span id="hpwlTotal">—</span><span class="unit">DBU</span></div>
+      <div class="delta" id="hpwlDelta">awaiting design</div>
+    </div>
+    <div class="metric hpwl">
+      <div class="name">per-net HPWL</div>
+      <div class="num"><span id="hpwlPerNet">—</span><span class="unit">DBU/net</span></div>
+      <div class="delta" id="hpwlPerNetDelta">—</div>
+    </div>
+
+    <h3>routing &amp; thermal</h3>
+    <div class="metric cong">
+      <div class="name">congestion (max bin)</div>
+      <div class="num"><span id="congMax">—</span><span class="unit">cells</span></div>
+      <div class="delta" id="congDelta">—</div>
+    </div>
+    <div class="metric therm">
+      <div class="name">thermal (max bin)</div>
+      <div class="num"><span id="thermMax">—</span><span class="unit">°C</span></div>
+      <div class="delta" id="thermDelta">—</div>
+    </div>
+    <div class="metric density">
+      <div class="name">utilization</div>
+      <div class="num"><span id="util">—</span><span class="unit">%</span></div>
+      <div class="delta" id="utilDelta">—</div>
+    </div>
+
+    <h3>runtime</h3>
+    <div class="metric">
+      <div class="name">last placement</div>
+      <div class="num"><span id="lastTime">—</span><span class="unit">ms</span></div>
+      <div class="delta" id="lastTimeSub">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const toast = (msg, type = '') => {
+  const t = $('toast'); t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.style.display = 'none', 3000);
+};
+const setStatus = (text, kind = '') => {
+  $('statusText').textContent = text;
+  $('statusDot').className = 'dot ' + kind;
+};
+
+let design = null;        // { components, nets, die, n_cells, n_nets }
+let placement = null;     // last placed positions { name: {x, y} }
+let metrics = null;       // last computed metrics
+let viewTransform = { x: 0, y: 0, scale: 1 };
+let isDragging = false;
+let dragCell = null;
+let dragOffset = { x: 0, y: 0 };
+let spaceHeld = false;
+let canvas = null;
+let ctx = null;
+
+// ---------- File upload ----------
+$('fileDrop').addEventListener('click', () => $('fileInput').click());
+$('fileInput').addEventListener('change', e => {
+  if (e.target.files[0]) loadFile(e.target.files[0]);
+});
+['dragenter','dragover'].forEach(ev => $('fileDrop').addEventListener(ev, e => { e.preventDefault(); $('fileDrop').classList.add('drag'); }));
+['dragleave','drop'].forEach(ev => $('fileDrop').addEventListener(ev, e => { e.preventDefault(); $('fileDrop').classList.remove('drag'); }));
+$('fileDrop').addEventListener('drop', e => { if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+
+// Example loaders
+document.querySelectorAll('[data-example]').forEach(btn => {
+  btn.addEventListener('click', () => loadExample(btn.dataset.example));
+});
+
+async function loadFile(file) {
+  setStatus(`loading ${file.name}…`, 'busy');
+  const form = new FormData();
+  form.append('file', file);
+  try {
+    const r = await fetch('/api/place_full?algorithm=gat&cell_w=2.0&best_effort=true&n_seeds=2', { method: 'POST', body: form });
+    if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+    const data = await r.json();
+    setDesign(data);
+    toast(`loaded ${file.name} · ${data.n_cells} cells`, 'ok');
+  } catch (e) {
+    toast(`load failed: ${e.message}`, 'error');
+    setStatus('load failed', 'error');
+  }
+}
+
+async function loadExample(name) {
+  setStatus(`loading example ${name}…`, 'busy');
+  try {
+    const r = await fetch(`/api/example/${name}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const blob = await r.blob();
+    const file = new File([blob], `${name}.def`);
+    await loadFile(file);
+  } catch (e) {
+    toast(`example load failed: ${e.message}`, 'error');
+  }
+}
+
+function setDesign(data) {
+  design = data;
+  placement = data.placement;
+  metrics = data.metrics;
+  $('designPill').textContent = `${data.n_cells} cells · ${data.n_nets} nets`;
+  $('cellCount').textContent = data.n_cells;
+  updateMetrics(data.metrics, data.initial_metrics);
+  resetView();
+  draw();
+  setStatus(`ready · ${data.n_cells} cells loaded`, '');
+  addHistory(`loaded ${data.n_cells} cells`);
+}
+
+function updateMetrics(m, init) {
+  if (!m) return;
+  $('hpwlTotal').textContent = formatNum(m.hpwl_total);
+  $('hpwlPerNet').textContent = formatNum(m.hpwl_per_net);
+  $('congMax').textContent = formatNum(m.congestion_max);
+  $('thermMax').textContent = m.thermal_max.toFixed(1);
+  $('util').textContent = (m.utilization * 100).toFixed(0);
+  $('lastTime').textContent = Math.round(m.placement_time_ms);
+  $('lastTimeSub').textContent = m.placement_time_ms < 1000 ? 'real-time' : `${(m.placement_time_ms/1000).toFixed(1)}s`;
+
+  if (init && init.hpwl_total > 0) {
+    const dhpwl = (1 - m.hpwl_total / init.hpwl_total) * 100;
+    $('hpwlDelta').textContent = `${dhpwl > 0 ? '▼' : '▲'} ${dhpwl.toFixed(1)}% vs random`;
+    $('hpwlDelta').className = 'delta ' + (dhpwl > 0 ? 'down' : 'up');
+  }
+}
+
+function formatNum(n) {
+  if (n >= 1e9) return (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return Math.round(n).toString();
+}
+
+// ---------- Priorities ----------
+const sliders = {
+  hpwl: $('hpwlPrio'), cong: $('congPrio'), therm: $('thermPrio'), timing: $('timingPrio')
+};
+function normalizePriorities() {
+  let total = 0;
+  for (const k in sliders) total += +sliders[k].value;
+  if (total === 0) { sliders.hpwl.value = 1.0; total = 1.0; }
+  const out = {};
+  for (const k in sliders) {
+    out[k] = +sliders[k].value / total;
+    $(k + 'Val').textContent = out[k].toFixed(2);
+  }
+  return out;
+}
+for (const k in sliders) sliders[k].addEventListener('input', normalizePriorities);
+
+$('presetBalanced').addEventListener('click', () => setPreset({hpwl:0.25, cong:0.25, therm:0.25, timing:0.25}));
+$('presetSpeed').addEventListener('click', () => setPreset({hpwl:1.0, cong:0, therm:0, timing:0}));
+$('presetCool').addEventListener('click', () => setPreset({hpwl:0.1, cong:0.1, therm:0.8, timing:0}));
+$('presetRoutable').addEventListener('click', () => setPreset({hpwl:0.2, cong:0.6, therm:0.1, timing:0.1}));
+function setPreset(p) {
+  for (const k in p) sliders[k].value = p[k];
+  normalizePriorities();
+}
+
+// ---------- Actions ----------
+$('placeFull').addEventListener('click', placeFull);
+$('resetDesign').addEventListener('click', () => { if (design) { placement = null; draw(); setStatus('reset to random — place full to re-run', ''); } });
+$('exportGds').addEventListener('click', () => downloadFile('/api/place_full/gds', `${design?.name || 'chip'}.gds`));
+$('exportDef').addEventListener('click', () => downloadFile('/api/place_full/def', `${design?.name || 'chip'}_placed.def`));
+
+async function placeFull() {
+  if (!design) { toast('load a design first', 'error'); return; }
+  showLoading('placing with current priorities...');
+  const prio = normalizePriorities();
+  const form = new FormData();
+  form.append('algorithm', 'gat');
+  form.append('cell_w', '2.0');
+  form.append('best_effort', 'true');
+  form.append('n_seeds', '2');
+  form.append('priority_hpwl', prio.hpwl);
+  form.append('priority_cong', prio.cong);
+  form.append('priority_therm', prio.therm);
+  form.append('priority_timing', prio.timing);
+  try {
+    const r = await fetch('/api/place_with_priority', { method: 'POST', body: form });
+    if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+    const data = await r.json();
+    setDesign(data);
+    addHistory(`placed: HPWL ${formatNum(data.metrics.hpwl_total)}`);
+  } catch (e) {
+    toast(`place failed: ${e.message}`, 'error');
+  } finally {
+    hideLoading();
+  }
+}
+
+function downloadFile(url, filename) {
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+}
+
+// ---------- History ----------
+function addHistory(text) {
+  const item = document.createElement('div');
+  item.className = 'hist-item';
+  const t = new Date().toLocaleTimeString();
+  item.innerHTML = `<span class="t">${t}</span><span class="v">${text}</span>`;
+  $('history').prepend(item);
+  while ($('history').children.length > 30) $('history').lastChild.remove();
+}
+
+// ---------- Canvas ----------
+function resetView() {
+  if (!design) return;
+  const d = design.die;
+  const dieW = d.x2 - d.x1, dieH = d.y2 - d.y1;
+  const cw = canvas.width = canvas.clientWidth, ch = canvas.height = canvas.clientHeight;
+  const scale = Math.min(cw / (dieW * 1.1), ch / (dieH * 1.1));
+  viewTransform = { x: cw/2 - (d.x1 + dieW/2) * scale, y: ch/2 - (d.y1 + dieH/2) * scale, scale };
+}
+
+function dieToScreen(x, y) {
+  return { x: x * viewTransform.scale + viewTransform.x, y: y * viewTransform.scale + viewTransform.y };
+}
+function screenToDie(sx, sy) {
+  return { x: (sx - viewTransform.x) / viewTransform.scale, y: (sy - viewTransform.y) / viewTransform.scale };
+}
+
+function cellColor(name, pos) {
+  // color by thermal estimate (distance from center)
+  if (!design) return '#58a6ff';
+  const d = design.die;
+  const dx = (pos.x - (d.x1 + d.x2)/2) / (d.x2 - d.x1);
+  const dy = (pos.y - (d.y1 + d.y2)/2) / (d.y2 - d.y1);
+  const t = Math.min(1, Math.sqrt(dx*dx + dy*dy) * 2);
+  // blue (cool) → red (hot)
+  const r = Math.round(88 + (248-88) * t);
+  const g = Math.round(166 + (81-166) * t);
+  const b = Math.round(255 + (73-255) * t);
+  return `rgb(${r},${g},${b})`;
+}
+
+function draw() {
+  if (!ctx) return;
+  const cw = canvas.width, ch = canvas.height;
+  ctx.fillStyle = '#010409';
+  ctx.fillRect(0, 0, cw, ch);
+
+  // Die outline
+  const d = design.die;
+  const p1 = dieToScreen(d.x1, d.y1);
+  const p2 = dieToScreen(d.x2, d.y2);
+  ctx.strokeStyle = '#30363d';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+
+  if (!placement) return;
+
+  // Cells
+  const cellPx = Math.max(1, viewTransform.scale * 0.5);
+  let visible = 0;
+  for (const [name, pos] of Object.entries(placement)) {
+    const sp = dieToScreen(pos.x, pos.y);
+    if (sp.x < -10 || sp.y < -10 || sp.x > cw + 10 || sp.y > ch + 10) continue;
+    visible++;
+    if (cellPx < 2) {
+      ctx.fillStyle = cellColor(name, pos);
+      ctx.fillRect(sp.x - 0.5, sp.y - 0.5, 1.5, 1.5);
+    } else {
+      ctx.fillStyle = cellColor(name, pos);
+      ctx.fillRect(sp.x - cellPx/2, sp.y - cellPx/2, cellPx, cellPx);
+    }
+  }
+  $('visibleCount').textContent = visible;
+}
+
+function findCellAt(sx, sy) {
+  if (!placement) return null;
+  let best = null, bestD = Infinity;
+  const tol = 8;
+  for (const [name, pos] of Object.entries(placement)) {
+    const sp = dieToScreen(pos.x, pos.y);
+    const dx = sp.x - sx, dy = sp.y - sy;
+    const d = dx*dx + dy*dy;
+    if (d < tol*tol && d < bestD) { bestD = d; best = name; }
+  }
+  return best;
+}
+
+// ---------- Drag ----------
+canvas = $('die');
+ctx = canvas.getContext('2d');
+window.addEventListener('resize', () => { resetView(); draw(); });
+
+canvas.addEventListener('mousedown', e => {
+  if (spaceHeld) return;
+  const rect = canvas.getBoundingClientRect();
+  const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+  const name = findCellAt(sx, sy);
+  if (name && placement) {
+    isDragging = true; dragCell = name;
+    const dpos = screenToDie(sx, sy);
+    dragOffset = { x: placement[name].x - dpos.x, y: placement[name].y - dpos.y };
+    setStatus(`dragging ${name}`, 'busy');
+  }
+});
+canvas.addEventListener('mousemove', e => {
+  if (!isDragging || !dragCell) return;
+  const rect = canvas.getBoundingClientRect();
+  const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+  const dpos = screenToDie(sx, sy);
+  placement[dragCell] = { x: dpos.x + dragOffset.x, y: dpos.y + dragOffset.y };
+  draw();
+});
+canvas.addEventListener('mouseup', e => {
+  if (isDragging && dragCell) {
+    setStatus(`re-placing neighborhood of ${dragCell}…`, 'busy');
+    rePlaceNeighborhood(dragCell);
+    isDragging = false; dragCell = null;
+  }
+});
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+  const dpos = screenToDie(sx, sy);
+  const factor = e.deltaY < 0 ? 1.2 : 1/1.2;
+  viewTransform.scale *= factor;
+  const dpos2 = screenToDie(sx, sy);
+  viewTransform.x += (dpos2.x - dpos.x) * viewTransform.scale;
+  viewTransform.y += (dpos2.y - dpos.y) * viewTransform.scale;
+  draw();
+});
+window.addEventListener('keydown', e => { if (e.code === 'Space') spaceHeld = true; });
+window.addEventListener('keyup', e => { if (e.code === 'Space') spaceHeld = false; });
+
+// Space + drag pan
+let panStart = null;
+canvas.addEventListener('mousedown', e => {
+  if (spaceHeld) { panStart = { x: e.clientX, y: e.clientY, vx: viewTransform.x, vy: viewTransform.y }; }
+});
+canvas.addEventListener('mousemove', e => {
+  if (panStart) {
+    viewTransform.x = panStart.vx + (e.clientX - panStart.x);
+    viewTransform.y = panStart.vy + (e.clientY - panStart.y);
+    draw();
+  }
+});
+canvas.addEventListener('mouseup', () => { panStart = null; });
+
+// ---------- Re-place neighborhood ----------
+async function rePlaceNeighborhood(cellName) {
+  if (!design) return;
+  const prio = normalizePriorities();
+  try {
+    const r = await fetch('/api/replace_neighborhood', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        design: design,
+        cell: cellName,
+        k_hops: 2,
+        max_cells: 500,
+        priority_hpwl: prio.hpwl,
+        priority_cong: prio.cong,
+        priority_therm: prio.therm,
+        priority_timing: prio.timing,
+      })
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+    const data = await r.json();
+    // merge new positions
+    Object.assign(placement, data.placement);
+    updateMetrics(data.metrics, null);
+    draw();
+    setStatus(`re-placed ${data.n_replaced} cells · ${data.elapsed_ms.toFixed(0)}ms`, '');
+    addHistory(`drag: ${data.n_replaced} cells re-placed`);
+  } catch (e) {
+    toast(`re-place failed: ${e.message}`, 'error');
+    setStatus('re-place failed', 'error');
+  }
+}
+
+function showLoading(label) { $('loadingLabel').textContent = label; $('loading').classList.add('show'); }
+function hideLoading() { $('loading').classList.remove('show'); }
+
+resetView();
+</script>
+</body>
+</html>
