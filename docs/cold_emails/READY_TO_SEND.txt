@@ -1,126 +1,231 @@
-================================================================
-COLD EMAIL 1 — Prof. Andrew Kahng (UCSD)
-akahng@ucsd.edu
-================================================================
-Subject: 14yo built the BSD-3 interactive placer your 2023 survey predicted — feedback?
+READY TO SEND — Cold Emails to Professors and Adharsh
+=====================================================
 
-Hi Prof. Kahng,
+These are 5 cold email drafts. Total time to send: 30 minutes.
+Do this by Sept 14, 2026.
 
-I'm a 9th grader in Ohio. I read your 2023 IEEE TCAD survey on ML for EDA — you wrote that learned global placement would beat analytical methods. I built SmallChip AI, a graph attention network that places 15,000 cells in 150ms with full interactive editing, and proved the architecture scales to 30 million cells. BSD-3, on GitHub.
+------------------------------------------------------------
+EMAIL 1 — Prof. Andrew Kahng (UCSD)
+------------------------------------------------------------
+To: abk@ucsd.edu
+Subject: High school student seeking EDA research guidance (Strongsville OH)
 
-The interactive part is what's new — no commercial or open-source placer lets you drag a cell and see it re-place in 14ms. DREAMPlace is batch only, OpenROAD is batch only, Cadence Innovus is batch only.
+Dear Prof. Kahng,
 
-Would you be open to a 20-min call in the next few weeks? Even one piece of feedback on my V4 multi-objective loss (HPWL + congestion + thermal) would mean a lot.
+My name is Harshith Nelabhotla. I'm a 9th-grade student at Strongsville High
+School in Ohio, working on a BSD-3 open-source chip placement tool called
+SmallChip AI. I am writing to ask if you would be willing to provide 1 hour
+per month of remote guidance as I prepare the project for the 2027 NEOSEF
+and 2027 ISEF competitions.
 
-Paper (8 pages, arxiv-ready): https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
-Code: https://github.com/hnelabhotla-boop/smallchip-ai
+The project is at github.com/hnelabhotla-boop/smallchip-ai. The key results:
+- 99.7% / 370× HPWL improvement on the GCD benchmark, validated end-to-end
+  through OpenROAD's legalization (identical timing and power).
+- 100% win rate, 87.11% average improvement on 69 held-out clean designs.
+- 208,790 DBU/net on a 100M-cell legal placement (75× over random) in
+  15 minutes on a $0.27/hr cloud VM — within 2× of RePlAce/DREAMPlace
+  per-net HPWL on 1-2M-cell real chips.
+- A formal theoretical analysis: three theorems on the spectral + Adam +
+  multi-start pipeline (convergence proof attached as paper draft).
 
-Thanks,
-Harshith
-hnelabhotla@gmail.com
+I have read your 2018 RePlAce paper carefully, and the spectral + Adam
+recipe I use is a specific combination of the spectral init from Hagen/Kang,
+the Adam convergence analysis from Kingma/Ba, and the multi-start strategy
+from Karypis/Aggarwal. The novelty is the system integration and the first
+formal convergence analysis of an ML-based chip placement pipeline.
 
+I would be honored if you could review the convergence proof (attached) and
+the ISEF paper draft (attached), and if you would be willing to act as a
+remote advisor for the 2027 ISEF cycle. I am particularly interested in
+guidance on:
+- Whether the three theorems are correctly stated and provable
+- How to position the system for ISEF and for potential arXiv publication
+- A connection to the OpenROAD community for beta testers
 
-================================================================
-COLD EMAIL 2 — Prof. Igor Markov (Michigan / Google)
-imarkov@umich.edu
-================================================================
-Subject: 14yo asking about quality vs speed tradeoff in learned placement
+Thank you for your time. I look forward to hearing from you.
 
-Hi Prof. Markov,
+Best regards,
+Harshith Nelabhotla
+Strongsville High School, Strongsville OH 44136
+hnelabhotla@students.strongsville.k12.oh.us
+github.com/hnelabhotla-boop/smallchip-ai
 
-I'm a 9th grader building SmallChip AI — a graph attention network placer with sub-150ms inference and an LLM co-pilot. BSD-3 open source.
+------------------------------------------------------------
+EMAIL 2 — Prof. Igor Markov (University of Michigan)
+------------------------------------------------------------
+To: imarkov@umich.edu
+Subject: High school student seeking CS theory guidance (chip placement, NEOSEF/ISEF)
 
-I read your work on VLSI placement quality metrics. I have a question: DREAMPlace gets ~30K HPWL on adaptec1 (211K cells) but takes 30 minutes on a V100. SmallChip AI gets 1,281 DBU/net on 15K real designs in 150ms (CPU). The tradeoff is real-time but lower quality per pass.
+Dear Prof. Markov,
 
-My current approach: V3 GAT single-pass + smart legalizer + detailed placer (flipping/shifting/swapping). For 1-15K cells this gets 87.7% improvement over random, validated on 66 held-out designs.
+My name is Harshith Nelabhotla. I'm a 9th-grade student at Strongsville High
+School in Ohio, working on a BSD-3 open-source chip placement tool called
+SmallChip AI for the 2027 NEOSEF and 2027 ISEF competitions.
 
-The question: in your view, is the right path to push for better single-pass quality (V4 multi-objective), or to keep real-time + accept that interactive iteration beats batch quality for small chips?
+I am writing because I have read your work on hypergraph partitioning, the
+"Famous Five" spectral placement paper with Alpert/Kahng/Yan, and the
+multilevel hypergraph partitioning textbook. My project uses spectral
+embedding (eigenvectors 2, 3 of the random-walk normalized Laplacian) as the
+top-level placement for a 100M-cell chip — and I have proved a convergence
+bound for the spectral + Adam + multi-start pipeline (paper draft attached).
 
-20-min call sometime in the next few weeks?
+The three theorems:
+- Theorem 1: spectral init achieves HPWL within O(d/λ₂) of the continuous
+  relaxation optimum.
+- Theorem 2: Adam refinement converges in O(L₀/ε²) iterations, dimension-free.
+- Theorem 3: multi-start success probability is 1 - (1-p*)ᵏ.
 
-Code: https://github.com/hnelabhotla-boop/smallchip-ai
-Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
+I would be honored if you could review the convergence proof and provide
+guidance on whether the theorems are correctly stated, what additional
+lemmas would strengthen the paper, and whether this is publishable in a
+workshop venue (e.g., ACM STC, IEEE EDA workshop).
 
-Thanks,
-Harshith
-hnelabhotla@gmail.com
+I am also hoping to apply to MIT PRIMES or RSI for summer 2027 to deepen
+the theoretical work, and would welcome a recommendation from you if the
+work merits it.
 
+Thank you for your time.
 
-================================================================
-COLD EMAIL 3 — Prof. Yibo Lin (Utah, ex-DREAMPlace)
-yibolin@cs.utah.edu
-================================================================
-Subject: Built the interactive counterpart to DREAMPlace — would love your read
+Best regards,
+Harshith Nelabhotla
+Strongsville High School, Strongsville OH 44136
+hnelabhotla@students.strongsville.k12.oh.us
+github.com/hnelabhotla-boop/smallchip-ai
 
-Hi Prof. Lin,
+------------------------------------------------------------
+EMAIL 3 — Prof. Yanzhi Wang (Northeastern University, EDA + ML)
+------------------------------------------------------------
+To: yanzhiwang@northeastern.edu (or yzwang@ece.northeastern.edu)
+Subject: High school student seeking ML-for-EDA guidance (NEOSEF/ISEF 2027)
 
-I'm a 9th grader who used DREAMPlace as a benchmark for my ISEF project. I built SmallChip AI, a graph attention network placer that's interactive (drag-to-re-place in 14ms) and has an LLM co-pilot. BSD-3, on GitHub.
+Dear Prof. Wang,
 
-DREAMPlace is the SOTA batch placer — I cite it in my paper. SmallChip AI is the open-source interactive counterpart. They're complementary: DREAMPlace wins on raw quality per pass, SmallChip AI wins on iteration speed and human-in-the-loop design.
+My name is Harshith Nelabhotla. I'm a 9th-grade student at Strongsville High
+School in Ohio, working on a BSD-3 open-source chip placement tool called
+SmallChip AI. I have read your recent work on ML for EDA and am writing to
+ask if you would be willing to provide remote guidance as I prepare the
+project for NEOSEF and ISEF 2027.
 
-I proved the architecture scales to 30M cells (random per-block in 50s) and have 100M scaling as next milestone.
+The project combines a 18K-parameter GAT for sub-15K-cell placement (150ms
+inference, BSD-3 release) with a hierarchical spectral + Adam + multi-start
+pipeline that scales to 100M cells. The headline result: 99.7% / 370× HPWL
+improvement on the GCD benchmark, validated end-to-end through OpenROAD
+with identical timing and power.
 
-Would you be open to a 20-min call? Two specific things I'd love your read on:
-1. My V4 multi-objective loss (HPWL + congestion + thermal) — am I missing something obvious?
-2. GPU-accelerated DREAMPlace vs CPU SmallChip AI at 1-15K cells — is this even a fair comparison?
+I would be honored to:
+- Share the convergence proof (attached) and the ISEF paper draft (attached)
+- Get your feedback on the placement pipeline
+- Discuss whether the 100M-cell result has publication potential
+- Have you as a remote advisor for the ISEF 2027 cycle (1 hour/month)
 
-Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
-Code: https://github.com/hnelabhotla-boop/smallchip-ai
+I am in Strongsville OH (Cleveland area), and would be happy to schedule a
+30-minute Zoom call at your convenience.
 
-Thanks,
-Harshith
-hnelabhotla@gmail.com
+Thank you for your time.
 
+Best regards,
+Harshith Nelabhotla
+Strongsville High School, Strongsville OH 44136
+hnelabhotla@students.strongsville.k12.oh.us
+github.com/hnelabhotla-boop/smallchip-ai
 
-================================================================
-COLD EMAIL 4 — Prof. Sung Kyu Lim (Georgia Tech)
-limsk@gatech.edu
-================================================================
-Subject: Inspired by your real-time 3D placement work — built the 2D version, BSD-3
+------------------------------------------------------------
+EMAIL 4 — Prof. Siddharth Garg (NYU Tandon, ML for EDA)
+------------------------------------------------------------
+To: sg175@nyu.edu
+Subject: High school student seeking ML-for-chip-design guidance (NEOSEF/ISEF 2027)
 
-Hi Prof. Lim,
+Dear Prof. Garg,
 
-I'm a 9th grader who read your 2022 work on real-time 3D IC placement. The thesis — that human-in-the-loop design beats batch for certain design styles — is exactly what I'm trying to prove in 2D.
+My name is Harshith Nelabhotla. I'm a 9th-grade student at Strongsville High
+School in Ohio, working on a BSD-3 open-source chip placement tool called
+SmallChip AI for the 2027 NEOSEF and 2027 ISEF competitions.
 
-I built SmallChip AI: a graph attention network placer with drag-to-re-place (14ms response), LLM co-pilot, and BSD-3 release. I proved the architecture scales to 30M cells with hierarchical partitioning.
+I have read your work on ML for hardware security and for chip design, and
+am writing to ask if you would be willing to provide remote guidance (1
+hour/month) as I prepare the project. The key results:
 
-Your 3D work inspired my 2D approach. The interactive framing is what's new — no other placer (Cadence, Synopsys, OpenROAD, DREAMPlace) is interactive at the cell level.
+- 99.7% / 370× HPWL improvement on GCD, validated through OpenROAD
+  legalization, identical timing and power.
+- 87.11% average improvement on 69 held-out clean designs.
+- 208,790 DBU/net legal placement on 100M cells, 75× over random, in 15
+  min on a $0.27/hr cloud VM.
+- A formal theoretical analysis (three theorems on spectral + Adam +
+  multi-start convergence).
 
-Would you be open to a 20-min call? I'm specifically interested in:
-- How your 3D hierarchical partitioner works
-- Whether 2D interactive + LLM co-pilot makes sense for analog/mixed-signal design
-- ISEF tips for the engineering track
+The project is BSD-3 open source, designed to fill the missing cell-level
+placement layer in the open-source EDA stack (Skywater, OpenROAD, DREAMPlace,
+Yosys, KLayout all open — no BSD-3 cell-level placer until this work).
 
-Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
-Code: https://github.com/hnelabhotla-boop/smallchip-ai
+I would be honored to share the convergence proof and the ISEF paper draft
+for your review, and to discuss potential collaboration on extending the
+work to timing-aware or congestion-aware variants.
 
-Thanks,
-Harshith
-hnelabhotla@gmail.com
+Thank you for your time.
 
+Best regards,
+Harshith Nelabhotla
+Strongsville High School, Strongsville OH 44136
+hnelabhotla@students.strongsville.k12.oh.us
+github.com/hnelabhotla-boop/smallchip-ai
 
-================================================================
-COLD EMAIL 5 — Prof. David Pan (UT Austin)
-dpan@ece.utexas.edu
-================================================================
-Subject: The missing piece in OpenROAD's flow — interactive BSD-3 placer
+------------------------------------------------------------
+EMAIL 5 — Adharsh Narendrakumar (St. Ignatius, Cleveland, NEOSEF 2025 grand prize)
+------------------------------------------------------------
+To: Find his email or his teacher Tara Henderson at Hathaway Brown
+Subject: NEOSEF grand prize winner advice — high schooler building BSD-3 EDA tool
 
-Hi Prof. Pan,
+Hi Adharsh,
 
-I'm a 9th grader working on SmallChip AI, a graph attention network placer that fills a specific gap in the OpenROAD flow: real-time interactive cell-level editing with an LLM co-pilot. BSD-3, on GitHub.
+My name is Harshith Nelabhotla. I'm a 9th-grade student at Strongsville High
+School in Strongsville OH (about 25 min from St. Ignatius). I saw that you
+won the NEOSEF grand prize in 2025 and advanced to ISEF with your lung
+cancer semantic segmentation project. Congratulations — that's a huge
+accomplishment.
 
-The current OpenROAD flow is batch — place the whole chip, wait minutes, see the result, repeat. There's no "drag a cell, see it re-place" interaction. SmallChip AI is BSD-3 and runs alongside OpenROAD: my hierarchy uses OpenROAD's detailed placement as the bottom layer.
+I'm working on a different kind of project: a BSD-3 open-source chip
+placement tool (SmallChip AI, at github.com/hnelabhotla-boop/smallchip-ai).
+It uses a Graph Attention Network to place cells on a chip in 150ms, and
+the most important result is a 99.7% / 370× HPWL improvement on the GCD
+benchmark, validated end-to-end through OpenROAD's legalization.
 
-For ISEF 2027 (May), I want to:
-- Prove the architecture scales to 100M cells
-- Integrate with OpenROAD as a peer dependency
-- Submit a paper / co-author with you if the work is publishable
+I have a few questions I'd love to ask you, if you have 30 minutes for a
+call or a few email responses:
 
-Would you be open to a 20-min call to discuss whether the interactive + LLM approach has legs as research, not just a demo?
+1. How did you structure the 2 years from your first project (10th grade)
+   to winning NEOSEF grand prize (11th grade)? Was the project the same
+   across both years, or did it evolve?
+2. What was the biggest factor in your win — the algorithm, the dataset,
+   the mentor, the presentation, or something else?
+3. What was the most useful advice you got from your teacher (Tara
+   Henderson) and from any mentor?
+4. For ISEF, what would you do differently in 10th grade if you had to
+   start over?
+5. Did you have a CS/Math/ML mentor (not your teacher)? If so, how did
+   you find them?
 
-Paper: https://github.com/hnelabhotla-boop/smallchip-ai/blob/main/paper/arxiv_preprint.pdf
-Code: https://github.com/hnelabhotla-boop/smallchip-ai
+I'm in Strongsville, and would love to meet in person if that's easier
+than a call. I can come to Cleveland any weekend.
 
-Thanks,
-Harshith
-hnelabhotla@gmail.com
+Thank you for your time. Either way, congratulations again on the win.
+
+Best,
+Harshith Nelabhotla
+Strongsville High School, Strongsville OH 44136
+hnelabhotla@students.strongsville.k12.oh.us
+
+------------------------------------------------------------
+SEND CHECKLIST
+------------------------------------------------------------
+
+[ ] Email 1: Prof. Kahng (UCSD) — sent by Sept 9
+[ ] Email 2: Prof. Markov (Michigan) — sent by Sept 9
+[ ] Email 3: Prof. Wang (Northeastern) — sent by Sept 10
+[ ] Email 4: Prof. Garg (NYU) — sent by Sept 10
+[ ] Email 5: Adharsh Narendrakumar (St. Ignatius) — sent by Sept 11
+
+Total time: 30 minutes. Total impact: could be life-changing.
+
+Pro tip: in each email, REPLACE the abstract paragraph with the latest
+version if you update the paper. Send from your school email
+(hnelabhotla@students.strongsville.k12.oh.us) for credibility.
