@@ -1,0 +1,73 @@
+{
+  "results": [
+    {
+      "label": "1M_spectral",
+      "n_cells": 1000000,
+      "n_nets": 428571,
+      "n_blocks": 1000,
+      "build_time_s": 0.1674051284790039,
+      "partition_time_s": 0.6113641262054443,
+      "spectral_time_s": 0.7450461387634277,
+      "refine_time_s": 0.3850076198577881,
+      "place_time_s": 2.608424186706543,
+      "hpwl_time_s": 2.5692739486694336,
+      "total_hpwl_dbu": 12818886656.0,
+      "per_net_hpwl_dbu": 29910.765625,
+      "memory_gb": 0.016624764,
+      "use_spectral": true,
+      "use_2level": false
+    },
+    {
+      "label": "1M_2level",
+      "n_cells": 1000000,
+      "n_nets": 428571,
+      "n_blocks": 1000,
+      "build_time_s": 0.14474177360534668,
+      "partition_time_s": 0,
+      "spectral_time_s": 0.7796204090118408,
+      "refine_time_s": 0.3008251190185547,
+      "place_time_s": 3.024625301361084,
+      "hpwl_time_s": 2.540848970413208,
+      "total_hpwl_dbu": 8333699072.0,
+      "per_net_hpwl_dbu": 19445.31640625,
+      "memory_gb": 0.016624764,
+      "use_spectral": true,
+      "use_2level": true
+    },
+    {
+      "label": "100M_spectral",
+      "n_cells": 100000000,
+      "n_nets": 42857142,
+      "n_blocks": 6667,
+      "build_time_s": 24.585965633392334,
+      "partition_time_s": 67.49882078170776,
+      "spectral_time_s": 63.8397216796875,
+      "refine_time_s": 24.946072578430176,
+      "place_time_s": 257.6066484451294,
+      "hpwl_time_s": 265.5149419307709,
+      "total_hpwl_dbu": 29930052124672.0,
+      "per_net_hpwl_dbu": 698367.875,
+      "memory_gb": 1.662519188,
+      "use_spectral": true,
+      "use_2level": false
+    },
+    {
+      "label": "100M_2level",
+      "n_cells": 100000000,
+      "n_nets": 42857142,
+      "n_blocks": 6667,
+      "build_time_s": 24.711827278137207,
+      "partition_time_s": 0,
+      "spectral_time_s": 1.2439923286437988,
+      "refine_time_s": 0.45845723152160645,
+      "place_time_s": 313.1947820186615,
+      "hpwl_time_s": 253.326762676239,
+      "total_hpwl_dbu": 144703622217728.0,
+      "per_net_hpwl_dbu": 3376417.75,
+      "memory_gb": 1.662519188,
+      "use_spectral": true,
+      "use_2level": true
+    }
+  ],
+  "elapsed_s": 1938.1489322185516
+}
