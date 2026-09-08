@@ -1,0 +1,29 @@
+{
+  "results": [
+    {
+      "label": "1M_legal_70",
+      "n_cells": 1000000,
+      "n_nets": 428571,
+      "n_blocks": 1000,
+      "n_starts": 1,
+      "target_utilization": 0.7,
+      "per_net_hpwl_dbu": 138609.0,
+      "cell_size_dbu": 899.647705078125,
+      "cell_size_um": 0.8996477127075195,
+      "memory_gb": 0.016624764
+    },
+    {
+      "label": "100M_legal_70",
+      "n_cells": 100000000,
+      "n_nets": 42857142,
+      "n_blocks": 6667,
+      "n_starts": 1,
+      "target_utilization": 0.7,
+      "per_net_hpwl_dbu": 208790.109375,
+      "cell_size_dbu": 921.6387329101562,
+      "cell_size_um": 0.9216387271881104,
+      "memory_gb": 1.662519188
+    }
+  ],
+  "elapsed_s": 914.1427907943726
+}
