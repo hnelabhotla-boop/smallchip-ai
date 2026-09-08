@@ -1,0 +1,31 @@
+{
+  "results": [
+    {
+      "label": "1M_v7",
+      "n_cells": 1000000,
+      "n_nets": 428571,
+      "n_blocks": 1000,
+      "n_starts": 3,
+      "build_time_s": 0.20119380950927734,
+      "best_starts_hpwl": 114590.5546875,
+      "per_cell_refine_hpwl": 114590.5546875,
+      "per_net_hpwl_dbu": 114590.5546875,
+      "total_hpwl_dbu": 49110188032.0,
+      "memory_gb": 0.016624764
+    },
+    {
+      "label": "100M_v7",
+      "n_cells": 100000000,
+      "n_nets": 42857142,
+      "n_blocks": 6667,
+      "n_starts": 3,
+      "build_time_s": 24.58194065093994,
+      "best_starts_hpwl": 124956.421875,
+      "per_cell_refine_hpwl": 124956.421875,
+      "per_net_hpwl_dbu": 124956.421875,
+      "total_hpwl_dbu": 5355275288576.0,
+      "memory_gb": 1.662519188
+    }
+  ],
+  "elapsed_s": 3103.944961309433
+}
