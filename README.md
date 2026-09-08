@@ -192,7 +192,7 @@ Net result: **1,281 DBU/net, only 2.6x flat 5K (502)**. 30K synthetic: 3,089 DBU
 
 ---
 
-## 100M-cell scaling proof (BFS partition + spectral top)
+## 100M-cell scaling proof (BFS partition + spectral top + Adam)
 
 Stress test on synthetic designs up to 100M cells (Hetzner CCX33, 24 vCPU, 32GB RAM, no GPU):
 
@@ -200,11 +200,17 @@ Stress test on synthetic designs up to 100M cells (Hetzner CCX33, 24 vCPU, 32GB 
 |------|------:|------:|-----:|-------------:|:---|
 | 15K | 15,000 | 100 | 0.1 s | 109,184 | spectral |
 | 1M | 1,000,000 | 1,000 | 5 s | 29,911 | spectral |
-| **100M** | **100,000,000** | **6,667** | **7 min** | **698,368** | **spectral** |
+| **100M** | **100,000,000** | **6,667** | **52 min** | **124,956** | **spectral + Adam + multi-start** |
 
-**100M headline:** 698,368 DBU/net (sub-1M, 12.5× better than force-directed 8.7M, 22.6× better than random 15.7M). The single biggest win was switching top-level placement from force-directed gradient descent to spectral embedding (eigenvectors of the block-connectivity graph Laplacian). Spectral is provably optimal for the quadratic wirelength relaxation that upper-bounds linear HPWL.
+**100M headline:** 124,956 DBU/net (sub-100K in reach, 5.6× better than spectral alone, 126× better than random baseline 15.7M). The single biggest win was switching top-level placement from force-directed gradient descent to spectral embedding (eigenvectors of the block-connectivity graph Laplacian). Adam refinement + 3 random restarts added another 5.6×.
 
-Per-net HPWL scales as O(√N) — perfect for a fixed-density placement problem. Memory: 1.7 GB at 100M. No GPU required.
+**Version history (per-net HPWL at 100M cells):**
+- v3 (force-directed top): 15,759,929 DBU/net
+- v4 (BFS-aware partition + force-directed top): 8,711,274 DBU/net (1.81×)
+- v6 (spectral top + 30-iter refinement): 698,368 DBU/net (sub-1M)
+- **v7 (spectral + Adam + multi-start): 124,956 DBU/net (sub-100K in reach)**
+
+Spectral is provably optimal for the quadratic wirelength relaxation that upper-bounds linear HPWL. Per-net HPWL scales as O(√N). Memory: 1.7 GB at 100M. No GPU required.
 
 ---
 
