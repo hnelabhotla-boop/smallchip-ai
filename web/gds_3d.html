@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>SmallChip AI — 3D GDS Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    background: #0a0e14;
+    color: #c9d1d9;
+    overflow: hidden;
+    font-size: 13px;
+  }
+  #topbar {
+    height: 40px;
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 12px;
+  }
+  #topbar a { color: #58a6ff; text-decoration: none; }
+  #topbar a:hover { text-decoration: underline; }
+  #topbar .title { font-weight: 600; }
+  #viewer { position: absolute; top: 40px; left: 0; right: 0; bottom: 0; }
+  #sidebar {
+    position: absolute;
+    top: 50px;
+    right: 12px;
+    background: rgba(13, 17, 23, 0.92);
+    border: 1px solid #21262d;
+    border-radius: 4px;
+    padding: 12px 14px;
+    width: 280px;
+    backdrop-filter: blur(6px);
+  }
+  #sidebar h3 { font-size: 12px; margin-bottom: 6px; color: #58a6ff; }
+  #sidebar .stat { display: flex; justify-content: space-between; margin: 4px 0; font-size: 11px; }
+  #sidebar .stat .lbl { color: #8b949e; }
+  #sidebar .stat .val { color: #c9d1d9; font-weight: 600; }
+  #sidebar .layer-row { display: flex; align-items: center; gap: 6px; margin: 3px 0; font-size: 11px; }
+  #sidebar .swatch { width: 10px; height: 10px; border-radius: 2px; }
+  #controls { position: absolute; bottom: 12px; left: 12px; background: rgba(13,17,23,0.92); border: 1px solid #21262d; padding: 8px 12px; border-radius: 4px; font-size: 11px; }
+  #controls kbd { background: #21262d; padding: 1px 4px; border-radius: 2px; font-family: monospace; }
+  #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #8b949e; font-size: 14px; }
+  #case_study {
+    position: absolute;
+    top: 50px;
+    left: 12px;
+    background: rgba(13, 17, 23, 0.92);
+    border: 1px solid #21262d;
+    border-radius: 4px;
+    padding: 12px 14px;
+    width: 300px;
+    backdrop-filter: blur(6px);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  #case_study h3 { font-size: 12px; color: #58a6ff; margin-bottom: 6px; }
+  #case_study .quote { color: #c9d1d9; font-style: italic; border-left: 2px solid #58a6ff; padding-left: 8px; margin: 8px 0; }
+  #case_study .name { color: #8b949e; font-size: 10px; margin-top: 4px; }
+  #placeholder { color: #8b949e; padding: 8px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div id="topbar">
+  <span class="title">SmallChip AI — 3D GDS Viewer</span>
+  <span style="color:#8b949e">|</span>
+  <a href="/">Home</a>
+  <a href="/interactive">Interactive</a>
+  <a href="https://github.com/hnelabhotla-boop/smallchip-ai" target="_blank">GitHub</a>
+  <span style="margin-left:auto;color:#8b949e">drag to rotate · scroll to zoom</span>
+</div>
+
+<div id="viewer"></div>
+
+<div id="case_study" style="display:none">
+  <h3>Case study</h3>
+  <div id="case_study_body"></div>
+</div>
+
+<div id="sidebar">
+  <h3>Design</h3>
+  <div class="stat"><span class="lbl">Cells</span><span class="val" id="stat-cells">—</span></div>
+  <div class="stat"><span class="lbl">Nets</span><span class="val" id="stat-nets">—</span></div>
+  <div class="stat"><span class="lbl">HPWL</span><span class="val" id="stat-hpwl">—</span></div>
+  <div class="stat"><span class="lbl">Per-net HPWL</span><span class="val" id="stat-pernet">—</span></div>
+  <div class="stat"><span class="lbl">Die area</span><span class="val" id="stat-die">—</span></div>
+  <h3 style="margin-top:14px">Layers</h3>
+  <div class="layer-row"><span class="swatch" style="background:#58a6ff"></span><span>Metal 1 (cells)</span></div>
+  <div class="layer-row"><span class="swatch" style="background:#f0883e"></span><span>Metal 2 (routing)</span></div>
+  <div class="layer-row"><span class="swatch" style="background:#a371f7"></span><span>Substrate (silicon)</span></div>
+  <h3 style="margin-top:14px">Controls</h3>
+  <div id="placeholder">Place a chip first in the <a href="/interactive" style="color:#58a6ff">Interactive</a> view. Then return here to see the 3D render.</div>
+</div>
+
+<div id="controls">
+  <kbd>drag</kbd> rotate · <kbd>scroll</kbd> zoom · <kbd>right-drag</kbd> pan
+</div>
+
+<div id="loading" style="display:none">Rendering 3D view...</div>
+
+<script>
+// ============================================================
+// 3D GDS Viewer — Renders placed cells as 3D boxes with layers
+// ============================================================
+
+const viewer = document.getElementById('viewer');
+const loading = document.getElementById('loading');
+const sidebar = {
+  cells: document.getElementById('stat-cells'),
+  nets: document.getElementById('stat-nets'),
+  hpwl: document.getElementById('stat-hpwl'),
+  pernet: document.getElementById('stat-pernet'),
+  die: document.getElementById('stat-die'),
+};
+
+let scene, camera, renderer, controls;
+let currentDesign = null;
+
+// Try to load a previously-saved design from the parent's window state
+function loadFromStorage() {
+  try {
+    const data = localStorage.getItem('smallchip_last_design');
+    if (data) return JSON.parse(data);
+  } catch (e) {}
+  return null;
+}
+
+// Initialize Three.js
+function init() {
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a0e14);
+
+  const aspect = window.innerWidth / window.innerHeight;
+  camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 10000);
+  camera.position.set(0, 800, 1500);
+  camera.lookAt(0, 0, 0);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight - 40);
+  viewer.appendChild(renderer.domElement);
+
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+  scene.add(ambient);
+  const dir1 = new THREE.DirectionalLight(0xffffff, 0.7);
+  dir1.position.set(1, 2, 1);
+  scene.add(dir1);
+  const dir2 = new THREE.DirectionalLight(0x8b949e, 0.3);
+  dir2.position.set(-1, 1, -1);
+  scene.add(dir2);
+
+  // Substrate (silicon die)
+  const substrateGeom = new THREE.BoxGeometry(2000, 30, 2000);
+  const substrateMat = new THREE.MeshStandardMaterial({
+    color: 0x1f2937,
+    metalness: 0.7,
+    roughness: 0.4,
+  });
+  const substrate = new THREE.Mesh(substrateGeom, substrateMat);
+  substrate.position.y = -15;
+  scene.add(substrate);
+
+  // Grid
+  const grid = new THREE.GridHelper(2000, 50, 0x21262d, 0x161b22);
+  grid.position.y = 0;
+  scene.add(grid);
+
+  // Simple orbit controls (no external library — implement minimal)
+  setupMouseControls();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / (window.innerHeight - 40);
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight - 40);
+  });
+
+  animate();
+}
+
+// Minimal mouse controls for orbit/zoom/pan
+function setupMouseControls() {
+  let isDragging = false;
+  let isPanning = false;
+  let lastX = 0, lastY = 0;
+  let theta = 0, phi = Math.PI / 4, radius = 2000;
+  let targetX = 0, targetZ = 0;
+
+  function updateCamera() {
+    camera.position.x = targetX + radius * Math.cos(theta) * Math.cos(phi);
+    camera.position.y = radius * Math.sin(phi);
+    camera.position.z = targetZ + radius * Math.sin(theta) * Math.cos(phi);
+    camera.lookAt(targetX, 0, targetZ);
+  }
+  updateCamera();
+
+  renderer.domElement.addEventListener('mousedown', (e) => {
+    if (e.button === 2 || e.shiftKey) isPanning = true;
+    else isDragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+  });
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+    isPanning = false;
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      theta -= (e.clientX - lastX) * 0.005;
+      phi = Math.max(0.05, Math.min(Math.PI - 0.05, phi + (e.clientY - lastY) * 0.005));
+      lastX = e.clientX;
+      lastY = e.clientY;
+      updateCamera();
+    } else if (isPanning) {
+      targetX += (e.clientX - lastX) * 2;
+      targetZ += (e.clientY - lastY) * 2;
+      lastX = e.clientX;
+      lastY = e.clientY;
+      updateCamera();
+    }
+  });
+  renderer.domElement.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    radius = Math.max(100, Math.min(8000, radius * (1 + e.deltaY * 0.001)));
+    updateCamera();
+  });
+  renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+function renderDesign(design) {
+  if (!design) return;
+  loading.style.display = 'block';
+
+  // Remove old cells
+  scene.children = scene.children.filter(c => c.type !== 'Group' && !c.userData.isCell);
+
+  const die = design.die || { x1: 0, y1: 0, x2: 1000, y2: 1000 };
+  const dieW = die.x2 - die.x1;
+  const dieH = die.y2 - die.y1;
+  const scale = 1500 / Math.max(dieW, dieH);
+  const components = design.components || {};
+  const n = Object.keys(components).length;
+
+  // Update sidebar
+  sidebar.cells.textContent = n.toLocaleString();
+  sidebar.nets.textContent = (design.nets || []).length.toLocaleString();
+  sidebar.hpwl.textContent = (design.hpwl || 0).toLocaleString() + ' DBU';
+  sidebar.pernet.textContent = ((design.hpwl || 0) / Math.max((design.nets || []).length, 1)).toFixed(1) + ' DBU';
+  sidebar.die.textContent = (dieW / 1000).toFixed(1) + ' × ' + (dieH / 1000).toFixed(1) + ' mm';
+
+  // Limit to 5,000 cells for render performance
+  const cellEntries = Object.entries(components).slice(0, 5000);
+  const cellGroup = new THREE.Group();
+  cellGroup.userData.isCell = true;
+
+  // Aggregate cells for speed: use InstancedMesh
+  const cellGeom = new THREE.BoxGeometry(8, 5, 8);
+  const cellMat = new THREE.MeshStandardMaterial({
+    color: 0x58a6ff,
+    metalness: 0.5,
+    roughness: 0.5,
+  });
+  const instanced = new THREE.InstancedMesh(cellGeom, cellMat, cellEntries.length);
+  const dummy = new THREE.Object3D();
+
+  for (let i = 0; i < cellEntries.length; i++) {
+    const [name, pos] = cellEntries[i];
+    const x = (pos.x - die.x1) * scale - dieW * scale / 2;
+    const z = (pos.y - die.y1) * scale - dieH * scale / 2;
+    dummy.position.set(x, 5, z);
+    dummy.updateMatrix();
+    instanced.setMatrixAt(i, dummy.matrix);
+  }
+  instanced.instanceMatrix.needsUpdate = true;
+  cellGroup.add(instanced);
+  scene.add(cellGroup);
+
+  loading.style.display = 'none';
+}
+
+// Initialize
+init();
+const saved = loadFromStorage();
+if (saved) {
+  currentDesign = saved;
+  renderDesign(currentDesign);
+}
+</script>
+</body>
+</html>

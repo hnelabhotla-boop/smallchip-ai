@@ -54,6 +54,7 @@ app.add_middleware(
 _gat_model = None
 _gcd_demo_placement = None
 _multiobj_predictor = None
+_last_saved_state = None  # for the 3D viewer
 
 
 def get_gat_model():
@@ -610,6 +611,33 @@ async def interactive_page():
 async def copilot_page():
     """DEPRECATED — the LLM co-pilot is gone. Use /interactive for the new tool."""
     return FileResponse(str(WEB_DIR / "interactive.html"))
+
+
+@app.get("/3d")
+async def gds_3d_viewer():
+    """3D GDS viewer — renders placed cells as a 3D scene for the ISEF booth."""
+    return FileResponse(str(WEB_DIR / "gds_3d.html"))
+
+
+@app.post("/api/save_state")
+async def save_state(state: dict):
+    """Save the current design state for the 3D viewer.
+
+    The interactive UI posts the current placed design here after each placement,
+    so /3d can load it and render a 3D view. State is stored in-memory and
+    is replaced by the next call (last placement wins).
+    """
+    global _last_saved_state
+    _last_saved_state = state
+    return {"ok": True, "saved_components": len(state.get("components", {}))}
+
+
+@app.get("/api/get_state")
+async def get_state():
+    """Return the last-saved state for the 3D viewer to load."""
+    if _last_saved_state is None:
+        return {"state": None}
+    return {"state": _last_saved_state}
 
 
 # ---------- Example designs ----------

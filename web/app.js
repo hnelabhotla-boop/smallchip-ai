@@ -541,6 +541,28 @@ function findCellAt(cx, cy) {
     return best;
 }
 
+async function saveStateFor3D() {
+    """Save current placement to /api/save_state for the 3D viewer."""
+    if (!interactive || !interactive.components || !interactive.die) return;
+    const state = {
+        components: interactive.components,
+        die: interactive.die,
+        hpwl: interactive.lastHPWL || 0,
+        nets: [],
+    };
+    try {
+        await fetch('/api/save_state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(state),
+        });
+        // Also save to localStorage as backup
+        localStorage.setItem('smallchip_last_design', JSON.stringify(state));
+    } catch (e) {
+        // Silent fail — 3D viewer is optional
+    }
+}
+
 function drawInteractive() {
     const canvas = $('interactiveCanvas');
     if (!canvas) return;
@@ -676,6 +698,8 @@ async function onInteractiveMouseUp(e) {
             }
         }
         drawInteractive();
+        // Save state for 3D viewer
+        saveStateFor3D().catch(() => {});
         if (status) {
             status.textContent = `Re-placed ${data.neighborhood_size} cells in ${data.elapsed_ms.toFixed(0)}ms (round-trip ${elapsedTotal.toFixed(0)}ms). HPWL: ${interactive.selectedCell} moved to (${targetDie.x.toFixed(0)}, ${targetDie.y.toFixed(0)}).`;
             status.classList.add('active');
