@@ -149,15 +149,18 @@ To stress-test the hierarchical architecture at industry-relevant scale, we repl
 **Version history (per-net HPWL at 100M cells):**
 - v3 (force-directed top): 15,759,929 DBU/net (random)
 - v4 (BFS-aware partition + force-directed top): 8,711,274 DBU/net (1.81×)
-- **v6 (BFS-aware partition + spectral top + inter-block refinement): 698,368 DBU/net (22.6× over v3, sub-1M achieved)**
+- v6 (BFS-aware partition + spectral top + 30-iter refinement): 698,368 DBU/net (22.6× over v3, sub-1M achieved)
+- **v7 (spectral + Adam refinement + multi-start): 124,956 DBU/net (126× over v3, sub-100K in reach)**
 
 | Scale | Cells | Nets | Blocks | Wall time | Per-net HPWL (DBU) | Memory |
 |---|---|---|---|---|---|---|
 | 15K | 15,000 | 6,428 | 100 | 0.1 s | 109,184 (spectral) | < 1 GB |
 | 1M | 1,000,000 | 428,571 | 1,000 | 5 s | 29,911 (spectral) | < 1 GB |
-| **100M** | **100,000,000** | **~43M** | **6,667** | **438 s** | **698,368 (spectral)** | **1.7 GB** |
+| **100M** | **100,000,000** | **~43M** | **6,667** | **52 min** | **124,956 (spectral + Adam + multi-start)** | **1.7 GB** |
 
 **Spectral top-level placement.** The single biggest improvement at 100M was replacing force-directed gradient descent with spectral embedding — solving for the eigenvectors of the block-connectivity graph Laplacian. The 2nd and 3rd smallest eigenvectors provide the smoothest 2D embedding that minimizes the quadratic wirelength objective $\sum_{(i,j)} w_{ij} \|x_i - x_j\|^2$. Because linear HPWL is upper-bounded by $\sqrt{2 \cdot \text{quadratic HPWL}}$, the spectral embedding gives a provably tight initialization for the linear objective. The improvement over force-directed is 12.5× at 100M (8.7M → 698K).
+
+**Adam refinement + multi-start.** On top of spectral, v7 adds: (1) 3 random restarts of the BFS partition, keeping the best, and (2) Adam-style optimization of inter-block positions for 100 iterations, with adaptive learning rate and momentum. The combined effect is an additional 5.6× improvement (698K → 125K). The remaining HPWL is dominated by intra-block placement (random within each 15K-cell block); we project that replacing random intra-block placement with V5 GAT would yield a further 1.5-2× improvement.
 
 Key observations:
 - **Spectral beats force-directed by 12.5×** at 100M. This is the textbook result: gradient descent gets stuck in local optima of the linear HPWL objective, while spectral embedding solves the smooth quadratic relaxation in closed form.
