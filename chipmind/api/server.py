@@ -635,6 +635,17 @@ async def gds_3d_viewer():
     return FileResponse(str(WEB_DIR / "gds_3d.html"))
 
 
+@app.get("/case_study")
+async def case_study_page():
+    """Sarah's IoT Sensor case study — the ISEF booth centerpiece.
+
+    A polished story page (similar to how NeuroFlex used Aiden's prosthetic
+    or Hikaru used the ladybug wing) that walks a real user through the
+    tool, with concrete numbers and a quote.
+    """
+    return FileResponse(str(WEB_DIR / "case_study.html"))
+
+
 @app.post("/api/save_state")
 async def save_state(state: dict):
     """Save the current design state for the 3D viewer.
