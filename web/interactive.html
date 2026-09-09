@@ -481,7 +481,7 @@ $('compareBtn').addEventListener('click', async () => {
     btn.disabled = true;
     btn.textContent = 'comparing…';
     try {
-        const r = await fetch('/api/compare', {
+        const r = await fetch('/api/nwase_vs_spectral', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ design, algo_a: 'nwase', algo_b: 'spectral' }),

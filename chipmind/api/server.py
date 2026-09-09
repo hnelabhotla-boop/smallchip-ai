@@ -236,7 +236,11 @@ def place_with_algorithm(design: dict, algo: str, iterations: Optional[int] = No
         return placer.place(design, iterations=iterations)
 
     placer = PlacerClass(**kwargs)
-    return placer.place(design, iterations=iterations)
+    result = placer.place(design, iterations=iterations)
+    # Normalize: ensure "algorithm" key exists for downstream consumers
+    if "algorithm" not in result:
+        result["algorithm"] = ALGORITHMS[algo][0]
+    return result
 
 
 def predict_all_metrics(chip: dict, components: dict = None) -> dict:
@@ -809,12 +813,13 @@ class CompareRequest(BaseModel):
     algo_b: str = "spectral"
 
 
-@app.post("/api/compare")
-async def compare_endpoint(req: CompareRequest):
-    """Run two algorithms on the same design, return both HPWLs side-by-side.
+@app.post("/api/nwase_vs_spectral")
+async def nwase_vs_spectral_endpoint(req: CompareRequest):
+    """The ISEF "show me the win" endpoint: NWASE (novel) vs standard spectral.
 
-    The ISEF "show me the win" endpoint: judges upload a chip and see
-    NWASE vs standard spectral in real-time, with the HPWL delta.
+    Judges upload a chip (or use the loaded design) and see NWASE vs
+    standard spectral in real-time, with the HPWL delta and a novelty
+    claim paragraph. This is the centerpiece of the live booth demo.
     """
     safe = get_safe_algorithms(req.design, [req.algo_a, req.algo_b])
     blocked = [a for a, (_, msg) in safe.items() if msg is not None]
