@@ -274,6 +274,7 @@
     <button class="btn" id="exportGds">export GDS</button>
     <button class="btn" id="exportDef">export placed DEF</button>
     <a class="btn" id="view3d" href="/3d" target="_blank">view 3D →</a>
+    <button class="btn btn-primary" id="compareBtn" title="Run NWASE (novel) vs standard spectral side-by-side">compare: NWASE vs spectral</button>
 
     <h3>history</h3>
     <div id="history"></div>
@@ -473,6 +474,51 @@ $('placeFull').addEventListener('click', placeFull);
 $('resetDesign').addEventListener('click', () => { if (design) { placement = null; draw(); setStatus('reset to random — place full to re-run', ''); } });
 $('exportGds').addEventListener('click', () => downloadFile('/api/place_full/gds', `${design?.name || 'chip'}.gds`));
 $('exportDef').addEventListener('click', () => downloadFile('/api/place_full/def', `${design?.name || 'chip'}_placed.def`));
+$('compareBtn').addEventListener('click', async () => {
+    if (!design) { alert('Load a design first (Upload DEF or click an example)'); return; }
+    const btn = $('compareBtn');
+    const oldText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'comparing…';
+    try {
+        const r = await fetch('/api/compare', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ design, algo_a: 'nwase', algo_b: 'spectral' }),
+        });
+        if (!r.ok) {
+            const err = await r.json();
+            throw new Error(err.detail || `HTTP ${r.status}`);
+        }
+        const data = await r.json();
+        // Show the result in an alert + the history pane
+        const a = data.algorithm_a, b = data.algorithm_b;
+        const winner = data.winner === 'nwase' ? 'NWASE' : 'Spectral';
+        const msg = `🏆 ${winner} wins this head-to-head\n\n`
+            + `${a.name}: ${Math.round(a.hpwl).toLocaleString()} DBU (${a.time_s.toFixed(2)}s)\n`
+            + `${b.name}: ${Math.round(b.hpwl).toLocaleString()} DBU (${b.time_s.toFixed(2)}s)\n\n`
+            + `Δ = ${data.delta_pct >= 0 ? '+' : ''}${data.delta_pct.toFixed(2)}% HPWL\n\n`
+            + data.novelty_claim;
+        // Push to history
+        const hist = $('history');
+        if (hist) {
+            const item = document.createElement('div');
+            item.className = 'hist-item';
+            item.style.borderLeft = data.winner === 'nwase' ? '3px solid #58a6ff' : '3px solid #f0883e';
+            item.innerHTML = `<b>NWASE vs Spectral</b>: Δ ${data.delta_pct >= 0 ? '+' : ''}${data.delta_pct.toFixed(2)}% HPWL — winner: ${winner}`;
+            hist.prepend(item);
+        }
+        // Also write to status if present
+        const status = $('status');
+        if (status) status.textContent = msg;
+        alert(msg);
+    } catch (e) {
+        alert(`Compare failed: ${e.message}\n\n(For designs > 5K cells, use the cloud pipeline or GAT endpoint.)`);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = oldText;
+    }
+});
 
 // ---------- 100M cell live demo ----------
 $('demo100m').addEventListener('click', run100mDemo);
