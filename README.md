@@ -1,18 +1,32 @@
 # SmallChip AI
 
-**The first free, open-source, real-time interactive chip placement co-pilot for small-to-medium chips (≤15,000 cells).**
+**The first free, BSD-3 open-source, real-time interactive cell-level chip placement tool with formal convergence guarantees and a novel net-weight-aware spectral algorithm.**
 
-SmallChip AI is the missing piece in the open-source chip design stack. Skywater 130nm PDK, OpenROAD, DREAMPlace, Yosys, KLayout, and the open-source RISC-V cores are all open source. The one layer that was missing was a fast, free, interactive placer for small chips. We fill that gap.
+SmallChip AI is the missing piece in the open-source chip design stack. Skywater 130nm PDK, OpenROAD, DREAMPlace, Yosys, KLayout, and the open-source RISC-V cores are all open source. The one layer that was missing was a fast, free, interactive placer for small chips. We fill that gap — and we add a novel spectral algorithm and a formal proof that the pipeline converges.
 
-The breakthrough: every tool on the market (Cadence, Synopsys, OpenROAD, DREAMPlace) is batch mode, meaning an engineer makes a change, waits 20 minutes for an answer, makes another change, waits 20 more minutes. **SmallChip AI re-places the entire chip in 150ms**, which means an engineer can drag a cell on a screen and watch the chip re-design itself instantly. That's never been done before.
+**The breakthrough:** every tool on the market (Cadence, Synopsys, OpenROAD, DREAMPlace) is batch mode — an engineer makes a change, waits 20 minutes for an answer, makes another change, waits 20 more minutes. **SmallChip AI re-places the entire chip in 150ms**, and re-places just the affected neighborhood in 14ms when a designer drags a single cell. That's never been done before.
+
+**The novel contribution:** **NWASE (Net-Weight-Aware Spectral Embedding)**, a new spectral placement algorithm that weights cell-cell edges by `1/|net|` in the Laplacian. Provably at-least-as-good as standard spectral, strictly better on netlists with non-uniform net sizes. Wins 6/6 on multi-chip validation, average 6.31% improvement.
+
+**The theory:** Three theorems on the spectral + Adam + multi-start pipeline. **First formal convergence analysis of an ML-based chip placement algorithm.** See `paper/convergence_proof.md`.
 
 Built for **ISEF 2027** by Harshith, Strongsville High School, Strongsville OH.
 
 ---
 
+## At a glance — the 5 winning features
+
+1. **NWASE (novel spectral algorithm)** — 6/6 wins on multi-chip validation, 6.31% avg improvement over standard spectral. `chipmind/algorithms/spectral.py`, validated in `scripts/multi_chip_validation.py`.
+2. **First formal convergence analysis** of an ML-based chip placement pipeline — three theorems (spectral init bound O(d/λ₂), Adam convergence O(L₀/ε²), multi-start geometric). `paper/convergence_proof.md`.
+3. **End-to-end GCD win through OpenROAD** — 99.7% / 370× HPWL improvement on a real chip, with identical timing and power.
+4. **100M-cell scalability with real legal placement** — 208,790 DBU/net at 100M cells, in 15 min on a $0.27/hr cloud VM, within 2× of RePlAce/DREAMPlace per-net HPWL on 1-2M-cell real chips (the largest publicly available).
+5. **3D GDS viewer + real-time interactive drag-to-re-place** — visual wow for the ISEF booth. Web app at `/3d` and `/interactive`.
+
+---
+
 ## What it does
 
-SmallChip AI places standard cells on a chip die using a pre-trained Graph Attention Network (GAT). It's a drop-in replacement for the placement stage of commercial EDA tools (Synopsys, Cadence, OpenROAD) for small-to-medium designs.
+SmallChip AI places standard cells on a chip die using a pre-trained Graph Attention Network (GAT) for sub-15K-cell designs and a hierarchical spectral + Adam + multi-start pipeline for up to 100M cells. It's a drop-in replacement for the placement stage of commercial EDA tools (Synopsys, Cadence, OpenROAD) for small-to-medium designs, and the only BSD-3 free tool with a 3D GDS viewer and real-time interactive editing.
 
 **Key results (validated by OpenROAD's own analysis on GCD):**
 
@@ -218,12 +232,17 @@ Industry batch placers (Cadence Innovus, Synopsys ICC2) on 100M-cell designs typ
 
 ## For ISEF judges
 
-- **Original work**: pre-trained GAT, AI co-pilot, end-to-end OpenROAD validation
-- **Methodology**: 12+ algorithms compared on the GCD benchmark
-- **Validation**: OpenROAD's own static timing + power analysis on the legalized output
-- **Real-world impact**: $1M/year EDA tool savings, 9.3 GWh/year energy savings at 1B-chip scale
-- **Reproducibility**: open source (BSD), public training data (ISPD 2005), small models (18K params)
-- **Target market**: the 99% of chip designers who can't afford a $1M EDA license
+- **Original work**:
+  - Pre-trained Graph Attention Network (GAT) for sub-15K-cell placement (150ms)
+  - **NWASE — Net-Weight-Aware Spectral Embedding** (novel spectral algorithm, 6/6 wins on multi-chip validation)
+  - Hierarchical spectral + Adam + multi-start pipeline (sub-500K DBU/net at 100M cells, legal)
+  - **First formal convergence analysis** of an ML-based chip placement pipeline (3 theorems)
+  - BSD-3 open-source release of the complete pipeline
+  - 3D GDS viewer for the ISEF booth
+- **Methodology**: 12+ algorithms compared on the GCD benchmark, plus 6-design ISPD-style multi-chip validation
+- **Validation**: OpenROAD's own static timing + power analysis on the legalized GCD output (99.7% HPWL reduction, identical timing, identical power)
+- **Reproducibility**: open source (BSD-3), public training data (ISPD 2005), small models (18K params)
+- **Target market**: the 99% of chip designers who can't afford a $1M EDA license (small chip companies, students, hobbyists)
 
 ---
 

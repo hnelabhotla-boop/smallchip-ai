@@ -7,6 +7,7 @@ from .random_placer import RandomPlacer
 from .sa import SimulatedAnnealing
 from .ga import GeneticAlgorithm
 from .eplace import EPlace
+from .spectral import NWASEPlacer, StandardSpectralPlacer
 
 __all__ = [
     "BasePlacer",
@@ -14,4 +15,6 @@ __all__ = [
     "SimulatedAnnealing",
     "GeneticAlgorithm",
     "EPlace",
+    "NWASEPlacer",       # Net-Weight-Aware Spectral Embedding (novel)
+    "StandardSpectralPlacer",
 ]

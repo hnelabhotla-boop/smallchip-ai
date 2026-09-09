@@ -72,15 +72,20 @@ class NWASEPlacer(BasePlacer):
         # Build net-weight-aware adjacency matrix
         A = np.zeros((n, n), dtype=np.float64)
         for net in chip["nets"]:
-            # Handle both "cells" and "components" key
-            cells = net.get("cells") or net.get("components") or []
+            # Handle multiple net formats: dict with "cells"/"components", or list of cells
+            if isinstance(net, dict):
+                cells = net.get("cells") or net.get("components") or []
+            elif isinstance(net, (list, tuple)):
+                cells = list(net)
+            else:
+                continue
             k = len(cells)
             if k < 2 or k > 50:
                 continue
             if self.mode == "inv_net_size":
                 w = 1.0 / k
             elif self.mode == "net_weight":
-                w = float(net.get("weight", 1.0))
+                w = float(net.get("weight", 1.0)) if isinstance(net, dict) else 1.0
             elif self.mode == "log_net_size":
                 w = 1.0 / math.log2(k + 1)
             else:
@@ -159,7 +164,12 @@ class StandardSpectralPlacer(BasePlacer):
 
         A = np.zeros((n, n), dtype=np.float64)
         for net in chip["nets"]:
-            cells = net.get("cells") or net.get("components") or []
+            if isinstance(net, dict):
+                cells = net.get("cells") or net.get("components") or []
+            elif isinstance(net, (list, tuple)):
+                cells = list(net)
+            else:
+                continue
             if len(cells) < 2 or len(cells) > 50:
                 continue
             for i in range(len(cells)):
