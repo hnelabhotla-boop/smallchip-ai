@@ -167,8 +167,10 @@ class OLPMovePredictor:
     def save(self, path=None):
         p = Path(path) if path else MODEL_PATH
         p.parent.mkdir(parents=True, exist_ok=True)
+        # Save as .pt.npz (npz format with .pt stem so it's recognizable as PyTorch-style)
+        actual_path = p.parent / (p.name + ".npz")
         np.savez(
-            p,
+            actual_path,
             W1=self.W1, b1=self.b1,
             W2=self.W2, b2=self.b2,
             W3=self.W3, b3=self.b3,
@@ -176,14 +178,24 @@ class OLPMovePredictor:
 
     def load(self, path=None):
         p = Path(path) if path else MODEL_PATH
-        if not p.exists():
-            return False
-        data = np.load(p)
-        self.W1 = data["W1"]; self.b1 = data["b1"]
-        self.W2 = data["W2"]; self.b2 = data["b2"]
-        self.W3 = data["W3"]; self.b3 = data["b3"]
-        self._trained = True
-        return True
+        # Try .pt.npz, .npz, and .pt (in that order)
+        candidates = [
+            p.parent / (p.name + ".npz"),  # e.g., olp_model.pt.npz
+            p.with_suffix(".npz"),
+            p,
+        ]
+        for c in candidates:
+            if c.exists() and ".npz" in c.name:
+                try:
+                    data = np.load(c)
+                    self.W1 = data["W1"]; self.b1 = data["b1"]
+                    self.W2 = data["W2"]; self.b2 = data["b2"]
+                    self.W3 = data["W3"]; self.b3 = data["b3"]
+                    self._trained = True
+                    return True
+                except Exception as e:
+                    print(f"Load failed for {c}: {e}")
+        return False
 
     @property
     def is_trained(self):
