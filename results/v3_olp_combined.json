@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "n_cells": 1000,
+      "n_nets": 912,
+      "random_hpwl": 651051.6103744507,
+      "random_olp_hpwl": 400703.9719390869,
+      "random_improvement_pct": 38.4528099533272,
+      "v3_hpwl": 10114.53451871872,
+      "v3_olp_hpwl": 12287.00830078125,
+      "v3_improvement_pct": -21.47873219515922,
+      "v3_time_s": 0.26026320457458496,
+      "olp_time_s": 2.473478078842163
+    },
+    {
+      "n_cells": 5000,
+      "n_nets": 5050,
+      "random_hpwl": 3382292.731842041,
+      "random_olp_hpwl": 2096559.3230133057,
+      "random_improvement_pct": 38.01366442130833,
+      "v3_hpwl": 6439.061393737793,
+      "v3_olp_hpwl": 21038.181564331055,
+      "v3_improvement_pct": -226.7274572780344,
+      "v3_time_s": 19.27578902244568,
+      "olp_time_s": 22.23812985420227
+    }
+  ],
+  "summary": {
+    "avg_v3_olp_improvement_pct": -124.1030947365968,
+    "n_designs": 2,
+    "model_params": 2178
+  }
+}
