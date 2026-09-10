@@ -217,6 +217,7 @@ def generate_synthetic_expert_drags(
                 "user_id": log.user_id,
                 "chip_id": log.chip_id,
                 "cell_id": log.cell_id,
+                "target_dxdy_scaled": (target_dxdy * 0.1).tolist(),  # 10% step (for iterative use)
             })
             n_total += 1
         if verbose:

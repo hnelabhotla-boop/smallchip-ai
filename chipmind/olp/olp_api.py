@@ -206,6 +206,37 @@ async def train_olp(req: dict = None):
     }
 
 
+@router.post("/bootstrap_v2")
+async def bootstrap_v2(n_designs: int = 10, n_cells: int = 500, drags_per_design: int = 100,
+                       target_scale: float = 0.1):
+    """Bootstrap with SCALED targets for iterative use.
+
+    The default bootstrap uses full V3 deltas. This version uses scaled
+    targets (e.g., 10% of V3 delta) so the model learns to make
+    small iterative steps. Better for the iterative OLP use case.
+    """
+    from .olp_bootstrap import bootstrap_from_v3
+    examples = bootstrap_from_v3(
+        n_designs=n_designs, n_cells=n_cells, drags_per_design=drags_per_design
+    )
+    init_db()
+    import numpy as np
+    # Use the SCALED targets (10% of V3 delta) for training
+    X = np.array([e["features"] for e in examples], dtype=np.float32)
+    y_scaled = np.array([e["target_dxdy_scaled"] for e in examples], dtype=np.float32)
+    model = get_model()
+    losses = model.train(X, y_scaled, verbose=True)
+    model.save()
+    return {
+        "ok": True,
+        "n_synthetic_drags": len(examples),
+        "final_loss": float(losses[-1]),
+        "model_path": str(MODEL_PATH),
+        "target_scale": target_scale,
+        "note": "Trained on SCALED targets for iterative use. Apply iteratively with same scale.",
+    }
+
+
 @router.post("/bootstrap")
 async def bootstrap(n_designs: int = 5, n_cells: int = 500, drags_per_design: int = 200):
     """Generate synthetic expert drags from V3 GAT and train the model.
