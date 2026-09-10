@@ -35,6 +35,8 @@ from chipmind.algorithms import (
     RandomPlacer, SimulatedAnnealing, GeneticAlgorithm, EPlace,
     NWASEPlacer, StandardSpectralPlacer,
 )
+from chipmind.olp import init_db as olp_init_db
+from chipmind.olp.olp_api import router as olp_router
 from chipmind.ml import load_model, predict_placement, MultiObjectivePredictor
 
 app = FastAPI(
@@ -42,6 +44,10 @@ app = FastAPI(
     description="Open-source ML chip placement. Free, <30 sec, 5 quality metrics.",
     version="0.2.0",
 )
+
+# Initialize OLP database and mount OLP router
+olp_init_db()
+app.include_router(olp_router)
 
 app.add_middleware(
     CORSMiddleware,
